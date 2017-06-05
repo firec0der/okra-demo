@@ -18,12 +18,12 @@ export default class PageLayout extends React.Component {
     const { children } = this.props;
 
     return (
-      <div className='container text-center'>
+      <div className='page-layout'>
         <TopBar />
-
-        <div className='page-layout__viewport'>
+        <main className='main'>
           { children }
-        </div>
+        </main>
+        <footer className='footer' />
       </div>
     );
   }

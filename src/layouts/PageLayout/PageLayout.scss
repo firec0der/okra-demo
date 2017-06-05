@@ -1,8 +1,14 @@
-.page-layout__viewport {
-  padding-top: 4rem;
-}
+.page-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
 
-.page-layout__nav-item--active {
-  font-weight: bold;
-  text-decoration: underline;
+  > .main {
+    flex: 1;
+  }
+
+  > .footer {
+    height: 50px;
+    background-color: #0288c3;
+  }
 }
