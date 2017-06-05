@@ -1,23 +1,31 @@
+// import from vendors
 import React from 'react';
+import PropTypes from 'prop-types';
+
+// import from components
 import TopBar from '../../components/TopBar/TopBar';
 
-import PropTypes from 'prop-types';
+// import from styles
 import './PageLayout.scss';
 
-export const PageLayout = ({ children }) => (
-  <div className='container text-center'>
-    <TopBar />
+export default class PageLayout extends React.Component {
 
-    <h1>React Redux Starter Kit</h1>
+  static propTypes = {
+    children: PropTypes.node
+  }
 
-    <div className='page-layout__viewport'>
-      {children}
-    </div>
-  </div>
-);
+  render() {
+    const { children } = this.props;
 
-PageLayout.propTypes = {
-  children: PropTypes.node,
-};
+    return (
+      <div className='container text-center'>
+        <TopBar />
 
-export default PageLayout;
+        <div className='page-layout__viewport'>
+          { children }
+        </div>
+      </div>
+    );
+  }
+
+}
