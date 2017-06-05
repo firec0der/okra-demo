@@ -1,6 +1,6 @@
 import CoreLayout from '../layouts/PageLayout/PageLayout';
 
-import HomePage from '../pages/Home/Home';
+import HomePage from '../pages/HomePage/HomePage';
 
 export default (store) => ({
   path: '/',
