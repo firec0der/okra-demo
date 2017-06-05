@@ -1,5 +1,9 @@
+// import from vendors
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { browserHistory, Router } from 'react-router';
+import { Provider } from 'react-redux';
+
 import createStore from './store/createStore';
 import './styles/main.scss';
 
@@ -12,11 +16,12 @@ const store = createStore(window.__INITIAL_STATE__);
 const MOUNT_NODE = document.getElementById('root');
 
 let render = () => {
-  const App = require('./components/App').default;
   const routes = require('./routes/index').default(store);
 
   ReactDOM.render(
-    <App store={store} routes={routes} />,
+    <Provider store={store}>
+      <Router history={browserHistory} children={routes} />
+    </Provider>,
     MOUNT_NODE
   );
 };
