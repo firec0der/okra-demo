@@ -1,11 +1,11 @@
 import React from 'react';
-import './TopBar.scss';
+import './Header.scss';
 
 export default class TopBar extends React.Component {
 
   render() {
     return (
-      <div className='top-bar' />
+      <header className='header' />
     );
   }
 
