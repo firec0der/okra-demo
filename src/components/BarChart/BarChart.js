@@ -9,6 +9,9 @@ import _ from 'lodash/fp';
 // import from styles
 import './BarChart.scss';
 
+// import from constants
+import { colorPalette } from '../../constants/colors';
+
 export default class BarChart extends React.Component {
 
   static propTypes = {
@@ -52,9 +55,9 @@ export default class BarChart extends React.Component {
         <CartesianGrid strokeDasharray='3 3' />
         <Tooltip formatter={tooltipValueFormatter} />
         <Legend />
-        <Bar dataKey='2007' fill='#537690' />
-        <Bar dataKey='2008' fill='#AE82A8' />
-        <Bar dataKey='2009' fill='#F7C243' />
+        <Bar dataKey='2007' fill={colorPalette[0]} />
+        <Bar dataKey='2008' fill={colorPalette[1]} />
+        <Bar dataKey='2009' fill={colorPalette[2]} />
       </RCHBarChart>
     );
   }
