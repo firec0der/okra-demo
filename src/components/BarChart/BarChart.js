@@ -37,8 +37,18 @@ export default class BarChart extends React.Component {
     return !_.isEqual(data, nextData);
   }
 
+  getDataKeys(data) {
+    return _.uniq(
+      data
+        .map(dataItem => Object.keys(_.omit('name', dataItem)))
+        .reduce((acc, keys) => [...acc, ...keys], [])
+    );
+  }
+
   render() {
     const { data, chartWidth, chartHeight, yTickFormatter, tooltipValueFormatter } = this.props;
+
+    const keys = this.getDataKeys(data);
 
     const barChartProps = {
       width: chartWidth,
@@ -55,9 +65,7 @@ export default class BarChart extends React.Component {
         <CartesianGrid strokeDasharray='3 3' />
         <Tooltip formatter={tooltipValueFormatter} />
         <Legend />
-        <Bar dataKey='2007' fill={colorPalette[0]} />
-        <Bar dataKey='2008' fill={colorPalette[1]} />
-        <Bar dataKey='2009' fill={colorPalette[2]} />
+        { keys.map((key, index) => <Bar dataKey={key} fill={colorPalette[index]} />) }
       </RCHBarChart>
     );
   }
