@@ -1,8 +1,6 @@
 // import from vendors
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { browserHistory, Router } from 'react-router';
-import { Provider } from 'react-redux';
 
 import createStore from './store/createStore';
 import './styles/main.scss';
@@ -16,12 +14,13 @@ const store = createStore(window.__INITIAL_STATE__);
 const MOUNT_NODE = document.getElementById('root');
 
 let render = () => {
+  const App = require('./components/App/App').default;
   const routes = require('./routes/index').default(store);
 
+  const appProps = { routes, store };
+
   ReactDOM.render(
-    <Provider store={store}>
-      <Router history={browserHistory} children={routes} />
-    </Provider>,
+    <App {...appProps} />,
     MOUNT_NODE
   );
 };
@@ -48,7 +47,7 @@ if (__DEV__) {
 
     // Setup hot module replacement
     module.hot.accept([
-      './components/App',
+      './components/App/App',
       './routes/index',
     ], () =>
       setImmediate(() => {
