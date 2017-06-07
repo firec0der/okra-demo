@@ -1,7 +1,15 @@
 // import from vendor
 import React from 'react';
 import PropTypes from 'prop-types';
-import { PieChart as RCHPieChart, Pie, ResponsiveContainer } from 'recharts';
+import {
+  PieChart as RechartPieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer
+} from 'recharts';
+
+// import from constants
+import { colorPalette } from '../../constants/colors';
 
 export default class PieChart extends React.Component {
 
@@ -22,16 +30,18 @@ export default class PieChart extends React.Component {
     const pieProps = {
       data,
       label: true,
-      outerRadius: 100,
-      fill: '#8884d8',
-      innerRadius: 10
+      outerRadius: 100
     };
 
     return (
       <ResponsiveContainer width='100%' height={300}>
-        <RCHPieChart margin={{ top: 20, right: 20, left: 20, bottom: 20 }}>
-          <Pie {...pieProps} />
-        </RCHPieChart>
+        <RechartPieChart margin={{ top: 20, right: 20, left: 20, bottom: 20 }}>
+          <Pie {...pieProps}>
+            { data.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={colorPalette[index]} />
+            )) }
+          </Pie>
+        </RechartPieChart>
       </ResponsiveContainer>
     );
   }
