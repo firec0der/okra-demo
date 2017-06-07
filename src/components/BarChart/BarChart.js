@@ -2,7 +2,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  BarChart as RCHBarChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Bar
+  BarChart as RechartsBarChart,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  Bar,
+  ResponsiveContainer
 } from 'recharts';
 import _ from 'lodash/fp';
 
@@ -59,14 +66,16 @@ export default class BarChart extends React.Component {
     };
 
     return (
-      <RCHBarChart {...barChartProps}>
-        <XAxis dataKey='name' />
-        <YAxis tickCount={10} tickFormatter={yTickFormatter} />
-        <CartesianGrid strokeDasharray='3 3' />
-        <Tooltip formatter={tooltipValueFormatter} />
-        <Legend />
-        { keys.map((key, index) => <Bar dataKey={key} fill={colorPalette[index]} />) }
-      </RCHBarChart>
+      <ResponsiveContainer width='100%' height={300}>
+        <RechartsBarChart {...barChartProps}>
+          <XAxis dataKey='name' />
+          <YAxis tickCount={10} tickFormatter={yTickFormatter} />
+          <CartesianGrid strokeDasharray='3 3' />
+          <Tooltip formatter={tooltipValueFormatter} />
+          <Legend />
+          { keys.map((key, index) => <Bar dataKey={key} fill={colorPalette[index]} />) }
+        </RechartsBarChart>
+      </ResponsiveContainer>
     );
   }
 
