@@ -4,10 +4,12 @@ import HomePage from '../pages/HomePage/HomePage';
 
 import { fetchKantarBrands } from '../modules/kantarBrands';
 import { fetchKantarFilters } from '../modules/kantarFilters';
+import { fetchKantarAreas } from '../modules/kantarAreas';
 
 export const onHomeEnter = ({ dispatch }) => () => {
   dispatch(fetchKantarBrands());
   dispatch(fetchKantarFilters());
+  dispatch(fetchKantarAreas());
 };
 
 export default (store) => ({
