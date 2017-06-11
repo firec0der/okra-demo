@@ -5,7 +5,7 @@ const SUCCESS = 'KANTAR/BRANDS_SUCCESS';
 const initialState = {
   isLoading: false,
   error: null,
-  dictionary: null
+  dictionary: {}
 };
 
 const loading = () => ({
