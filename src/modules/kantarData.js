@@ -40,7 +40,7 @@ export const fetchKantarData = ({ brandIds } = { brandIds: [] }) => dispatch => 
 
   const queryString = brandIds.map(id => `brandIds[]=${id}`).join('&');
 
-  return fetch(`http://localhost:8089/api/kantar/brands?${queryString}`)
+  return fetch(`http://localhost:8089/api/kantar/data?${queryString}`)
     .then(response => response.json())
     .then(json => dispatch(success(json)));
 };
