@@ -8,7 +8,7 @@ import { Grid, Col } from 'react-bootstrap';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import BarChart from '../../components/BarChart/BarChart';
 import PieChart from '../../components/PieChart/PieChart';
-import Select from '../../components/Select/Select';
+import MultipleSelect from '../../components/MultipleSelect/MultipleSelect';
 
 // import from styles
 import './HomePage.scss';
@@ -116,7 +116,8 @@ class HomePage extends React.Component {
 
         <Grid>
           <Col xs={12} md={8} mdOffset={2}>
-            <Select
+            <MultipleSelect
+              label='Choose brands'
               options={this.brandOptions()}
               multi
               isLoading={kantarBrands.isLoading}
