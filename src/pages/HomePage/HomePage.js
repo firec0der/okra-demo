@@ -13,6 +13,9 @@ import Select from '../../components/Select/Select';
 // import from styles
 import './HomePage.scss';
 
+// import from utils
+import { mergeObjects } from '../../utils/object';
+
 // import from modules
 import { fetchKantarData } from '../../modules/kantarData';
 
@@ -31,9 +34,9 @@ const pieChartData = [
   { name: 'Sector C', value: 300 }, { name: 'Sector D', value: 200 }
 ];
 
-const mapStateToProps = ({ kantarBrands, kantaData }) => ({
+const mapStateToProps = ({ kantarBrands, kantarData }) => ({
   kantarBrands,
-  kantaData
+  kantarData
 });
 
 const mapDispatchToProps = {
@@ -47,6 +50,10 @@ class HomePage extends React.Component {
       isLoading: PropTypes.bool.isRequired,
       dictionary: PropTypes.object,
     }),
+    kantarData: PropTypes.shape({
+      isLoading: PropTypes.bool.isRequired,
+      list: PropTypes.array,
+    }),
     fetchKantarData: PropTypes.func.isRequired
   };
 
@@ -59,10 +66,44 @@ class HomePage extends React.Component {
     brandIds: selectedBrands.map(value => value.value)
   });
 
+  barChartData = () => {
+    const { kantarData, kantarBrands } = this.props;
+
+    const brandIds = [...(new Set(kantarData.list.map(item => item.brandId)))];
+
+    const data = kantarData.list.reduce(
+      (acc, item) => mergeObjects(acc, {
+        [item.brandId]: mergeObjects(
+          acc[item.brandId],
+          item.penetration ? { [`${item.year} q${item.quarter}`]: item.penetration } : {}
+        )
+      }),
+      brandIds.reduce(
+        (acc, brandId) => mergeObjects(acc, { [brandId]: {} }),
+        {}
+      )
+    );
+
+    return Object
+      .keys(data)
+      .reduce((acc, brandId) => [
+        ...acc,
+        mergeObjects(
+          { name: kantarBrands.dictionary[brandId] },
+          Object
+            .keys(data[brandId])
+            .sort()
+            .reduce((acc, key) => mergeObjects(acc, { [key]: data[brandId][key] }), {})
+        )
+      ], []);
+  }
+
   render() {
     const { kantarBrands } = this.props;
 
     const searchOnSubmit = (value) => window.alert(`It works, value: ${value}`);
+
+    const barChartData = this.barChartData();
 
     return (
       <div className='home-page'>
@@ -74,16 +115,18 @@ class HomePage extends React.Component {
         </Grid>
 
         <Grid>
-          <Col xs={12} md={6}>
+          <Col xs={12} md={8} mdOffset={2}>
             <Select
               options={this.brandOptions()}
               multi
               isLoading={kantarBrands.isLoading}
               onChange={this.onBrandSelectChange}
             />
-            <BarChart data={barChartData} />
+            { barChartData.length > 0 && <BarChart data={this.barChartData()} /> }
           </Col>
-          <Col xs={12} md={6}>
+        </Grid>
+        <Grid>
+          <Col xs={12} md={8} mdOffset={2}>
             <PieChart data={pieChartData} />
           </Col>
         </Grid>
