@@ -22,21 +22,15 @@ import { fetchKantarData } from '../../modules/kantarData';
 // import from assets
 import UnileverLargeLogo from '../../assets/images/UL-large-logo.png';
 
-const barChartData = [
-  { name: 'Unilever', 2007: 29.1, 2008: 31.28, 2009: 39.62 },
-  { name: 'P&G', 2007: 14.63, 2008: 13.04, 2009: 10.1 },
-  { name: 'Beiersdorf', 2007: 20.3, 2008: 18.9, 2009: 25.96 },
-  { name: 'Another one', 2007: 20.3, 2010: 28.12 },
-];
-
 const pieChartData = [
   { name: 'Sector A', value: 400 }, { name: 'Sector B', value: 300 },
   { name: 'Sector C', value: 300 }, { name: 'Sector D', value: 200 }
 ];
 
-const mapStateToProps = ({ kantarBrands, kantarData }) => ({
+const mapStateToProps = ({ kantarBrands, kantarData, kantarFilters }) => ({
   kantarBrands,
-  kantarData
+  kantarData,
+  kantarFilters
 });
 
 const mapDispatchToProps = {
@@ -54,13 +48,24 @@ class HomePage extends React.Component {
       isLoading: PropTypes.bool.isRequired,
       list: PropTypes.array,
     }),
+    kantarFilters: PropTypes.shape({
+      isLoading: PropTypes.bool.isRequired,
+      list: PropTypes.array.isRequired,
+      dictionary: PropTypes.object.isRequired,
+    }),
     fetchKantarData: PropTypes.func.isRequired
   };
 
   brandOptions = () => {
     const table = this.props.kantarBrands.table;
     return Object.keys(table).map(id => ({ value: id, label: table[id] }));
-  }
+  };
+
+  filtersOption = () => {
+    const { list, dictionary } = this.props.kantarFilters;
+
+    return list.map(key => ({ value: key, label: dictionary[key] }));
+  };
 
   onBrandSelectChange = (selectedBrands) => this.props.fetchKantarData({
     brandIds: selectedBrands.map(value => value.value)
@@ -99,7 +104,7 @@ class HomePage extends React.Component {
   }
 
   render() {
-    const { kantarBrands } = this.props;
+    const { kantarBrands, kantarFilters } = this.props;
 
     const searchOnSubmit = (value) => window.alert(`It works, value: ${value}`);
 
@@ -122,6 +127,13 @@ class HomePage extends React.Component {
               multi
               isLoading={kantarBrands.isLoading}
               onChange={this.onBrandSelectChange}
+            />
+            <MultipleSelect
+              label='Choose filters'
+              options={this.filtersOption()}
+              multi
+              isLoading={kantarFilters.isLoading}
+              onChange={this.onFilterSelectChange}
             />
             { barChartData.length > 0 && <BarChart data={this.barChartData()} /> }
           </Col>
