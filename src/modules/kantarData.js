@@ -1,3 +1,5 @@
+import { apiBase } from '../constants/api';
+
 const LOADING = 'KANTAR/DATA_LOADING';
 const SUCCESS = 'KANTAR/DATA_SUCCESS';
 // const FAILURE = 'KANTAR/DATA_FAILURE';
@@ -40,7 +42,7 @@ export const fetchKantarData = ({ brandIds } = { brandIds: [] }) => dispatch => 
 
   const queryString = brandIds.map(id => `brandIds[]=${id}`).join('&');
 
-  return fetch(`http://localhost:8089/api/kantar/data?${queryString}`)
+  return fetch(`${apiBase}/kantar/data?${queryString}&areaIds[]=2`)
     .then(response => response.json())
     .then(json => dispatch(success(json)));
 };

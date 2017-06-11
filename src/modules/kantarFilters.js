@@ -1,3 +1,5 @@
+import { apiBase } from '../constants/api';
+
 const LOADING = 'KANTAR/FILTERS_LOADING';
 const SUCCESS = 'KANTAR/FILTERS_SUCCESS';
 // const FAILURE = 'KANTAR/FILTERS_FAILURE';
@@ -40,7 +42,7 @@ export default (state = initialState, action) => {
 export const fetchKantarFilters = () => dispatch => {
   dispatch(loading());
 
-  return fetch('http://localhost:8089/api/kantar/filters')
+  return fetch(`${apiBase}/kantar/filters`)
     .then(response => response.json())
     .then(json => dispatch(success(json)));
 };
