@@ -33,9 +33,7 @@ export default class BarChart extends React.Component {
 
   static defaultProps = {
     chartHeight: 300,
-    chartWidth: 600,
-    yTickFormatter: value => `${value}%`,
-    tooltipValueFormatter: value => `${value}%`
+    chartWidth: 600
   }
 
   shouldComponentUpdate({ data: nextData }) {
@@ -53,7 +51,7 @@ export default class BarChart extends React.Component {
   }
 
   render() {
-    const { data, chartWidth, chartHeight, yTickFormatter, tooltipValueFormatter } = this.props;
+    const { data, chartWidth, chartHeight } = this.props;
 
     const keys = this.getDataKeys(data);
 
@@ -69,11 +67,11 @@ export default class BarChart extends React.Component {
       <ResponsiveContainer width='100%' height={300}>
         <RechartsBarChart {...barChartProps}>
           <XAxis dataKey='name' />
-          <YAxis tickCount={10} tickFormatter={yTickFormatter} />
+          <YAxis tickCount={10} />
           <CartesianGrid strokeDasharray='3 3' />
-          <Tooltip formatter={tooltipValueFormatter} />
+          <Tooltip />
           <Legend />
-          { keys.map((key, index) => <Bar dataKey={key} fill={colorPalette[index]} />) }
+          { keys.map((key, index) => <Bar key={index} dataKey={key} fill={colorPalette[index]} />) }
         </RechartsBarChart>
       </ResponsiveContainer>
     );
