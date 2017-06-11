@@ -7,7 +7,8 @@ const SUCCESS = 'KANTAR/FILTERS_SUCCESS';
 const initialState = {
   isLoading: false,
   error: null,
-  dictionary: {}
+  dictionary: {},
+  list: []
 };
 
 const loading = () => ({

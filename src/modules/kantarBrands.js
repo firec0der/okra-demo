@@ -7,7 +7,7 @@ const SUCCESS = 'KANTAR/BRANDS_SUCCESS';
 const initialState = {
   isLoading: false,
   error: null,
-  dictionary: {}
+  table: {}
 };
 
 const loading = () => ({
@@ -16,7 +16,7 @@ const loading = () => ({
 
 const success = (data) => ({
   type: SUCCESS,
-  payload: { dictionary: data }
+  payload: { table: data }
 });
 
 export default (state = initialState, action) => {
@@ -24,7 +24,7 @@ export default (state = initialState, action) => {
     case SUCCESS:
       return {
         ...state,
-        dictionary: action.payload.dictionary,
+        table: action.payload.table,
         isLoading: false,
         error: null
       };

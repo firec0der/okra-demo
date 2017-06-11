@@ -48,7 +48,7 @@ class HomePage extends React.Component {
   static propTypes = {
     kantarBrands: PropTypes.shape({
       isLoading: PropTypes.bool.isRequired,
-      dictionary: PropTypes.object,
+      table: PropTypes.object,
     }),
     kantarData: PropTypes.shape({
       isLoading: PropTypes.bool.isRequired,
@@ -58,8 +58,8 @@ class HomePage extends React.Component {
   };
 
   brandOptions = () => {
-    const dictionary = this.props.kantarBrands.dictionary;
-    return Object.keys(dictionary).map(key => ({ value: key, label: dictionary[key] }));
+    const table = this.props.kantarBrands.table;
+    return Object.keys(table).map(id => ({ value: id, label: table[id] }));
   }
 
   onBrandSelectChange = (selectedBrands) => this.props.fetchKantarData({
@@ -89,7 +89,7 @@ class HomePage extends React.Component {
       .reduce((acc, brandId) => [
         ...acc,
         mergeObjects(
-          { name: kantarBrands.dictionary[brandId] },
+          { name: kantarBrands.table[brandId] },
           Object
             .keys(data[brandId])
             .sort()
