@@ -40,8 +40,6 @@ const mapDispatchToProps = {
   clearKantarData
 };
 
-const properyByDefault = 'penetration';
-
 class HomePage extends React.Component {
 
   static propTypes = {
@@ -72,7 +70,7 @@ class HomePage extends React.Component {
     this.state = {
       dataFilters: {
         brandIds: [],
-        properties: [properyByDefault],
+        property: 'penetration',
         areaIds: []
       }
     };
@@ -82,7 +80,7 @@ class HomePage extends React.Component {
     const { brandIds, areaIds } = dataFilters;
     const { fetchKantarData } = this.props;
 
-    if (brandIds.length) {
+    if (brandIds.length && areaIds.length) {
       fetchKantarData({ brandIds, areaIds });
     }
   };
@@ -95,15 +93,6 @@ class HomePage extends React.Component {
   areaOptions = () => {
     const table = this.props.kantarAreas.table;
     return Object.keys(table).map(id => ({ value: id, label: table[id] }));
-  };
-
-  propertiesOptions = () => {
-    const { list, dictionary } = this.props.kantarFilters;
-    return list.map(property => ({
-      value: property,
-      label: dictionary[property],
-      clearableValue: property !== properyByDefault
-    }));
   };
 
   onBrandSelectChange = (selectedBrands) => {
@@ -121,13 +110,6 @@ class HomePage extends React.Component {
     const dataFilters = mergeObjects(this.state.dataFilters, { areaIds });
 
     this.setState({ dataFilters }, () => this.fetchData(dataFilters));
-  }
-
-  onPropertySelectChange = (selectedProperties) => {
-    const properties = selectedProperties.map(value => value.value);
-    const dataFilters = mergeObjects(this.state.dataFilters, { properties });
-
-    this.setState({ dataFilters });
   }
 
   barChartData = () => {
@@ -148,8 +130,8 @@ class HomePage extends React.Component {
         .reduce(
           (acc, object) => mergeObjects(
             acc,
-            object[dataFilters.properties]
-              ? { [object.period]: object[dataFilters.properties] }
+            object[dataFilters.property]
+              ? { [`${kantarAreas.table[object.areaId]}, ${object.period}`]: object[dataFilters.property] }
               : {},
           ),
           { name: kantarBrands.table[brandId] }
@@ -159,16 +141,9 @@ class HomePage extends React.Component {
   }
 
   render() {
-    const { kantarBrands, kantarFilters, kantarAreas, kantarData } = this.props;
-    const { dataFilters } = this.state;
+    const { kantarBrands, kantarAreas, kantarData } = this.props;
 
     const searchOnSubmit = (value) => window.alert(`It works, value: ${value}`);
-
-    const propertySelectValues = !kantarFilters.isLoading ? dataFilters.properties.map(key => ({
-      value: key,
-      label: kantarFilters.dictionary[key],
-      clearableValue: key !== properyByDefault
-    })) : {};
 
     return (
       <div className='home-page'>
@@ -190,22 +165,6 @@ class HomePage extends React.Component {
             />
           </Col>
           <Col xs={12} md={4}>
-            { !kantarFilters.isLoading && (
-              <MultipleSelect
-                label='Choose values to be displayed'
-                options={this.propertiesOptions()}
-                isLoading={kantarFilters.isLoading}
-                onChange={this.onPropertySelectChange}
-                clearable={false}
-                value={propertySelectValues}
-                multi
-              />
-            ) }
-          </Col>
-        </Grid>
-
-        <Grid>
-          <Col xs={12} md={4} mdOffset={2}>
             <MultipleSelect
               label='Choose areas'
               options={this.areaOptions()}
