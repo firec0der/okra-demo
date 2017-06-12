@@ -127,12 +127,11 @@ class HomePage extends React.Component {
       _.map(([ brandId, list ]) => list
         .map(i => mergeObjects(i, { period: `Q${i.quarter}/${i.year}` }))
         .sort((a, b) => {
-          const aVal = `${a.year} ${a.quarter}`;
-          const bVal = `${b.year} ${b.quarter}`;
-          if (aVal > bVal) { return 1; }
-          if (bVal < aVal) { return -1; }
-          return 0;
+          const aVal = + new Date(`20${a.year}`, a.quarter);
+          const bVal = + new Date(`20${b.year}`, b.quarter);
+          return aVal - bVal;
         })
+        .map(item => { console.log(item.period); return item })
         .reduce(
           (acc, object) => mergeObjects(
             acc,
