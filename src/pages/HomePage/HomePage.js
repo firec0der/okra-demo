@@ -151,7 +151,7 @@ class HomePage extends React.Component {
         </Grid>
 
         <Grid>
-          <Col xs={12} md={8} mdOffset={2}>
+          <Col xs={12} md={4} mdOffset={2}>
             <MultipleSelect
               label='Choose brands'
               options={this.brandOptions()}
@@ -159,6 +159,8 @@ class HomePage extends React.Component {
               isLoading={kantarBrands.isLoading}
               onChange={this.onBrandSelectChange}
             />
+          </Col>
+          <Col xs={12} md={4}>
             { !kantarFilters.isLoading && (
               <MultipleSelect
                 label='Choose filters'
@@ -169,8 +171,13 @@ class HomePage extends React.Component {
                 clearable={false}
               />
             ) }
-            { barChartData.length > 0 && <BarChart data={this.barChartData()} /> }
           </Col>
+
+          { barChartData.length > 0 && (
+            <Col xs={12} md={10} mdOffset={1} style={{ marginBottom: '30px' }}>
+              <BarChart chartHeight={450} data={this.barChartData()} />
+            </Col>
+          ) }
         </Grid>
 
         { /*
