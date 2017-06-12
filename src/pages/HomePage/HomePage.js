@@ -40,7 +40,7 @@ const mapDispatchToProps = {
   clearKantarData
 };
 
-const filterByDefault = 'penetration';
+const properyByDefault = 'penetration';
 
 class HomePage extends React.Component {
 
@@ -72,7 +72,7 @@ class HomePage extends React.Component {
     this.state = {
       dataFilters: {
         brandIds: [],
-        filters: [filterByDefault],
+        properties: [properyByDefault],
         areaIds: []
       }
     };
@@ -97,12 +97,12 @@ class HomePage extends React.Component {
     return Object.keys(table).map(id => ({ value: id, label: table[id] }));
   };
 
-  filtersOption = () => {
+  propertiesOptions = () => {
     const { list, dictionary } = this.props.kantarFilters;
-    return list.map(key => ({
-      value: key,
-      label: dictionary[key],
-      clearableValue: key !== filterByDefault
+    return list.map(property => ({
+      value: property,
+      label: dictionary[property],
+      clearableValue: property !== properyByDefault
     }));
   };
 
@@ -123,9 +123,9 @@ class HomePage extends React.Component {
     this.setState({ dataFilters }, () => this.fetchData(dataFilters));
   }
 
-  onFilterSelectChange = (selectedFilters) => {
-    const filters = selectedFilters.map(value => value.value);
-    const dataFilters = mergeObjects(this.state.dataFilters, { filters });
+  onPropertySelectChange = (selectedProperties) => {
+    const properties = selectedProperties.map(value => value.value);
+    const dataFilters = mergeObjects(this.state.dataFilters, { properties });
 
     this.setState({ dataFilters });
   }
@@ -148,8 +148,8 @@ class HomePage extends React.Component {
         .reduce(
           (acc, object) => mergeObjects(
             acc,
-            object[dataFilters.filters]
-              ? { [object.period]: object[dataFilters.filters] }
+            object[dataFilters.properties]
+              ? { [object.period]: object[dataFilters.properties] }
               : {},
           ),
           { name: kantarBrands.table[brandId] }
@@ -164,10 +164,10 @@ class HomePage extends React.Component {
 
     const searchOnSubmit = (value) => window.alert(`It works, value: ${value}`);
 
-    const filterValues = !kantarFilters.isLoading ? dataFilters.filters.map(key => ({
+    const propertySelectValues = !kantarFilters.isLoading ? dataFilters.properties.map(key => ({
       value: key,
       label: kantarFilters.dictionary[key],
-      clearableValue: key !== filterByDefault
+      clearableValue: key !== properyByDefault
     })) : {};
 
     return (
@@ -192,12 +192,12 @@ class HomePage extends React.Component {
           <Col xs={12} md={4}>
             { !kantarFilters.isLoading && (
               <MultipleSelect
-                label='Choose filters'
-                options={this.filtersOption()}
+                label='Choose values to be displayed'
+                options={this.propertiesOptions()}
                 isLoading={kantarFilters.isLoading}
-                onChange={this.onFilterSelectChange}
+                onChange={this.onPropertySelectChange}
                 clearable={false}
-                value={filterValues}
+                value={propertySelectValues}
                 multi
               />
             ) }
