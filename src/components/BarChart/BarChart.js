@@ -64,7 +64,7 @@ export default class BarChart extends React.Component {
     };
 
     return (
-      <ResponsiveContainer width='100%' height={300}>
+      <ResponsiveContainer width='100%' height={chartHeight}>
         <RechartsBarChart {...barChartProps}>
           <XAxis dataKey='name' />
           <YAxis tickCount={10} />
