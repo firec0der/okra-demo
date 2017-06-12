@@ -40,6 +40,8 @@ const mapDispatchToProps = {
   clearKantarData
 };
 
+const filterByDefault = 'penetration';
+
 class HomePage extends React.Component {
 
   static propTypes = {
@@ -70,7 +72,7 @@ class HomePage extends React.Component {
     this.state = {
       dataFilters: {
         brandIds: [],
-        filters: ['penetration'],
+        filters: [filterByDefault.value],
         areaIds: []
       }
     };
@@ -97,7 +99,11 @@ class HomePage extends React.Component {
 
   filtersOption = () => {
     const { list, dictionary } = this.props.kantarFilters;
-    return list.map(key => ({ value: key, label: dictionary[key] }));
+    return list.map(key => ({
+      value: key,
+      label: dictionary[key],
+      clearableValue: key !== filterByDefault
+    }));
   };
 
   onBrandSelectChange = (selectedBrands) => {
@@ -117,11 +123,9 @@ class HomePage extends React.Component {
     this.setState({ dataFilters }, () => this.fetchData(dataFilters));
   }
 
-  onFilterSelectChange = (selectedFilter) => {
-    const dataFilters = mergeObjects(
-      this.state.dataFilters,
-      { filters: selectedFilter.value }
-    );
+  onFilterSelectChange = (selectedFilters) => {
+    const filters = selectedFilters.map(value => value.value);
+    const dataFilters = mergeObjects(this.state.dataFilters, { filters });
 
     this.setState({ dataFilters });
   }
@@ -137,8 +141,8 @@ class HomePage extends React.Component {
         .map(object => mergeObjects(object, { period: `Q${object.quarter}/${object.year}` }))
         .sort((a, b) => {
           // dirty hack :(
-          const aVal = + new Date(`20${a.year}`, a.quarter);
-          const bVal = + new Date(`20${b.year}`, b.quarter);
+          const aVal = +new Date(`20${a.year}`, a.quarter);
+          const bVal = +new Date(`20${b.year}`, b.quarter);
           return aVal - bVal;
         })
         .reduce(
@@ -149,7 +153,8 @@ class HomePage extends React.Component {
               : {},
           ),
           { name: kantarBrands.table[brandId] }
-      ))
+        )
+      )
     ])(kantarData.list);
   }
 
@@ -159,9 +164,9 @@ class HomePage extends React.Component {
 
     const searchOnSubmit = (value) => window.alert(`It works, value: ${value}`);
 
-    const filter = !kantarFilters.isLoading
-      ? { value: dataFilters.filters, label: kantarFilters.dictionary[dataFilters.filters] }
-      : {};
+    // const filter = !kantarFilters.isLoading
+    //   ? { value: dataFilters.filters, label: kantarFilters.dictionary[dataFilters.filters] }
+    //   : {};
 
     return (
       <div className='home-page'>
@@ -189,8 +194,8 @@ class HomePage extends React.Component {
                 options={this.filtersOption()}
                 isLoading={kantarFilters.isLoading}
                 onChange={this.onFilterSelectChange}
-                value={filter}
                 clearable={false}
+                multi
               />
             ) }
           </Col>
@@ -208,7 +213,7 @@ class HomePage extends React.Component {
           </Col>
         </Grid>
 
-        { kantarData.list.length && (
+        { kantarData.list.length > 0 && (
           <Grid>
             <Col xs={12} md={10} mdOffset={1} style={{ marginBottom: '30px' }}>
               <BarChart chartHeight={450} data={this.barChartData()} />
