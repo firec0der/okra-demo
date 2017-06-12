@@ -172,11 +172,14 @@ class HomePage extends React.Component {
             { barChartData.length > 0 && <BarChart data={this.barChartData()} /> }
           </Col>
         </Grid>
+
+        { /*
         <Grid>
           <Col xs={12} md={8} mdOffset={2}>
             <PieChart data={pieChartData} />
           </Col>
         </Grid>
+         */ }
       </div>
     );
   }
