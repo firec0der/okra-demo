@@ -2,6 +2,7 @@ import { apiBase } from '../constants/api';
 
 const LOADING = 'KANTAR/DATA_LOADING';
 const SUCCESS = 'KANTAR/DATA_SUCCESS';
+const CLEAR = 'KANTAR/DATA_CLEAR';
 // const FAILURE = 'KANTAR/DATA_FAILURE';
 
 const initialState = {
@@ -19,6 +20,10 @@ const success = (data) => ({
   payload: { list: data }
 });
 
+export const clearKantarData = () => ({
+  type: CLEAR
+});
+
 export default (state = initialState, action) => {
   switch (action.type) {
     case SUCCESS:
@@ -32,6 +37,8 @@ export default (state = initialState, action) => {
         ...state,
         isLoading: true
       };
+    case CLEAR:
+      return initialState;
     default:
       return state;
   }
