@@ -37,12 +37,15 @@ export default (state = initialState, action) => {
   }
 };
 
-export const fetchKantarData = ({ brandIds } = { brandIds: [] }) => dispatch => {
+export const fetchKantarData = (data) => dispatch => {
   dispatch(loading());
 
-  const queryString = brandIds.map(id => `brandIds[]=${id}`).join('&');
+  const queryString = [
+    ...(data.brandIds || []).map(id => `brandIds[]=${id}`),
+    ...(data.areaIds || []).map(id => `areaIds[]=${id}`),
+  ].join('&');
 
-  return fetch(`${apiBase}/kantar/data?${queryString}&areaIds[]=2`)
+  return fetch(`${apiBase}/kantar/data?${queryString}`)
     .then(response => response.json())
     .then(json => dispatch(success(json)));
 };
