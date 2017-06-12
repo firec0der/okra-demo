@@ -8,7 +8,7 @@ import { Grid, Col } from 'react-bootstrap';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import BarChart from '../../components/BarChart/BarChart';
 import PieChart from '../../components/PieChart/PieChart';
-import MultipleSelect from '../../components/MultipleSelect/MultipleSelect';
+import MultipleSelect from '../../components/Select/Select';
 
 // import from styles
 import './HomePage.scss';
@@ -56,6 +56,17 @@ class HomePage extends React.Component {
     fetchKantarData: PropTypes.func.isRequired
   };
 
+  constructor(...args) {
+    super(...args);
+
+    this.state = {
+      dataFilters: {
+        brandIds: [],
+        filters: 'penetration'
+      }
+    };
+  }
+
   brandOptions = () => {
     const table = this.props.kantarBrands.table;
     return Object.keys(table).map(id => ({ value: id, label: table[id] }));
@@ -67,12 +78,27 @@ class HomePage extends React.Component {
     return list.map(key => ({ value: key, label: dictionary[key] }));
   };
 
-  onBrandSelectChange = (selectedBrands) => this.props.fetchKantarData({
-    brandIds: selectedBrands.map(value => value.value)
-  });
+  onBrandSelectChange = (selectedBrands) => {
+    const brandIds = selectedBrands.map(value => value.value);
+    const dataFilters = mergeObjects(this.state.dataFilters, { brandIds });
+
+    const fetchKantarData = () => this.props.fetchKantarData(dataFilters);
+
+    this.setState({ dataFilters }, fetchKantarData);
+  }
+
+  onFilterSelectChange = (selectedFilter) => {
+    const dataFilters = mergeObjects(
+      this.state.dataFilters,
+      { filters: selectedFilter.value }
+    );
+
+    this.setState({ dataFilters });
+  }
 
   barChartData = () => {
     const { kantarData, kantarBrands } = this.props;
+    const { filters } = this.state.dataFilters;
 
     const brandIds = [...(new Set(kantarData.list.map(item => item.brandId)))];
 
@@ -80,7 +106,7 @@ class HomePage extends React.Component {
       (acc, item) => mergeObjects(acc, {
         [item.brandId]: mergeObjects(
           acc[item.brandId],
-          item.penetration ? { [`${item.year} q${item.quarter}`]: item.penetration } : {}
+          item[filters] ? { [`${item.year} q${item.quarter}`]: item[filters] } : {}
         )
       }),
       brandIds.reduce(
@@ -105,10 +131,15 @@ class HomePage extends React.Component {
 
   render() {
     const { kantarBrands, kantarFilters } = this.props;
+    const { dataFilters } = this.state;
 
     const searchOnSubmit = (value) => window.alert(`It works, value: ${value}`);
 
     const barChartData = this.barChartData();
+
+    const filter = !kantarFilters.isLoading
+      ? { value: dataFilters.filters, label: kantarFilters.dictionary[dataFilters.filters] }
+      : {};
 
     return (
       <div className='home-page'>
@@ -128,13 +159,16 @@ class HomePage extends React.Component {
               isLoading={kantarBrands.isLoading}
               onChange={this.onBrandSelectChange}
             />
-            <MultipleSelect
-              label='Choose filters'
-              options={this.filtersOption()}
-              multi
-              isLoading={kantarFilters.isLoading}
-              onChange={this.onFilterSelectChange}
-            />
+            { !kantarFilters.isLoading && (
+              <MultipleSelect
+                label='Choose filters'
+                options={this.filtersOption()}
+                isLoading={kantarFilters.isLoading}
+                onChange={this.onFilterSelectChange}
+                value={filter}
+                clearable={false}
+              />
+            ) }
             { barChartData.length > 0 && <BarChart data={this.barChartData()} /> }
           </Col>
         </Grid>
