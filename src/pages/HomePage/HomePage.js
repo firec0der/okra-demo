@@ -3,6 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Grid, Col } from 'react-bootstrap';
+import _ from 'lodash/fp';
 
 // import from components
 import SearchBar from '../../components/SearchBar/SearchBar';
@@ -27,10 +28,11 @@ const pieChartData = [
   { name: 'Sector C', value: 300 }, { name: 'Sector D', value: 200 }
 ];
 
-const mapStateToProps = ({ kantarBrands, kantarData, kantarFilters }) => ({
-  kantarBrands,
-  kantarData,
-  kantarFilters
+const mapStateToProps = (state) => ({
+  kantarBrands: state.kantarBrands,
+  kantarData: state.kantarData,
+  kantarFilters: state.kantarFilters,
+  kantarAreas: state.kantarAreas,
 });
 
 const mapDispatchToProps = {
@@ -41,6 +43,10 @@ class HomePage extends React.Component {
 
   static propTypes = {
     kantarBrands: PropTypes.shape({
+      isLoading: PropTypes.bool.isRequired,
+      table: PropTypes.object,
+    }),
+    kantarAreas: PropTypes.shape({
       isLoading: PropTypes.bool.isRequired,
       table: PropTypes.object,
     }),
@@ -62,13 +68,19 @@ class HomePage extends React.Component {
     this.state = {
       dataFilters: {
         brandIds: [],
-        filters: 'penetration'
+        filters: 'penetration',
+        areaIds: []
       }
     };
   }
 
   brandOptions = () => {
     const table = this.props.kantarBrands.table;
+    return Object.keys(table).map(id => ({ value: id, label: table[id] }));
+  };
+
+  areaOptions = () => {
+    const table = this.props.kantarAreas.table;
     return Object.keys(table).map(id => ({ value: id, label: table[id] }));
   };
 
@@ -87,6 +99,15 @@ class HomePage extends React.Component {
     this.setState({ dataFilters }, fetchKantarData);
   }
 
+  onAreaSelectChange = (selectedAreas) => {
+    const areaIds = selectedAreas.map(value => value.value);
+    const dataFilters = mergeObjects(this.state.dataFilters, { areaIds });
+
+    const fetchKantarData = () => this.props.fetchKantarData(dataFilters);
+
+    this.setState({ dataFilters }, fetchKantarData);
+  }
+
   onFilterSelectChange = (selectedFilter) => {
     const dataFilters = mergeObjects(
       this.state.dataFilters,
@@ -97,40 +118,33 @@ class HomePage extends React.Component {
   }
 
   barChartData = () => {
-    const { kantarData, kantarBrands } = this.props;
-    const { filters } = this.state.dataFilters;
+    const { kantarData, kantarBrands, kantarAreas } = this.props;
+    const { filters, areaIds } = this.state.dataFilters;
 
-    const brandIds = [...(new Set(kantarData.list.map(item => item.brandId)))];
-
-    const data = kantarData.list.reduce(
-      (acc, item) => mergeObjects(acc, {
-        [item.brandId]: mergeObjects(
-          acc[item.brandId],
-          item[filters] ? { [`${item.year} q${item.quarter}`]: item[filters] } : {}
-        )
-      }),
-      brandIds.reduce(
-        (acc, brandId) => mergeObjects(acc, { [brandId]: {} }),
-        {}
-      )
-    );
-
-    return Object
-      .keys(data)
-      .reduce((acc, brandId) => [
-        ...acc,
-        mergeObjects(
-          { name: kantarBrands.table[brandId] },
-          Object
-            .keys(data[brandId])
-            .sort()
-            .reduce((acc, key) => mergeObjects(acc, { [key]: data[brandId][key] }), {})
-        )
-      ], []);
+    return _.flow([
+      _.groupBy('brandId'),
+      _.entries,
+      _.map(([ brandId, list ]) => list
+        .map(i => mergeObjects(i, { period: `Q${i.quarter}/${i.year}` }))
+        .sort((a, b) => {
+          const aVal = `${a.year} ${a.quarter}`;
+          const bVal = `${b.year} ${b.quarter}`;
+          if (aVal > bVal) { return 1; }
+          if (bVal < aVal) { return -1; }
+          return 0;
+        })
+        .reduce(
+          (acc, object) => mergeObjects(
+            acc,
+            object[filters] ? { [object.period]: object[filters] } : {}
+          ),
+          { name: kantarBrands.table[brandId] }
+      ))
+    ])(kantarData.list);
   }
 
   render() {
-    const { kantarBrands, kantarFilters } = this.props;
+    const { kantarBrands, kantarFilters, kantarAreas } = this.props;
     const { dataFilters } = this.state;
 
     const searchOnSubmit = (value) => window.alert(`It works, value: ${value}`);
@@ -172,13 +186,27 @@ class HomePage extends React.Component {
               />
             ) }
           </Col>
+        </Grid>
 
-          { barChartData.length > 0 && (
+        <Grid>
+          <Col xs={12} md={4} mdOffset={2}>
+            <MultipleSelect
+              label='Choose areas'
+              options={this.areaOptions()}
+              multi
+              isLoading={kantarAreas.isLoading}
+              onChange={this.onAreaSelectChange}
+            />
+          </Col>
+        </Grid>
+
+        { barChartData.length > 0 && (
+          <Grid>
             <Col xs={12} md={10} mdOffset={1} style={{ marginBottom: '30px' }}>
               <BarChart chartHeight={450} data={this.barChartData()} />
             </Col>
-          ) }
-        </Grid>
+          </Grid>
+        ) }
 
         { /*
         <Grid>
