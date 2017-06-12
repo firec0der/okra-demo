@@ -199,7 +199,7 @@ class HomePage extends React.Component {
           </Col>
         </Grid>
 
-        { barChartData.length > 0 && (
+        { dataFilters.brandIds.length > 0 && (
           <Grid>
             <Col xs={12} md={10} mdOffset={1} style={{ marginBottom: '30px' }}>
               <BarChart chartHeight={450} data={this.barChartData()} />
