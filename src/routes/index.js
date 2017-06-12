@@ -3,12 +3,12 @@ import CoreLayout from '../layouts/PageLayout/PageLayout';
 import HomePage from '../pages/HomePage/HomePage';
 
 import { fetchKantarBrands } from '../modules/kantarBrands';
-import { fetchKantarFilters } from '../modules/kantarFilters';
+import { fetchKantarProperties } from '../modules/kantarProperties';
 import { fetchKantarAreas } from '../modules/kantarAreas';
 
 export const onHomeEnter = ({ dispatch }) => () => {
   dispatch(fetchKantarBrands());
-  dispatch(fetchKantarFilters());
+  dispatch(fetchKantarProperties());
   dispatch(fetchKantarAreas());
 };
 

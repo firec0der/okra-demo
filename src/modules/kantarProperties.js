@@ -1,7 +1,7 @@
 import { apiBase } from '../constants/api';
 
-const LOADING = 'KANTAR/FILTERS_LOADING';
-const SUCCESS = 'KANTAR/FILTERS_SUCCESS';
+const LOADING = 'KANTAR/PROPERTIES_LOADING';
+const SUCCESS = 'KANTAR/PROPERTIES_SUCCESS';
 // const FAILURE = 'KANTAR/FILTERS_FAILURE';
 
 const initialState = {
@@ -40,10 +40,10 @@ export default (state = initialState, action) => {
   }
 };
 
-export const fetchKantarFilters = () => dispatch => {
+export const fetchKantarProperties = () => dispatch => {
   dispatch(loading());
 
-  return fetch(`${apiBase}/kantar/filters`)
+  return fetch(`${apiBase}/kantar/properties`)
     .then(response => response.json())
     .then(json => dispatch(success(json)));
 };
