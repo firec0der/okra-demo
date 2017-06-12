@@ -7,12 +7,11 @@ import { FormGroup, ControlLabel } from 'react-bootstrap';
 // import from styles
 import 'react-select/scss/default.scss';
 
-export default class MultipleSelect extends React.Component {
+export default class Select extends React.Component {
 
   static propTypes = {
     onChange: PropTypes.func,
     label: PropTypes.string,
-    value: PropTypes.array
   };
 
   static defaultProps = {
@@ -22,9 +21,7 @@ export default class MultipleSelect extends React.Component {
   constructor(props, ...args) {
     super(props, ...args);
 
-    this.state = {
-      value: []
-    };
+    this.state = { value: props.value || null };
   }
 
   handleChange = (value) => this.setState({ value }, this.props.onChange.bind(null, value));
