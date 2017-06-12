@@ -72,7 +72,7 @@ class HomePage extends React.Component {
     this.state = {
       dataFilters: {
         brandIds: [],
-        filters: [filterByDefault.value],
+        filters: [filterByDefault],
         areaIds: []
       }
     };
