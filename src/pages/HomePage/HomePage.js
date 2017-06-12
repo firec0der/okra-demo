@@ -164,9 +164,11 @@ class HomePage extends React.Component {
 
     const searchOnSubmit = (value) => window.alert(`It works, value: ${value}`);
 
-    // const filter = !kantarFilters.isLoading
-    //   ? { value: dataFilters.filters, label: kantarFilters.dictionary[dataFilters.filters] }
-    //   : {};
+    const filterValues = !kantarFilters.isLoading ? dataFilters.filters.map(key => ({
+      value: key,
+      label: kantarFilters.dictionary[key],
+      clearableValue: key !== filterByDefault
+    })) : {};
 
     return (
       <div className='home-page'>
@@ -195,6 +197,7 @@ class HomePage extends React.Component {
                 isLoading={kantarFilters.isLoading}
                 onChange={this.onFilterSelectChange}
                 clearable={false}
+                value={filterValues}
                 multi
               />
             ) }
