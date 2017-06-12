@@ -18,7 +18,7 @@ import './HomePage.scss';
 import { mergeObjects } from '../../utils/object';
 
 // import from modules
-import { fetchKantarData } from '../../modules/kantarData';
+import { fetchKantarData, clearKantarData } from '../../modules/kantarData';
 
 // import from assets
 import UnileverLargeLogo from '../../assets/images/UL-large-logo.png';
@@ -36,7 +36,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  fetchKantarData
+  fetchKantarData,
+  clearKantarData
 };
 
 class HomePage extends React.Component {
@@ -59,7 +60,8 @@ class HomePage extends React.Component {
       list: PropTypes.array.isRequired,
       dictionary: PropTypes.object.isRequired,
     }),
-    fetchKantarData: PropTypes.func.isRequired
+    fetchKantarData: PropTypes.func.isRequired,
+    clearKantarData: PropTypes.func.isRequired
   };
 
   constructor(...args) {
@@ -68,11 +70,20 @@ class HomePage extends React.Component {
     this.state = {
       dataFilters: {
         brandIds: [],
-        filters: 'penetration',
+        filters: ['penetration'],
         areaIds: []
       }
     };
   }
+
+  fetchData = (dataFilters) => {
+    const { brandIds, areaIds } = dataFilters;
+    const { fetchKantarData } = this.props;
+
+    if (brandIds.length) {
+      fetchKantarData({ brandIds, areaIds });
+    }
+  };
 
   brandOptions = () => {
     const table = this.props.kantarBrands.table;
@@ -86,7 +97,6 @@ class HomePage extends React.Component {
 
   filtersOption = () => {
     const { list, dictionary } = this.props.kantarFilters;
-
     return list.map(key => ({ value: key, label: dictionary[key] }));
   };
 
@@ -94,18 +104,17 @@ class HomePage extends React.Component {
     const brandIds = selectedBrands.map(value => value.value);
     const dataFilters = mergeObjects(this.state.dataFilters, { brandIds });
 
-    const fetchKantarData = () => this.props.fetchKantarData(dataFilters);
-
-    this.setState({ dataFilters }, fetchKantarData);
+    this.setState({ dataFilters }, dataFilters.brandIds.length
+      ? () => this.fetchData(dataFilters)
+      : this.props.clearKantarData
+    );
   }
 
   onAreaSelectChange = (selectedAreas) => {
     const areaIds = selectedAreas.map(value => value.value);
     const dataFilters = mergeObjects(this.state.dataFilters, { areaIds });
 
-    const fetchKantarData = () => this.props.fetchKantarData(dataFilters);
-
-    this.setState({ dataFilters }, fetchKantarData);
+    this.setState({ dataFilters }, () => this.fetchData(dataFilters));
   }
 
   onFilterSelectChange = (selectedFilter) => {
@@ -119,23 +128,25 @@ class HomePage extends React.Component {
 
   barChartData = () => {
     const { kantarData, kantarBrands, kantarAreas } = this.props;
-    const { filters, areaIds } = this.state.dataFilters;
+    const { dataFilters } = this.state;
 
     return _.flow([
       _.groupBy('brandId'),
       _.entries,
       _.map(([ brandId, list ]) => list
-        .map(i => mergeObjects(i, { period: `Q${i.quarter}/${i.year}` }))
+        .map(object => mergeObjects(object, { period: `Q${object.quarter}/${object.year}` }))
         .sort((a, b) => {
+          // dirty hack :(
           const aVal = + new Date(`20${a.year}`, a.quarter);
           const bVal = + new Date(`20${b.year}`, b.quarter);
           return aVal - bVal;
         })
-        .map(item => { console.log(item.period); return item })
         .reduce(
           (acc, object) => mergeObjects(
             acc,
-            object[filters] ? { [object.period]: object[filters] } : {}
+            object[dataFilters.filters]
+              ? { [object.period]: object[dataFilters.filters] }
+              : {},
           ),
           { name: kantarBrands.table[brandId] }
       ))
@@ -143,12 +154,10 @@ class HomePage extends React.Component {
   }
 
   render() {
-    const { kantarBrands, kantarFilters, kantarAreas } = this.props;
+    const { kantarBrands, kantarFilters, kantarAreas, kantarData } = this.props;
     const { dataFilters } = this.state;
 
     const searchOnSubmit = (value) => window.alert(`It works, value: ${value}`);
-
-    const barChartData = this.barChartData();
 
     const filter = !kantarFilters.isLoading
       ? { value: dataFilters.filters, label: kantarFilters.dictionary[dataFilters.filters] }
@@ -199,7 +208,7 @@ class HomePage extends React.Component {
           </Col>
         </Grid>
 
-        { dataFilters.brandIds.length > 0 && (
+        { kantarData.list.length && (
           <Grid>
             <Col xs={12} md={10} mdOffset={1} style={{ marginBottom: '30px' }}>
               <BarChart chartHeight={450} data={this.barChartData()} />
