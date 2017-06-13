@@ -10,6 +10,7 @@ import SearchBar from '../../components/SearchBar/SearchBar';
 import BarChart from '../../components/BarChart/BarChart';
 import PieChart from '../../components/PieChart/PieChart';
 import MultipleSelect from '../../components/Select/Select';
+import PropertyFilters from '../../components/PropertyFilters/PropertyFilters';
 
 // import from styles
 import './HomePage.scss';
@@ -112,6 +113,12 @@ class HomePage extends React.Component {
     this.setState({ dataFilters }, () => this.fetchData(dataFilters));
   }
 
+  onPropertyFilterChange = (property) => {
+    const dataFilters = mergeObjects(this.state.dataFilters, { property });
+
+    this.setState({ dataFilters });
+  }
+
   barChartData = () => {
     const { kantarData, kantarBrands, kantarAreas } = this.props;
     const { dataFilters } = this.state;
@@ -141,9 +148,15 @@ class HomePage extends React.Component {
   }
 
   render() {
-    const { kantarBrands, kantarAreas, kantarData } = this.props;
+    const { kantarBrands, kantarAreas, kantarData, kantarFilters } = this.props;
+    const { dataFilters } = this.state;
 
     const searchOnSubmit = (value) => window.alert(`It works, value: ${value}`);
+
+    const filters = _.flow(
+      _.entries,
+      _.map(([ value, label ]) => ({ value, label }))
+    )(kantarFilters.dictionary);
 
     return (
       <div className='home-page'>
@@ -151,6 +164,16 @@ class HomePage extends React.Component {
           <Col xs={12} md={6} mdOffset={3}>
             <img className='unilever-logo' src={UnileverLargeLogo} />
             <SearchBar onSubmit={searchOnSubmit} />
+          </Col>
+        </Grid>
+
+        <Grid style={{ marginBottom: '30px' }}>
+          <Col xs={12} md={8} mdOffset={2}>
+            <PropertyFilters
+              onChange={this.onPropertyFilterChange}
+              selected={dataFilters.property}
+              filters={filters}
+            />
           </Col>
         </Grid>
 
