@@ -7,7 +7,7 @@ import _ from 'lodash/fp';
 
 // import from components
 import SearchBar from '../../components/SearchBar/SearchBar';
-import BarChart from '../../components/BarChart/BarChart';
+import StackedBarChart from '../../components/StackedBarChart/StackedBarChart';
 import PieChart from '../../components/PieChart/PieChart';
 import MultipleSelect from '../../components/Select/Select';
 import PropertyFilters from '../../components/PropertyFilters/PropertyFilters';
@@ -201,7 +201,7 @@ class HomePage extends React.Component {
         { kantarData.list.length > 0 && (
           <Grid>
             <Col xs={12} md={10} mdOffset={1} style={{ marginBottom: '30px' }}>
-              <BarChart chartHeight={450} data={this.barChartData()} />
+              <StackedBarChart chartHeight={450} data={this.barChartData()} />
             </Col>
           </Grid>
         ) }

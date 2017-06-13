@@ -14,12 +14,10 @@ import {
 import _ from 'lodash/fp';
 
 // import from styles
-import './BarChart.scss';
-
 // import from constants
 import { colorPalette } from '../../constants/colors';
 
-export default class BarChart extends React.Component {
+export default class StackedBarChart extends React.Component {
 
   static propTypes = {
     data: PropTypes.arrayOf(PropTypes.shape({
