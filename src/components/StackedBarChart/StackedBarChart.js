@@ -17,6 +17,9 @@ import _ from 'lodash/fp';
 // import from constants
 import { colorPalette } from '../../constants/colors';
 
+// import from utils
+import { lightenColor } from '../../utils/color';
+
 export default class StackedBarChart extends React.Component {
 
   static propTypes = {
@@ -26,32 +29,39 @@ export default class StackedBarChart extends React.Component {
     chartWidth: PropTypes.number,
     chartHeight: PropTypes.number,
     yTickFormatter: PropTypes.func,
-    tooltipValueFormatter: PropTypes.func
+    tooltipValueFormatter: PropTypes.func,
+    stacks: PropTypes.array
   }
 
   static defaultProps = {
     chartHeight: 300,
-    chartWidth: 600
+    chartWidth: 600,
   }
 
-  shouldComponentUpdate({ data: nextData }) {
-    const { data } = this.props;
+  shouldComponentUpdate(nextProps) {
+    const { data, stacks } = this.props;
 
-    return !_.isEqual(data, nextData);
-  }
-
-  getDataKeys(data) {
-    return _.uniq(
-      data
-        .map(dataItem => Object.keys(_.omit('name', dataItem)))
-        .reduce((acc, keys) => [...acc, ...keys], [])
+    return !_.isEqual(
+      _.pick(['data', 'stacks'], nextProps),
+      _.pick(['data', 'stacks'], this.props)
     );
+  }
+
+  renderBars() {
+    const { stacks } = this.props;
+
+    return stacks.map((listWithKeys, i) => listWithKeys.map((key, j) => (
+      <Bar
+        key={`${i}-${key}`}
+        stackId={i}
+        dataKey={key}
+        fill={lightenColor(colorPalette[i], j * 5)}
+      />
+    )));
   }
 
   render() {
     const { data, chartWidth, chartHeight } = this.props;
-
-    const keys = this.getDataKeys(data);
 
     const barChartProps = {
       width: chartWidth,
@@ -69,7 +79,7 @@ export default class StackedBarChart extends React.Component {
           <CartesianGrid strokeDasharray='3 3' />
           <Tooltip />
           <Legend />
-          { keys.map((key, index) => <Bar key={index} dataKey={key} fill={colorPalette[index]} />) }
+          { this.renderBars() }
         </RechartsBarChart>
       </ResponsiveContainer>
     );
