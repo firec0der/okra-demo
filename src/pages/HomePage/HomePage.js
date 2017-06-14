@@ -123,28 +123,57 @@ class HomePage extends React.Component {
     const { kantarData, kantarBrands, kantarAreas } = this.props;
     const { dataFilters } = this.state;
 
-    return _.flow([
+    const dataRaw = _.flow([
       _.groupBy('brandId'),
       _.entries,
       _.map(([ brandId, list ]) => list
-        .map(object => mergeObjects(object, { period: `Q${object.quarter}/${object.year}` }))
-        .sort((a, b) => {
-          // dirty hack :(
-          const aVal = +new Date(`20${a.year}`, a.quarter);
-          const bVal = +new Date(`20${b.year}`, b.quarter);
-          return aVal - bVal;
-        })
         .reduce(
-          (acc, object) => mergeObjects(
-            acc,
-            object[dataFilters.property]
-              ? { [`${kantarAreas.table[object.areaId]}, ${object.period}`]: object[dataFilters.property] }
-              : {},
-          ),
-          { name: kantarBrands.table[brandId] }
+          (acc, object) => mergeObjects(acc, {
+            values: [
+              ...acc.values,
+              {
+                areaId: object.areaId,
+                year: object.year,
+                quarter: object.quarter,
+                value: object[dataFilters.property]
+              }
+            ]
+          }),
+          { name: kantarBrands.table[brandId], values: [] }
         )
       )
     ])(kantarData.list);
+
+    const chartData = dataRaw.map(list => mergeObjects(
+      { name: list.name },
+      list.values.reduce(
+        (acc, item) => mergeObjects(acc, {
+          [`${kantarAreas.table[item.areaId]}, Q${item.quarter}/${item.year}`]: item.value
+        }),
+        {}
+      )
+    ));
+
+    return chartData;
+  }
+
+  barChartStacks = () => {
+    const { kantarData, kantarAreas } = this.props;
+    const { dataFilters } = this.state;
+
+    const years = _.uniq(kantarData.list.map(item => item.year)).sort();
+    const quarters = _.uniq(kantarData.list.map(item => item.quarter)).sort();
+
+    return years
+      // collect all possible periods for the current data
+      .reduce((acc, year) => [
+        ...acc,
+        ...(quarters.map(quarter => `Q${quarter}/${year}`))
+      ], [])
+      // collect stacks [ [ 'data item for period 1', 'data item for period 2'] ]
+      .map(period => dataFilters.areaIds.map(
+        areaId => `${kantarAreas.table[areaId]}, ${period}`
+      ));
   }
 
   render() {
@@ -201,7 +230,11 @@ class HomePage extends React.Component {
         { kantarData.list.length > 0 && (
           <Grid>
             <Col xs={12} md={10} mdOffset={1} style={{ marginBottom: '30px' }}>
-              <StackedBarChart chartHeight={450} data={this.barChartData()} />
+              <StackedBarChart
+                chartHeight={450}
+                data={this.barChartData()}
+                stacks={this.barChartStacks()}
+              />
             </Col>
           </Grid>
         ) }
