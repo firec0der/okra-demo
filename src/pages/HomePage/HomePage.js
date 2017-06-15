@@ -10,7 +10,7 @@ import SearchBar from '../../components/SearchBar/SearchBar';
 import StackedBarChart from '../../components/StackedBarChart/StackedBarChart';
 import PieChart from '../../components/PieChart/PieChart';
 import MultipleSelect from '../../components/Select/Select';
-import PropertyFilters from '../../components/PropertyFilters/PropertyFilters';
+import MetricsFilters from '../../components/MetricsFilters/MetricsFilters';
 
 // import from styles
 import './HomePage.scss';
@@ -30,9 +30,9 @@ const pieChartData = [
 ];
 
 const mapStateToProps = (state) => ({
+  metrics: state.metrics,
   kantarBrands: state.kantarBrands,
   kantarData: state.kantarData,
-  kantarFilters: state.kantarFilters,
   kantarAreas: state.kantarAreas,
 });
 
@@ -56,10 +56,9 @@ class HomePage extends React.Component {
       isLoading: PropTypes.bool.isRequired,
       list: PropTypes.array,
     }),
-    kantarFilters: PropTypes.shape({
+    metrics: PropTypes.shape({
       isLoading: PropTypes.bool.isRequired,
-      list: PropTypes.array.isRequired,
-      dictionary: PropTypes.object.isRequired,
+      list: PropTypes.array.isRequired
     }),
     fetchKantarData: PropTypes.func.isRequired,
     clearKantarData: PropTypes.func.isRequired
@@ -71,14 +70,14 @@ class HomePage extends React.Component {
     this.state = {
       dataFilters: {
         brandIds: [],
-        property: 'penetration',
+        metric: 'penetration',
         areaIds: []
       }
     };
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    const propsKeys = ['kantarBrands', 'kantarAreas', 'kantarData', 'kantarFilters'];
+    const propsKeys = ['kantarBrands', 'kantarAreas', 'kantarData', 'metrics'];
 
     return !_.isEqual(_.pick(propsKeys, nextProps), _.pick(propsKeys, this.props))
       || !_.isEqual(this.state.dataFilters, nextState.dataFilters)
@@ -120,8 +119,8 @@ class HomePage extends React.Component {
     this.setState({ dataFilters }, () => this.fetchData(dataFilters));
   }
 
-  onPropertyFilterChange = (property) => {
-    const dataFilters = mergeObjects(this.state.dataFilters, { property });
+  onMetricFilterChange = (metric) => {
+    const dataFilters = mergeObjects(this.state.dataFilters, { metric });
 
     this.setState({ dataFilters });
   }
@@ -142,7 +141,7 @@ class HomePage extends React.Component {
                 areaId: object.areaId,
                 year: object.year,
                 quarter: object.quarter,
-                value: object[dataFilters.property]
+                value: object[dataFilters.metric]
               }
             ]
           }),
@@ -184,15 +183,10 @@ class HomePage extends React.Component {
   }
 
   render() {
-    const { kantarBrands, kantarAreas, kantarData, kantarFilters } = this.props;
+    const { kantarBrands, kantarAreas, kantarData, metrics } = this.props;
     const { dataFilters } = this.state;
 
     const searchOnSubmit = (value) => window.alert(`It works, value: ${value}`);
-
-    const filters = _.flow(
-      _.entries,
-      _.map(([ value, label ]) => ({ value, label }))
-    )(kantarFilters.dictionary);
 
     return (
       <div className='home-page'>
@@ -205,11 +199,13 @@ class HomePage extends React.Component {
 
         <Grid style={{ marginBottom: '30px' }}>
           <Col xs={12} md={8} mdOffset={2}>
-            <PropertyFilters
-              onChange={this.onPropertyFilterChange}
-              selected={dataFilters.property}
-              filters={filters}
-            />
+            { metrics.list.length > 0 && (
+              <MetricsFilters
+                metrics={metrics.list}
+                onChange={this.onMetricFilterChange}
+                selectedValue={dataFilters.metric}
+              />
+            ) }
           </Col>
         </Grid>
 
