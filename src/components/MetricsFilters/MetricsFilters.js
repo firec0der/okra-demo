@@ -68,7 +68,8 @@ export default class MetricsFilters extends React.Component {
       const baseProps = {
         bsSize: 'xsmall',
         key: group.id,
-        onClick: this.onGroupSelect.bind(null, group.id)
+        onClick: this.onGroupSelect.bind(null, group.id),
+        style: { marginBottom: '5px' }
       };
 
       const props = mergeObjects(
