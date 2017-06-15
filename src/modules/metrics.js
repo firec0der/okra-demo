@@ -1,13 +1,11 @@
 import { apiBase } from '../constants/api';
 
-const LOADING = 'KANTAR/PROPERTIES_LOADING';
-const SUCCESS = 'KANTAR/PROPERTIES_SUCCESS';
-// const FAILURE = 'KANTAR/FILTERS_FAILURE';
+const LOADING = 'METRICS_LOADING';
+const SUCCESS = 'METRICS_SUCCESS';
 
 const initialState = {
   isLoading: false,
   error: null,
-  dictionary: {},
   list: []
 };
 
@@ -15,9 +13,9 @@ const loading = () => ({
   type: LOADING
 });
 
-const success = ({ dictionary, list }) => ({
+const success = (list) => ({
   type: SUCCESS,
-  payload: { dictionary, list }
+  payload: { list }
 });
 
 export default (state = initialState, action) => {
@@ -25,7 +23,6 @@ export default (state = initialState, action) => {
     case SUCCESS:
       return {
         ...state,
-        dictionary: action.payload.dictionary,
         list: action.payload.list,
         isLoading: false,
         error: null
@@ -40,10 +37,10 @@ export default (state = initialState, action) => {
   }
 };
 
-export const fetchKantarProperties = () => dispatch => {
+export const fetchMetrics = () => dispatch => {
   dispatch(loading());
 
-  return fetch(`${apiBase}/kantar/properties`)
+  return fetch(`${apiBase}/metrics`)
     .then(response => response.json())
-    .then(json => dispatch(success(json)));
+    .then(data => dispatch(success(data)));
 };
