@@ -77,6 +77,13 @@ class HomePage extends React.Component {
     };
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    const propsKeys = ['kantarBrands', 'kantarAreas', 'kantarData', 'kantarFilters'];
+
+    return !_.isEqual(_.pick(propsKeys, nextProps), _.pick(propsKeys, this.props))
+      || !_.isEqual(this.state.dataFilters, nextState.dataFilters)
+  }
+
   fetchData = (dataFilters) => {
     const { brandIds, areaIds } = dataFilters;
     const { fetchKantarData } = this.props;
