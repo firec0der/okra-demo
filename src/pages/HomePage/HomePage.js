@@ -83,24 +83,32 @@ class HomePage extends React.Component {
       dataFilters: {
         brandIds: [],
         metric: 'penetration',
-        areaIds: []
+        areaIds: [],
+        packagingId: null
       }
     };
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    const propsKeys = ['kantarBrands', 'kantarAreas', 'kantarData', 'metrics'];
+    const propsKeys = [
+      'kantarBrands',
+      'kantarAreas',
+      'kantarData',
+      'kantarPackagings',
+      'kantarGenres',
+      'metrics'
+    ];
 
     return !_.isEqual(_.pick(propsKeys, nextProps), _.pick(propsKeys, this.props))
       || !_.isEqual(this.state.dataFilters, nextState.dataFilters)
   }
 
   fetchData = (dataFilters) => {
-    const { brandIds, areaIds } = dataFilters;
+    const { brandIds, areaIds, packagingId } = dataFilters;
     const { fetchKantarData } = this.props;
 
     if (brandIds.length && areaIds.length) {
-      fetchKantarData({ brandIds, areaIds });
+      fetchKantarData({ brandIds, areaIds, packagingId });
     }
   };
 
@@ -114,9 +122,33 @@ class HomePage extends React.Component {
     return Object.keys(table).map(id => ({ value: id, label: table[id] }));
   };
 
-  onBrandSelectChange = (selectedBrands) => {
-    const brandIds = selectedBrands.map(value => value.value);
-    const dataFilters = mergeObjects(this.state.dataFilters, { brandIds });
+  packagingOptions = () => {
+    return _.flow([
+      _.entries,
+      _.map(([ value, label ]) => ({ value: parseInt(value), label }))
+    ])(this.props.kantarPackagings.dictionary);
+  };
+
+  onBrandSelectChange = selectedBrands => {
+    const brandIds = selectedBrands.map(value => parseInt(value.value));
+
+    const dataFilters = mergeObjects(
+      this.state.dataFilters,
+      { brandIds },
+      !this.shouldUsePackagingsFilter(brandIds) ? { packagingId: null } : {}
+    );
+
+    this.setState({ dataFilters }, dataFilters.brandIds.length
+      ? () => this.fetchData(dataFilters)
+      : this.props.clearKantarData
+    );
+  }
+
+  onPackagingsSelectChange = selectedPackaging => {
+    const packagingId = selectedPackaging
+      ? parseInt(selectedPackaging.value)
+      : null;
+    const dataFilters = mergeObjects(this.state.dataFilters, { packagingId });
 
     this.setState({ dataFilters }, dataFilters.brandIds.length
       ? () => this.fetchData(dataFilters)
@@ -194,8 +226,20 @@ class HomePage extends React.Component {
       ));
   }
 
+  shouldUsePackagingsFilter = selectedBrandIds => {
+    const { kantarPackagings } = this.props;
+
+    if (kantarPackagings.isLoading || !selectedBrandIds.length) {
+      return false;
+    }
+
+    return selectedBrandIds.every(
+      brandId => kantarPackagings.applicableForBrands.includes(brandId)
+    );
+  }
+
   render() {
-    const { kantarBrands, kantarAreas, kantarData, metrics } = this.props;
+    const { kantarBrands, kantarAreas, kantarData, kantarPackagings, metrics } = this.props;
     const { dataFilters } = this.state;
 
     const searchOnSubmit = (value) => window.alert(`It works, value: ${value}`);
@@ -240,6 +284,19 @@ class HomePage extends React.Component {
               onChange={this.onAreaSelectChange}
             />
           </Col>
+        </Grid>
+
+        <Grid>
+          { this.shouldUsePackagingsFilter(dataFilters.brandIds) && (
+            <Col xs={12} md={4} mdOffset={2}>
+              <MultipleSelect
+                label='Choose packaging'
+                options={this.packagingOptions()}
+                isLoading={kantarPackagings.isLoading}
+                onChange={this.onPackagingsSelectChange}
+              />
+            </Col>
+          ) }
         </Grid>
 
         { kantarData.list.length > 0 && (
