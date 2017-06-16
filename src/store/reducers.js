@@ -6,6 +6,7 @@ import metrics from '../modules/metrics';
 import kantarData from '../modules/kantarData';
 import kantarAreas from '../modules/kantarAreas';
 import kantarPackagings from '../modules/kantarPackagings';
+import kantarGenres from '../modules/kantarGenres';
 
 export default combineReducers({
   location: locationReducer,
@@ -13,5 +14,6 @@ export default combineReducers({
   kantarBrands,
   kantarData,
   kantarAreas,
-  kantarPackagings
+  kantarPackagings,
+  kantarGenres
 });

@@ -6,12 +6,14 @@ import { fetchKantarBrands } from '../modules/kantarBrands';
 import { fetchMetrics } from '../modules/metrics';
 import { fetchKantarAreas } from '../modules/kantarAreas';
 import { fetchKantarPackagings } from '../modules/kantarPackagings';
+import { fetchKantarGenres } from '../modules/kantarGenres';
 
 export const onHomeEnter = ({ dispatch }) => () => {
   dispatch(fetchKantarBrands());
   dispatch(fetchKantarAreas());
   dispatch(fetchMetrics());
   dispatch(fetchKantarPackagings());
+  dispatch(fetchKantarGenres());
 };
 
 export default (store) => ({
