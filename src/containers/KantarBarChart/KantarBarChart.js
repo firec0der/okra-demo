@@ -178,26 +178,26 @@ class KantarBarChart extends React.Component {
     const { kantarData, kantarBrands, kantarAreas } = this.props;
     const { dataFilters } = this.state;
 
+    const filteredList = kantarData.list.filter(object => object[dataFilters.metric]);
+
     const dataRaw = _.flow([
       _.groupBy('brandId'),
       _.entries,
-      _.map(([ brandId, list ]) => list
-        .reduce(
-          (acc, object) => mergeObjects(acc, {
-            values: [
-              ...acc.values,
-              {
-                areaId: object.areaId,
-                year: object.year,
-                quarter: object.quarter,
-                value: object[dataFilters.metric]
-              }
-            ]
-          }),
-          { name: kantarBrands.table[brandId], values: [] }
-        )
-      )
-    ])(kantarData.list);
+      _.map(([ brandId, list ]) => list.reduce(
+        (acc, object) => mergeObjects(acc, {
+          values: [
+            ...acc.values,
+            {
+              areaId: object.areaId,
+              year: object.year,
+              quarter: object.quarter,
+              value: object[dataFilters.metric]
+            }
+          ]
+        }),
+        { name: kantarBrands.table[brandId], values: [] }
+      ))
+    ])(filteredList);
 
     const chartData = dataRaw.map(list => mergeObjects(
       { name: list.name },
