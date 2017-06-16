@@ -52,12 +52,14 @@ export const fetchKantarData = dataFilters => dispatch => {
   const brandIds = _.getOr([], 'brandIds', dataFilters);
   const areaIds = _.getOr([], 'areaIds', dataFilters);
   const packagingId = _.getOr(null, 'packagingId', dataFilters);
+  const genreId = _.getOr(null, 'genreId', dataFilters);
 
   const queryString = []
     .concat(
       brandIds.map(id => `brandIds[]=${id}`),
       areaIds.map(id => `areaIds[]=${id}`),
-      packagingId ? `packagingId=${packagingId}` : []
+      packagingId ? `packagingId=${packagingId}` : [],
+      genreId ? `genreId=${genreId}` : [],
     )
     .join('&');
 
