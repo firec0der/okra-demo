@@ -34,6 +34,8 @@ const mapStateToProps = (state) => ({
   kantarBrands: state.kantarBrands,
   kantarData: state.kantarData,
   kantarAreas: state.kantarAreas,
+  kantarGenres: state.kantarGenres,
+  kantarPackagings: state.kantarPackagings,
 });
 
 const mapDispatchToProps = {
@@ -59,6 +61,16 @@ class HomePage extends React.Component {
     metrics: PropTypes.shape({
       isLoading: PropTypes.bool.isRequired,
       list: PropTypes.array.isRequired
+    }),
+    kantarPackagings: PropTypes.shape({
+      isLoading: PropTypes.bool.isRequired,
+      applicableForBrands: PropTypes.arrayOf(PropTypes.number).isRequired,
+      dictionary: PropTypes.object.isRequired,
+    }),
+    kantarGenres: PropTypes.shape({
+      isLoading: PropTypes.bool.isRequired,
+      applicableForBrands: PropTypes.arrayOf(PropTypes.number).isRequired,
+      dictionary: PropTypes.object.isRequired,
     }),
     fetchKantarData: PropTypes.func.isRequired,
     clearKantarData: PropTypes.func.isRequired
