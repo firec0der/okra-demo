@@ -1,3 +1,5 @@
+import _ from 'lodash/fp';
+
 import { apiBase } from '../constants/api';
 
 const LOADING = 'KANTAR/DATA_LOADING';
@@ -44,13 +46,20 @@ export default (state = initialState, action) => {
   }
 };
 
-export const fetchKantarData = (data) => dispatch => {
+export const fetchKantarData = dataFilters => dispatch => {
   dispatch(loading());
 
-  const queryString = [
-    ...(data.brandIds || []).map(id => `brandIds[]=${id}`),
-    ...(data.areaIds || []).map(id => `areaIds[]=${id}`),
-  ].join('&');
+  const brandIds = _.getOr([], 'brandIds', dataFilters);
+  const areaIds = _.getOr([], 'areaIds', dataFilters);
+  const packagingId = _.getOr(null, 'packagingId', dataFilters);
+
+  const queryString = []
+    .concat(
+      brandIds.map(id => `brandIds[]=${id}`),
+      areaIds.map(id => `areaIds[]=${id}`),
+      packagingId ? `packagingId=${packagingId}` : []
+    )
+    .join('&');
 
   return fetch(`${apiBase}/kantar/data?${queryString}`)
     .then(response => response.json())
