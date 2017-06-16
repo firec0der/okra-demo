@@ -103,12 +103,12 @@ class HomePage extends React.Component {
       || !_.isEqual(this.state.dataFilters, nextState.dataFilters)
   }
 
-  fetchData = (dataFilters) => {
-    const { brandIds, areaIds, packagingId } = dataFilters;
+  fetchData = dataFilters => {
+    const { brandIds, areaIds, packagingId, genreId } = dataFilters;
     const { fetchKantarData } = this.props;
 
     if (brandIds.length && areaIds.length) {
-      fetchKantarData({ brandIds, areaIds, packagingId });
+      fetchKantarData({ brandIds, areaIds, packagingId, genreId });
     }
   };
 
@@ -129,13 +129,21 @@ class HomePage extends React.Component {
     ])(this.props.kantarPackagings.dictionary);
   };
 
+  genreOptions = () => {
+    return _.flow([
+      _.entries,
+      _.map(([ value, label ]) => ({ value: parseInt(value), label }))
+    ])(this.props.kantarGenres.dictionary);
+  };
+
   onBrandSelectChange = selectedBrands => {
     const brandIds = selectedBrands.map(value => parseInt(value.value));
 
     const dataFilters = mergeObjects(
       this.state.dataFilters,
       { brandIds },
-      !this.shouldUsePackagingsFilter(brandIds) ? { packagingId: null } : {}
+      !this.shouldUsePackagingsFilter(brandIds) ? { packagingId: null } : {},
+      !this.shouldUseGenreFilter(brandIds) ? { genreId: null } : {}
     );
 
     this.setState({ dataFilters }, dataFilters.brandIds.length
@@ -149,6 +157,18 @@ class HomePage extends React.Component {
       ? parseInt(selectedPackaging.value)
       : null;
     const dataFilters = mergeObjects(this.state.dataFilters, { packagingId });
+
+    this.setState({ dataFilters }, dataFilters.brandIds.length
+      ? () => this.fetchData(dataFilters)
+      : this.props.clearKantarData
+    );
+  }
+
+  onGenreSelectChange = selectedGenre => {
+    const genreId = selectedGenre
+      ? parseInt(selectedGenre.value)
+      : null;
+    const dataFilters = mergeObjects(this.state.dataFilters, { genreId });
 
     this.setState({ dataFilters }, dataFilters.brandIds.length
       ? () => this.fetchData(dataFilters)
@@ -238,8 +258,27 @@ class HomePage extends React.Component {
     );
   }
 
+  shouldUseGenreFilter = selectedBrandIds => {
+    const { kantarGenres } = this.props;
+
+    if (kantarGenres.isLoading || !selectedBrandIds.length) {
+      return false;
+    }
+
+    return selectedBrandIds.every(
+      brandId => kantarGenres.applicableForBrands.includes(brandId)
+    );
+  }
+
   render() {
-    const { kantarBrands, kantarAreas, kantarData, kantarPackagings, metrics } = this.props;
+    const {
+      kantarBrands,
+      kantarAreas,
+      kantarData,
+      kantarPackagings,
+      kantarGenres,
+      metrics
+    } = this.props;
     const { dataFilters } = this.state;
 
     const searchOnSubmit = (value) => window.alert(`It works, value: ${value}`);
@@ -294,6 +333,16 @@ class HomePage extends React.Component {
                 options={this.packagingOptions()}
                 isLoading={kantarPackagings.isLoading}
                 onChange={this.onPackagingsSelectChange}
+              />
+            </Col>
+          ) }
+          { this.shouldUseGenreFilter(dataFilters.brandIds) && (
+            <Col xs={12} md={4} mdOffset={this.shouldUsePackagingsFilter(dataFilters.brandIds) ? 0 : 2}>
+              <MultipleSelect
+                label='Choose genre'
+                options={this.genreOptions()}
+                isLoading={kantarGenres.isLoading}
+                onChange={this.onGenreSelectChange}
               />
             </Col>
           ) }
