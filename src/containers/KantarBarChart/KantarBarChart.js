@@ -16,7 +16,7 @@ import MetricsFilters from '../../components/MetricsFilters/MetricsFilters';
 import { mergeObjects } from '../../utils/object';
 
 // import from modules
-import { fetchKantarData, clearKantarData } from '../../modules/kantarData';
+import { fetchKantarData, clearKantarData } from '../../modules/kantar/kantarData';
 
 const mapStateToProps = state => ({
   metrics: state.metrics,

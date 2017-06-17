@@ -1,6 +1,6 @@
 import _ from 'lodash/fp';
 
-import { apiBase } from '../constants/api';
+import { apiBase } from '../../constants/api';
 
 const LOADING = 'KANTAR/DATA_LOADING';
 const SUCCESS = 'KANTAR/DATA_SUCCESS';

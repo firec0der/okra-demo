@@ -1,4 +1,4 @@
-import { apiBase } from '../constants/api';
+import { apiBase } from '../../constants/api';
 
 const LOADING = 'KANTAR/GENRES_LOADING';
 const SUCCESS = 'KANTAR/GENRES_SUCCESS';

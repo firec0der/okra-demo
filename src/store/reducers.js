@@ -1,12 +1,12 @@
 import { combineReducers } from 'redux';
 
 import locationReducer from './location';
-import kantarBrands from '../modules/kantarBrands';
 import metrics from '../modules/metrics';
-import kantarData from '../modules/kantarData';
-import kantarAreas from '../modules/kantarAreas';
-import kantarPackagings from '../modules/kantarPackagings';
-import kantarGenres from '../modules/kantarGenres';
+import kantarBrands from '../modules/kantar/kantarBrands';
+import kantarData from '../modules/kantar/kantarData';
+import kantarAreas from '../modules/kantar/kantarAreas';
+import kantarPackagings from '../modules/kantar/kantarPackagings';
+import kantarGenres from '../modules/kantar/kantarGenres';
 
 export default combineReducers({
   location: locationReducer,
