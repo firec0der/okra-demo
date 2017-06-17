@@ -35,7 +35,8 @@ export default class DataFilter extends React.Component {
 
     const options = _.flow([
       _.entries,
-      _.map(([ id, label ]) => ({ value: parseInt(id), label }))
+      _.map(([ id, label ]) => ({ value: parseInt(id), label })),
+      _.sortBy('label')
     ])(objects);
 
     return (
