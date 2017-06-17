@@ -8,6 +8,7 @@ import { fetchKantarAreas } from '../modules/kantar/kantarAreas';
 import { fetchKantarPackagings } from '../modules/kantar/kantarPackagings';
 import { fetchKantarGenres } from '../modules/kantar/kantarGenres';
 
+import { fetchNielsenAppliers } from '../modules/nielsen/nielsenAppliers';
 import { fetchNielsenAreas } from '../modules/nielsen/nielsenAreas';
 import { fetchNielsenBrands } from '../modules/nielsen/nielsenBrands';
 import { fetchNielsenGenres } from '../modules/nielsen/nielsenGenres';
@@ -22,6 +23,7 @@ export const onHomeEnter = ({ dispatch }) => () => {
   dispatch(fetchKantarPackagings());
   dispatch(fetchKantarGenres());
 
+  dispatch(fetchNielsenAppliers());
   dispatch(fetchNielsenAreas());
   dispatch(fetchNielsenBrands());
   dispatch(fetchNielsenGenres());
