@@ -10,6 +10,7 @@ import kantarGenres from '../modules/kantar/kantarGenres';
 
 import nielsenAreas from '../modules/nielsen/nielsenAreas';
 import nielsenBrands from '../modules/nielsen/nielsenBrands';
+import nielsenGenres from '../modules/nielsen/nielsenGenres';
 
 export default combineReducers({
   location: locationReducer,
@@ -20,5 +21,6 @@ export default combineReducers({
   kantarPackagings,
   kantarGenres,
   nielsenAreas,
-  nielsenBrands
+  nielsenBrands,
+  nielsenGenres
 });
