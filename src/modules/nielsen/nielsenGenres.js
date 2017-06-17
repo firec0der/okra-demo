@@ -6,7 +6,7 @@ const SUCCESS = 'NIELSEN/GENRES_SUCCESS';
 const initialState = {
   isLoading: false,
   error: null,
-  table: {},
+  dictionary: {},
   applicableForBrands: [],
 };
 
@@ -14,9 +14,9 @@ const loading = () => ({
   type: LOADING
 });
 
-const success = ({ table, applicableForBrands }) => ({
+const success = ({ dictionary, applicableForBrands }) => ({
   type: SUCCESS,
-  payload: { table, applicableForBrands }
+  payload: { dictionary, applicableForBrands }
 });
 
 export default (state = initialState, action) => {
@@ -24,7 +24,7 @@ export default (state = initialState, action) => {
     case SUCCESS:
       return {
         ...state,
-        table: action.payload.table,
+        dictionary: action.payload.dictionary,
         applicableForBrands: action.payload.applicableForBrands,
         isLoading: false,
         error: null
