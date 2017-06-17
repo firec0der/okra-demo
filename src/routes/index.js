@@ -11,6 +11,7 @@ import { fetchKantarGenres } from '../modules/kantar/kantarGenres';
 import { fetchNielsenAreas } from '../modules/nielsen/nielsenAreas';
 import { fetchNielsenBrands } from '../modules/nielsen/nielsenBrands';
 import { fetchNielsenGenres } from '../modules/nielsen/nielsenGenres';
+import { fetchNielsenPackagings } from '../modules/nielsen/nielsenPackagings';
 
 export const onHomeEnter = ({ dispatch }) => () => {
   dispatch(fetchKantarBrands());
@@ -22,6 +23,7 @@ export const onHomeEnter = ({ dispatch }) => () => {
   dispatch(fetchNielsenAreas());
   dispatch(fetchNielsenBrands());
   dispatch(fetchNielsenGenres());
+  dispatch(fetchNielsenPackagings());
 };
 
 export default (store) => ({
