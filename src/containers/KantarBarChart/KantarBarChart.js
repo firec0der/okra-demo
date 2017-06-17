@@ -11,6 +11,7 @@ import StackedBarChart from '../../components/StackedBarChart/StackedBarChart';
 import PieChart from '../../components/PieChart/PieChart';
 import MultipleSelect from '../../components/Select/Select';
 import MetricsFilters from '../../components/MetricsFilters/MetricsFilters';
+import DataFilter from '../../components/DataFilter/DataFilter';
 
 // import from utils
 import { mergeObjects } from '../../utils/object';
@@ -100,26 +101,6 @@ class KantarBarChart extends React.Component {
       fetchKantarData({ brandIds, areaIds, packagingId, genreId });
     }
   };
-
-  brandOptions = () => _.flow([
-    _.entries,
-    _.map(([ id, label ]) => ({ value: parseInt(id), label }))
-  ])(this.props.kantarBrands.table);
-
-  areaOptions = () => _.flow([
-    _.entries,
-    _.map(([ id, label ]) => ({ value: parseInt(id), label }))
-  ])(this.props.kantarAreas.table);
-
-  packagingOptions = () => _.flow([
-    _.entries,
-    _.map(([ value, label ]) => ({ value: parseInt(value), label }))
-  ])(this.props.kantarPackagings.dictionary);
-
-  genreOptions = () => _.flow([
-    _.entries,
-    _.map(([ value, label ]) => ({ value: parseInt(value), label }))
-  ])(this.props.kantarGenres.dictionary);
 
   onBrandSelectChange = selectedBrands => {
     const brandIds = selectedBrands.map(value => parseInt(value.value));
@@ -284,19 +265,19 @@ class KantarBarChart extends React.Component {
 
         <Grid>
           <Col xs={12} md={4} mdOffset={2}>
-            <MultipleSelect
+            <DataFilter
               label='Choose brands'
-              options={this.brandOptions()}
               multi
+              objects={kantarBrands.table}
               isLoading={kantarBrands.isLoading}
               onChange={this.onBrandSelectChange}
             />
           </Col>
           <Col xs={12} md={4}>
-            <MultipleSelect
+            <DataFilter
               label='Choose areas'
-              options={this.areaOptions()}
               multi
+              objects={kantarAreas.table}
               isLoading={kantarAreas.isLoading}
               onChange={this.onAreaSelectChange}
             />
@@ -306,9 +287,9 @@ class KantarBarChart extends React.Component {
         <Grid>
           { this.shouldUsePackagingsFilter(dataFilters.brandIds) && (
             <Col xs={12} md={4} mdOffset={2}>
-              <MultipleSelect
+              <DataFilter
                 label='Choose packaging'
-                options={this.packagingOptions()}
+                objects={kantarPackagings.dictionary}
                 isLoading={kantarPackagings.isLoading}
                 onChange={this.onPackagingsSelectChange}
               />
@@ -316,9 +297,9 @@ class KantarBarChart extends React.Component {
           ) }
           { this.shouldUseGenreFilter(dataFilters.brandIds) && (
             <Col xs={12} md={4} mdOffset={this.shouldUsePackagingsFilter(dataFilters.brandIds) ? 0 : 2}>
-              <MultipleSelect
+              <DataFilter
                 label='Choose genre'
-                options={this.genreOptions()}
+                objects={kantarGenres.dictionary}
                 isLoading={kantarGenres.isLoading}
                 onChange={this.onGenreSelectChange}
               />
