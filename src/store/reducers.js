@@ -8,6 +8,8 @@ import kantarAreas from '../modules/kantar/kantarAreas';
 import kantarPackagings from '../modules/kantar/kantarPackagings';
 import kantarGenres from '../modules/kantar/kantarGenres';
 
+import nielsenAreas from '../modules/nielsen/nielsenAreas';
+
 export default combineReducers({
   location: locationReducer,
   metrics,
@@ -15,5 +17,6 @@ export default combineReducers({
   kantarData,
   kantarAreas,
   kantarPackagings,
-  kantarGenres
+  kantarGenres,
+  nielsenAreas
 });
