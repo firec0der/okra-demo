@@ -12,6 +12,7 @@ import { fetchNielsenAreas } from '../modules/nielsen/nielsenAreas';
 import { fetchNielsenBrands } from '../modules/nielsen/nielsenBrands';
 import { fetchNielsenGenres } from '../modules/nielsen/nielsenGenres';
 import { fetchNielsenChannels } from '../modules/nielsen/nielsenChannels';
+import { fetchNielsenManufacturers } from '../modules/nielsen/nielsenManufacturers';
 import { fetchNielsenPackagings } from '../modules/nielsen/nielsenPackagings';
 
 export const onHomeEnter = ({ dispatch }) => () => {
@@ -25,6 +26,7 @@ export const onHomeEnter = ({ dispatch }) => () => {
   dispatch(fetchNielsenBrands());
   dispatch(fetchNielsenGenres());
   dispatch(fetchNielsenChannels());
+  dispatch(fetchNielsenManufacturers());
   dispatch(fetchNielsenPackagings());
 };
 
