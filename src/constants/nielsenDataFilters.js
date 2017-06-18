@@ -16,15 +16,15 @@ export const NIELSEN_DATA_FILTERS = {
     propKey: 'nielsenLevels'
   },
   [NIELSEN_MANUFACTURER_FILTER]: {
-    stateKey: 'manufacturerIds',
+    stateKey: 'manufacturerId',
     label: 'Manufacturers',
-    multi: true,
+    multi: false,
     propKey: 'nielsenManufacturers'
   },
   [NIELSEN_CHANNEL_FILTER]: {
-    stateKey: 'channelIds',
+    stateKey: 'channelId',
     label: 'Channel',
-    multi: false, // ?
+    multi: false,
     propKey: 'nielsenChannels'
   },
   [NIELSEN_AREA_FILTER]: {
@@ -40,7 +40,7 @@ export const NIELSEN_DATA_FILTERS = {
     propKey: 'nielsenBrands'
   },
   [NIELSEN_APPLIER_FILTER]: {
-    stateKey: 'applierIds',
+    stateKey: 'applierId',
     label: 'Applier',
     multi: false,
     propKey: 'nielsenAppliers'
