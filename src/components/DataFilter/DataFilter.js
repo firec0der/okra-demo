@@ -10,7 +10,7 @@ export default class DataFilter extends React.Component {
 
   static propTypes = {
     label: PropTypes.string.isRequired,
-    objects: PropTypes.object.isRequired,
+    dictionary: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
     isLoading: PropTypes.bool,
     multi: PropTypes.bool
@@ -22,7 +22,7 @@ export default class DataFilter extends React.Component {
   };
 
   shouldComponentUpdate(nextProps) {
-    const propsKeys = ['isLoading', 'multi', 'label', 'objects'];
+    const propsKeys = ['isLoading', 'multi', 'label', 'dictionary'];
 
     return !_.isEqual(
       _.pick(propsKeys, nextProps),
@@ -31,13 +31,13 @@ export default class DataFilter extends React.Component {
   }
 
   render() {
-    const { label, objects, multi, isLoading, onChange } = this.props;
+    const { label, dictionary, multi, isLoading, onChange } = this.props;
 
     const options = _.flow([
       _.entries,
       _.map(([ id, label ]) => ({ value: parseInt(id), label })),
       _.sortBy('label')
-    ])(objects);
+    ])(dictionary);
 
     return (
       <MultipleSelect
