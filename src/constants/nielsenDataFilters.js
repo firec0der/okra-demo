@@ -9,12 +9,44 @@ export const NIELSEN_GENRE_FILTER = 'genre';
 export const NIELSEN_PACKAGING_FILTER = 'packaging';
 
 export const NIELSEN_DATA_FILTERS = {
-  [NIELSEN_LEVEL_FILTER]: { stateKey: 'levelId', multi: false }, // single choice
-  [NIELSEN_MANUFACTURER_FILTER]: { stateKey: 'manufacturerIds', multi: true }, // multiple choice
-  [NIELSEN_CHANNEL_FILTER]: { stateKey: 'channelIds', multi: false }, // single choice ?
-  [NIELSEN_AREA_FILTER]: { stateKey: 'areaIds', multi: true }, // multiple choice
-  [NIELSEN_BRAND_FILTER]: { stateKey: 'brandIds', multi: true }, // multiple choice
-  [NIELSEN_APPLIER_FILTER]: { stateKey: 'applierIds', multi: false }, // single choice
-  [NIELSEN_GENRE_FILTER]: { stateKey: 'genreId', multi: false },  // single choice
-  [NIELSEN_PACKAGING_FILTER]: { stateKey: 'packagingId', multi: false } // single choice
+  [NIELSEN_LEVEL_FILTER]: {
+    stateKey: 'levelId',
+    label: 'Level',
+    multi: false
+  },
+  [NIELSEN_MANUFACTURER_FILTER]: {
+    stateKey: 'manufacturerIds',
+    label: 'Manufacturers',
+    multi: true
+  },
+  [NIELSEN_CHANNEL_FILTER]: {
+    stateKey: 'channelIds',
+    label: 'Channel',
+    multi: false // ?
+  },
+  [NIELSEN_AREA_FILTER]: {
+    stateKey: 'areaIds',
+    label: 'Areas',
+    multi: true
+  },
+  [NIELSEN_BRAND_FILTER]: {
+    stateKey: 'brandIds',
+    label: 'Brands',
+    multi: true
+  },
+  [NIELSEN_APPLIER_FILTER]: {
+    stateKey: 'applierIds',
+    label: 'Applier',
+    multi: false
+  },
+  [NIELSEN_GENRE_FILTER]: {
+    stateKey: 'genreId',
+    label: 'Genre',
+    multi: false
+  },
+  [NIELSEN_PACKAGING_FILTER]: {
+    stateKey: 'packagingId',
+    label: 'Packaging',
+    multi: false
+  }
 };
