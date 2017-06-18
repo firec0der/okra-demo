@@ -114,36 +114,35 @@ class NielsenBarChart extends React.Component {
   onMetricFilterChange = chosenMetric => this.setState({ chosenMetric });
 
   barChartData = () => {
-    const { nielsenBrands, nielsenAreas } = this.props;
+    const {
+      nielsenBrands: { dictionary: brandsDict },
+      nielsenAreas: { dictionary: areasDict }
+    } = this.props;
     const { chosenMetric, data } = this.state;
 
-    const objectsThatHaveMetric = data.list.filter(object => object[chosenMetric]);
-
     const dataRaw = _.flow([
+      _.filter(item => item[chosenMetric] && item.date),
       _.groupBy('brandId'),
       _.entries,
-      _.map(([ brandId, list ]) => list.reduce(
-        (acc, object) => mergeObjects(acc, {
-          values: [
-            ...acc.values,
-            {
-              areaId: object.areaId,
-              year: object.year,
-              quarter: object.quarter,
-              value: object[chosenMetric]
-            }
-          ]
+      _.map(([ brandId, list ]) => list
+        .reduce(
+        (acc, item) => mergeObjects(acc, {
+          values: [...acc.values, { areaId: item.areaId, value: item[chosenMetric], date: item.date }]
         }),
-        { name: nielsenBrands.table[brandId], values: [] }
+        { name: brandsDict[brandId], values: [] }
       ))
-    ])(objectsThatHaveMetric);
+    ])(data.items);
 
     const chartData = dataRaw.map(list => mergeObjects(
       { name: list.name },
       list.values.reduce(
-        (acc, item) => mergeObjects(acc, {
-          [`${nielsenAreas.table[item.areaId]}, Q${item.quarter}/${item.year}`]: item.value
-        }),
+        (acc, item) => {
+          const [year, month] = item.date.split('-');
+
+          return mergeObjects(acc, {
+            [`${areasDict[item.areaId]}, ${month}/${year}`]: item.value
+          })
+        },
         {}
       )
     ));
@@ -152,22 +151,26 @@ class NielsenBarChart extends React.Component {
   }
 
   barChartStacks = () => {
-    const { nielsenAreas } = this.props;
-    const { dataFilters, data } = this.state;
+    const { nielsenAreas: { dictionary: areasDict } } = this.props;
+    const { dataFilters, data: { items } } = this.state;
 
-    const years = _.uniq(nielsenData.list.map(item => item.year)).sort();
-    const quarters = _.uniq(nielsenData.list.map(item => item.quarter)).sort();
+    const periods = _.flow([
+      _.map(item => {
+        const [year, month] = item.date.split('-');
+        return `${month}/${year}`;
+      }),
+      _.uniq,
+      items => items.sort()
+    ])(items);
 
-    return years
-      // collect all possible periods for the current data
-      .reduce((acc, year) => [
-        ...acc,
-        ...(quarters.map(quarter => `Q${quarter}/${year}`))
-      ], [])
-      // collect stacks [ [ 'data item for period 1', 'data item for period 2'] ]
-      .map(period => dataFilters.areaIds.map(
-        areaId => `${nielsenAreas.table[areaId]}, ${period}`
-      ));
+    const areas = _.flow([
+      _.map(item => item.areaId),
+      _.uniq,
+      _.map(areaId => areasDict[areaId])
+    ])(items);
+
+    // collect stacks [ [ 'data item for period 1', 'data item for period 2'] ]
+    return periods.map(period => areas.map(area => `${area}, ${period}`));
   }
 
   getMetrics = () => _.flow([
@@ -226,7 +229,7 @@ class NielsenBarChart extends React.Component {
           nielsenPackagings={nielsenPackagings}
         />
 
-        { !data.isLoading && data.length > 0 && (
+        { !data.isLoading && data.items.length > 0 && (
           <Grid>
             <Col xs={12} md={10} mdOffset={1} style={{ marginBottom: '30px' }}>
               <StackedBarChart
