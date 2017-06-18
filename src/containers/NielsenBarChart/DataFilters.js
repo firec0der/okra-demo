@@ -38,7 +38,7 @@ export default class DataFilters extends React.Component {
       [property]: value ? parseInt(value.value) : null
     });
 
-    this.setState({ values });
+    this.setState({ values }, () => this.props.onChange(this.state.values));
   };
 
   onChangeMultiple = (propery, arrayWithValues) => {
@@ -46,7 +46,7 @@ export default class DataFilters extends React.Component {
       [propery]: arrayWithValues.map(value => parseInt(value.value))
     });
 
-    this.setState({ values });
+    this.setState({ values }, () => this.props.onChange(this.state.values));
   };
 
   getDictionary = propKey => _.getOr({}, `${propKey}.dictionary`, this.props);
