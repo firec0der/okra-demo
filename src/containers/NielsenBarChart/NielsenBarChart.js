@@ -44,17 +44,14 @@ const mapStateToProps = state => ({
 class NielsenBarChart extends React.Component {
 
   static propTypes = mergeObjects(DATA_FILTERS_PROP_TYPES, {
-    level: PropTypes.string,
+    header: PropTypes.string,
     values: PropTypes.object,
-    levelsToShow: PropTypes.arrayOf(PropTypes.string),
     dataFilters: PropTypes.arrayOf(PropTypes.string),
     requiredFilters: PropTypes.arrayOf(PropTypes.string),
     showMetricsFilters: PropTypes.bool
   });
 
   static defaultProps = {
-    level: 'Brand',
-    levelsToShow: ['Brand', 'Genre', 'Packaging', 'Appliers'],
     dataFilters: Object.keys(NIELSEN_DATA_FILTERS),
     requiredFilters: [NIELSEN_AREA_FILTER, NIELSEN_BRAND_FILTER],
     showMetricsFilters: true
@@ -195,7 +192,7 @@ class NielsenBarChart extends React.Component {
       nielsenLevels,
       nielsenManufacturers,
       nielsenPackagings,
-      levelsToShow
+      header
     } = this.props;
 
     const { chosenMetric, data } = this.state;
@@ -209,6 +206,8 @@ class NielsenBarChart extends React.Component {
 
     return (
       <div>
+        { !_.isNil(header) && <h1 className="text-center">{ header }</h1> }
+
         { shouldShowMetrics && (
           <Grid style={{ marginBottom: '30px' }}>
             <Col xs={12} md={8} mdOffset={2}>
