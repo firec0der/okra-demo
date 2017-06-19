@@ -1,6 +1,7 @@
 import CoreLayout from '../layouts/PageLayout/PageLayout';
 
 import HomePage from '../pages/HomePage/HomePage';
+import NielsenBarchart from '../pages/NielsenBarchart/NielsenBarchart';
 
 import { fetchMetrics } from '../modules/metrics';
 import { fetchKantarBrands } from '../modules/kantar/kantarBrands';
@@ -17,7 +18,7 @@ import { fetchNielsenLevels } from '../modules/nielsen/nielsenLevels';
 import { fetchNielsenManufacturers } from '../modules/nielsen/nielsenManufacturers';
 import { fetchNielsenPackagings } from '../modules/nielsen/nielsenPackagings';
 
-export const onHomeEnter = ({ dispatch }) => () => {
+export const fetchAllStaticData = ({ dispatch }) => () => {
   dispatch(fetchKantarBrands());
   dispatch(fetchKantarAreas());
   dispatch(fetchMetrics());
@@ -37,6 +38,10 @@ export const onHomeEnter = ({ dispatch }) => () => {
 export default (store) => ({
   path: '/',
   component: CoreLayout,
-  indexRoute: { component: HomePage, onEnter: onHomeEnter(store) },
-  // childRoutes: []
+  indexRoute: { component: HomePage, onEnter: fetchAllStaticData(store) },
+  childRoutes: [{
+    path: '/nielsen-barchart',
+    component: NielsenBarchart,
+    onEnter: fetchAllStaticData(store)
+  }]
 });

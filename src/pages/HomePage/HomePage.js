@@ -30,8 +30,6 @@ export default class HomePage extends React.Component {
             <SearchBar onSubmit={searchOnSubmit} />
           </Col>
         </Grid>
-
-        <KantarBarChart />
       </div>
     );
   }
