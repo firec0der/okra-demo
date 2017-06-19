@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash/fp';
 
 // import from components
-import MultipleSelect from '../Select/Select';
+import Select from '../Select/Select';
 
 export default class DataFilter extends React.Component {
 
@@ -22,7 +22,7 @@ export default class DataFilter extends React.Component {
   };
 
   shouldComponentUpdate(nextProps) {
-    const propsKeys = ['isLoading', 'multi', 'label', 'dictionary'];
+    const propsKeys = ['isLoading', 'multi', 'label', 'dictionary', 'value'];
 
     return !_.isEqual(
       _.pick(propsKeys, nextProps),
@@ -31,7 +31,7 @@ export default class DataFilter extends React.Component {
   }
 
   render() {
-    const { label, dictionary, multi, isLoading, onChange } = this.props;
+    const { label, dictionary, multi, isLoading, onChange, value } = this.props;
 
     const options = _.flow([
       _.entries,
@@ -40,12 +40,13 @@ export default class DataFilter extends React.Component {
     ])(dictionary);
 
     return (
-      <MultipleSelect
+      <Select
         label={label}
         options={options}
         multi={multi}
         isLoading={isLoading}
         onChange={onChange}
+        value={value}
       />
     );
   }
