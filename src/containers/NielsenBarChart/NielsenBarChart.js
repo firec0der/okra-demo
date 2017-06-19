@@ -23,7 +23,6 @@ import DATA_FILTERS_PROP_TYPES from './dataFiltersPropTypes';
 // import from components
 import StackedBarChart from '../../components/StackedBarChart/StackedBarChart';
 import MetricsFilters from '../../components/MetricsFilters/MetricsFilters';
-import DataFilter from '../../components/DataFilter/DataFilter';
 import DataFilters from './DataFilters';
 
 // import from utils
@@ -206,7 +205,13 @@ class NielsenBarChart extends React.Component {
 
     return (
       <div>
-        { !_.isNil(header) && <h1 className="text-center">{ header }</h1> }
+        { !_.isNil(header) && (
+          <Grid style={{ marginBottom: '30px' }}>
+            <Col xs={12} md={8} mdOffset={2}>
+              <h1 className="text-center">{ header }</h1>
+            </Col>
+          </Grid>
+        ) }
 
         { shouldShowMetrics && (
           <Grid style={{ marginBottom: '30px' }}>
