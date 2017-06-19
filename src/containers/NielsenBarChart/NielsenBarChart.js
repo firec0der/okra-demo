@@ -7,7 +7,7 @@ import _ from 'lodash/fp';
 
 // import from constants
 import { API_BASE_URL } from '../../constants/api';
-import { NIELSEN_DATA_FILTERS } from '../../constants/nielsenDataFilters';
+import { NIELSEN_DATA_FILTERS_CONFIG } from '../../constants/nielsenDataFilters';
 import DATA_FILTERS_PROP_TYPES from './dataFiltersPropTypes';
 
 // import from components
@@ -41,8 +41,8 @@ class NielsenBarChart extends React.Component {
   });
 
   static defaultProps = {
-    dataFilters: Object.keys(NIELSEN_DATA_FILTERS),
-    requiredFilters: [NIELSEN_AREA_FILTER, NIELSEN_BRAND_FILTER],
+    dataFilters: Object.keys(NIELSEN_DATA_FILTERS_CONFIG),
+    requiredFilters: [],
     showMetricsFilters: true
   };
 
@@ -71,7 +71,7 @@ class NielsenBarChart extends React.Component {
 
     const usefulValuesKeys = Object.keys(usefulValues);
     const requiredFiltersKeys = requiredFilters.map(
-      filter => NIELSEN_DATA_FILTERS[filter].key
+      filter => NIELSEN_DATA_FILTERS_CONFIG[filter].key
     );
 
     const shouldFetchData = usefulValuesKeys.length > 0
@@ -92,7 +92,7 @@ class NielsenBarChart extends React.Component {
         []
       ),
       _.join('&')
-    ])(NIELSEN_DATA_FILTERS);
+    ])(NIELSEN_DATA_FILTERS_CONFIG);
 
     this.setState(
       { data: { items: [], isLoading: false } },
@@ -219,7 +219,7 @@ class NielsenBarChart extends React.Component {
           values={this.props.values}
           onChange={this.fetchData}
           dataFilters={this.props.dataFilters}
-          dataFiltersConfig={NIELSEN_DATA_FILTERS}
+          dataFiltersConfig={NIELSEN_DATA_FILTERS_CONFIG}
           nielsenAppliers={nielsenAppliers}
           nielsenAreas={nielsenAreas}
           nielsenBrands={nielsenBrands}

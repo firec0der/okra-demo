@@ -8,7 +8,7 @@ export const NIELSEN_APPLIER_FILTER = 'applier';
 export const NIELSEN_GENRE_FILTER = 'genre';
 export const NIELSEN_PACKAGING_FILTER = 'packaging';
 
-export const NIELSEN_DATA_FILTERS = {
+export const NIELSEN_DATA_FILTERS_CONFIG = {
   [NIELSEN_LEVEL_FILTER]: {
     key: 'levelId',
     label: 'Level',
