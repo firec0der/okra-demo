@@ -57,6 +57,25 @@ export default class DataFilters extends React.Component {
   getDictionary = propKey => _.getOr({}, `${propKey}.dictionary`, this.props);
   getIsLoading = propKey => _.getOr(false, `${propKey}.isLoading`, this.props);
 
+  getSelectedValue = filter => {
+    // it's impossible, but anyway, something bad could happen.
+    if (!NIELSEN_DATA_FILTERS[filter]) { return null; }
+
+    const { propKey, key, multi, label } = NIELSEN_DATA_FILTERS[filter];
+    const dictionary = this.getDictionary(propKey);
+
+    if (_.isEmpty(dictionary) || !this.state.values[key]) { return null; }
+
+    if (!multi) {
+      return {
+        label: dictionary[this.state.values[key]],
+        value: this.state.values[key]
+      };
+    }
+
+    return this.state.values[key].map(id => ({ label: dictionary[id], value: id }));
+  };
+
   initialValues = () => {
     const { dataFilters, values } = this.props;
 
@@ -72,7 +91,7 @@ export default class DataFilters extends React.Component {
       }),
       {}
     );
-  }
+  };
 
   initCallbacks = () => _.flow([
     _.filter(filter => Object.keys(NIELSEN_DATA_FILTERS).includes(filter)),
@@ -88,6 +107,7 @@ export default class DataFilters extends React.Component {
     _.map(filter => (
       <DataFilter
         key={filter}
+        value={this.getSelectedValue(filter)}
         label={NIELSEN_DATA_FILTERS[filter].label}
         multi={NIELSEN_DATA_FILTERS[filter].multi}
         dictionary={this.getDictionary(NIELSEN_DATA_FILTERS[filter].propKey)}
