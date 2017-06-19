@@ -81,7 +81,7 @@ class NielsenBarChart extends React.Component {
     return _.flow([
       _.filter(filter => Object.keys(NIELSEN_DATA_FILTERS).includes(filter)),
       _.reduce((acc, filter) => mergeObjects(acc, {
-        [NIELSEN_DATA_FILTERS[filter].stateKey]: NIELSEN_DATA_FILTERS[filter].multi ? [] : null
+        [NIELSEN_DATA_FILTERS[filter].key]: NIELSEN_DATA_FILTERS[filter].multi ? [] : null
       }), {})
     ])(dataFilters);
   }
@@ -95,7 +95,7 @@ class NielsenBarChart extends React.Component {
 
     const usefulValuesKeys = Object.keys(usefulValues);
     const requiredFiltersKeys = requiredFilters.map(
-      filter => NIELSEN_DATA_FILTERS[filter].stateKey
+      filter => NIELSEN_DATA_FILTERS[filter].key
     );
 
     const shouldFetchData = usefulValuesKeys.length > 0
@@ -107,11 +107,11 @@ class NielsenBarChart extends React.Component {
 
     const queryString = _.flow([
       _.values,
-      _.filter(item => _.keys(usefulValues).includes(item.stateKey)),
+      _.filter(item => _.keys(usefulValues).includes(item.key)),
       _.reduce(
-        (acc, { stateKey, multi }) => [].concat(acc, multi
-          ? values[stateKey].map(value => `${stateKey}[]=${value}`)
-          : `${stateKey}=${values[stateKey]}`
+        (acc, { key, multi }) => [].concat(acc, multi
+          ? values[key].map(value => `${key}[]=${value}`)
+          : `${key}=${values[key]}`
         ),
         []
       ),

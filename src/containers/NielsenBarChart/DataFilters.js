@@ -55,7 +55,7 @@ export default class DataFilters extends React.Component {
   initialValues = () => _.flow([
     _.filter(filter => Object.keys(NIELSEN_DATA_FILTERS).includes(filter)),
     _.reduce((acc, filter) => mergeObjects(acc, {
-      [NIELSEN_DATA_FILTERS[filter].stateKey]: NIELSEN_DATA_FILTERS[filter].multi ? [] : null
+      [NIELSEN_DATA_FILTERS[filter].key]: NIELSEN_DATA_FILTERS[filter].multi ? [] : null
     }), {})
   ])(this.props.dataFilters);
 
@@ -63,8 +63,8 @@ export default class DataFilters extends React.Component {
     _.filter(filter => Object.keys(NIELSEN_DATA_FILTERS).includes(filter)),
     _.reduce((acc, filter) => mergeObjects(acc, {
       [filter]: NIELSEN_DATA_FILTERS[filter].multi
-        ? this.onChangeMultiple.bind(null, NIELSEN_DATA_FILTERS[filter].stateKey)
-        : this.onChangeSingle.bind(null, NIELSEN_DATA_FILTERS[filter].stateKey)
+        ? this.onChangeMultiple.bind(null, NIELSEN_DATA_FILTERS[filter].key)
+        : this.onChangeSingle.bind(null, NIELSEN_DATA_FILTERS[filter].key)
     }), {})
   ])(this.props.dataFilters);
 

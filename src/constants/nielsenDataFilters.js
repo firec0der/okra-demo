@@ -10,49 +10,49 @@ export const NIELSEN_PACKAGING_FILTER = 'packaging';
 
 export const NIELSEN_DATA_FILTERS = {
   [NIELSEN_LEVEL_FILTER]: {
-    stateKey: 'levelId',
+    key: 'levelId',
     label: 'Level',
     multi: false,
     propKey: 'nielsenLevels'
   },
   [NIELSEN_MANUFACTURER_FILTER]: {
-    stateKey: 'manufacturerId',
+    key: 'manufacturerId',
     label: 'Manufacturers',
     multi: false,
     propKey: 'nielsenManufacturers'
   },
   [NIELSEN_CHANNEL_FILTER]: {
-    stateKey: 'channelId',
+    key: 'channelId',
     label: 'Channel',
     multi: false,
     propKey: 'nielsenChannels'
   },
   [NIELSEN_AREA_FILTER]: {
-    stateKey: 'areaIds',
+    key: 'areaIds',
     label: 'Areas',
     multi: true,
     propKey: 'nielsenAreas'
   },
   [NIELSEN_BRAND_FILTER]: {
-    stateKey: 'brandIds',
+    key: 'brandIds',
     label: 'Brands',
     multi: true,
     propKey: 'nielsenBrands'
   },
   [NIELSEN_APPLIER_FILTER]: {
-    stateKey: 'applierId',
+    key: 'applierId',
     label: 'Applier',
     multi: false,
     propKey: 'nielsenAppliers'
   },
   [NIELSEN_GENRE_FILTER]: {
-    stateKey: 'genreId',
+    key: 'genreId',
     label: 'Genre',
     multi: false,
     propKey: 'nielsenGenres'
   },
   [NIELSEN_PACKAGING_FILTER]: {
-    stateKey: 'packagingId',
+    key: 'packagingId',
     label: 'Packaging',
     multi: false,
     propKey: 'nielsenPackagings'
