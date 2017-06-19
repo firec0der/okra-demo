@@ -19,6 +19,7 @@ export default class DataFilters extends React.Component {
 
   static propTypes = mergeObjects(DATA_FILTERS_PROP_TYPES, {
     dataFilters: PropTypes.arrayOf(PropTypes.string),
+    values: PropTypes.object,
     onChange: PropTypes.func,
   });
 
@@ -31,6 +32,10 @@ export default class DataFilters extends React.Component {
 
     this.state = { values: this.initialValues() };
     this.onChangeCallbacks = this.initCallbacks();
+  }
+
+  componentDidMount() {
+    this.props.onChange(this.state.values);
   }
 
   onChangeSingle = (property, value) => {
@@ -52,12 +57,22 @@ export default class DataFilters extends React.Component {
   getDictionary = propKey => _.getOr({}, `${propKey}.dictionary`, this.props);
   getIsLoading = propKey => _.getOr(false, `${propKey}.isLoading`, this.props);
 
-  initialValues = () => _.flow([
-    _.filter(filter => Object.keys(NIELSEN_DATA_FILTERS).includes(filter)),
-    _.reduce((acc, filter) => mergeObjects(acc, {
-      [NIELSEN_DATA_FILTERS[filter].key]: NIELSEN_DATA_FILTERS[filter].multi ? [] : null
-    }), {})
-  ])(this.props.dataFilters);
+  initialValues = () => {
+    const { dataFilters, values } = this.props;
+
+    const filterNames = Object.keys(NIELSEN_DATA_FILTERS);
+
+    const getValue = filter => values && values[NIELSEN_DATA_FILTERS[filter].key]
+      ? values[NIELSEN_DATA_FILTERS[filter].key]
+      : NIELSEN_DATA_FILTERS[filter].multi ? [] : null
+
+    return Object.keys(NIELSEN_DATA_FILTERS).reduce(
+      (acc, filterName) => mergeObjects(acc, {
+        [NIELSEN_DATA_FILTERS[filterName].key]: getValue(filterName)
+      }),
+      {}
+    );
+  }
 
   initCallbacks = () => _.flow([
     _.filter(filter => Object.keys(NIELSEN_DATA_FILTERS).includes(filter)),
