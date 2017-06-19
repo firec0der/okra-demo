@@ -47,6 +47,7 @@ class NielsenBarChart extends React.Component {
     level: PropTypes.string,
     levelsToShow: PropTypes.arrayOf(PropTypes.string),
     dataFilters: PropTypes.arrayOf(PropTypes.string),
+    requiredFilters: PropTypes.arrayOf(PropTypes.string),
     showMetricsFilters: PropTypes.bool
   });
 
@@ -54,6 +55,7 @@ class NielsenBarChart extends React.Component {
     level: 'Brand',
     levelsToShow: ['Brand', 'Genre', 'Packaging', 'Appliers'],
     dataFilters: Object.keys(NIELSEN_DATA_FILTERS),
+    requiredFilters: [NIELSEN_AREA_FILTER, NIELSEN_BRAND_FILTER],
     showMetricsFilters: true
   };
 
@@ -85,10 +87,23 @@ class NielsenBarChart extends React.Component {
   }
 
   fetchData = (values = {}) => {
+    const { requiredFilters } = this.props;
     const usefulValues = _.omitBy(
       value => _.isNil(value) || value.length === 0,
       values
     );
+
+    const usefulValuesKeys = Object.keys(usefulValues);
+    const requiredFiltersKeys = requiredFilters.map(
+      filter => NIELSEN_DATA_FILTERS[filter].stateKey
+    );
+
+    const shouldFetchData = usefulValuesKeys.length > 0
+      && requiredFiltersKeys.every(key => usefulValuesKeys.includes(key));
+
+    if (!shouldFetchData) {
+      return;
+    }
 
     const queryString = _.flow([
       _.values,
