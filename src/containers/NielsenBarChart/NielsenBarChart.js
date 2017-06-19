@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Grid, Col } from 'react-bootstrap';
 import _ from 'lodash/fp';
+import moment from 'moment';
 
 // import from constants
 import { API_BASE_URL } from '../../constants/api';
@@ -128,10 +129,9 @@ class NielsenBarChart extends React.Component {
       { name: list.name },
       list.values.reduce(
         (acc, item) => {
-          const [year, month] = item.date.split('-');
-
+          const period = moment(item.date).format('MMM, YY').toUpperCase();
           return mergeObjects(acc, {
-            [`${areasDict[item.areaId]}, ${month}/${year}`]: item.value
+            [`${areasDict[item.areaId]}, ${period}`]: item.value
           })
         },
         {}
@@ -146,12 +146,10 @@ class NielsenBarChart extends React.Component {
     const { dataFilters, data: { items } } = this.state;
 
     const periods = _.flow([
-      _.map(item => {
-        const [year, month] = item.date.split('-');
-        return `${month}/${year}`;
-      }),
+      _.map(item => parseInt(moment(item.date).format('x'))),
+      items => items.sort(),
+      _.map(item => moment(item).format('MMM, YY').toUpperCase()),
       _.uniq,
-      items => items.sort()
     ])(items);
 
     const areas = _.flow([
