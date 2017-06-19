@@ -10,19 +10,25 @@ export default class DataFilter extends React.Component {
 
   static propTypes = {
     label: PropTypes.string.isRequired,
+    // TODO: null || { 1: 'value', 2: 'value' }
     dictionary: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
     isLoading: PropTypes.bool,
-    multi: PropTypes.bool
+    multi: PropTypes.bool,
+    // TODO: null || { label: 'label', value: 'value' } || [{ label: 'label', value: 'value' }, ...]
+    value: PropTypes.any
   }
 
   static defaultProps = {
+    onChange: () => {},
     multi: false,
-    isLoading: false
+    isLoading: false,
+    value: null,
+    dictionary: null,
   };
 
   shouldComponentUpdate(nextProps) {
-    const propsKeys = ['isLoading', 'multi', 'label', 'dictionary', 'value'];
+    const propsKeys = ['value', 'dictionary', 'isLoading', 'multi', 'label'];
 
     return !_.isEqual(
       _.pick(propsKeys, nextProps),
