@@ -45,6 +45,7 @@ class NielsenBarChart extends React.Component {
 
   static propTypes = mergeObjects(DATA_FILTERS_PROP_TYPES, {
     level: PropTypes.string,
+    values: PropTypes.object,
     levelsToShow: PropTypes.arrayOf(PropTypes.string),
     dataFilters: PropTypes.arrayOf(PropTypes.string),
     requiredFilters: PropTypes.arrayOf(PropTypes.string),
@@ -73,17 +74,6 @@ class NielsenBarChart extends React.Component {
 
   componentDidMount() {
     // fetch data using some predefined values.
-  }
-
-  initialDataFiltersValue = () => {
-    const { dataFilters, level } = this.props;
-
-    return _.flow([
-      _.filter(filter => Object.keys(NIELSEN_DATA_FILTERS).includes(filter)),
-      _.reduce((acc, filter) => mergeObjects(acc, {
-        [NIELSEN_DATA_FILTERS[filter].key]: NIELSEN_DATA_FILTERS[filter].multi ? [] : null
-      }), {})
-    ])(dataFilters);
   }
 
   fetchData = (values = {}) => {
@@ -232,6 +222,7 @@ class NielsenBarChart extends React.Component {
         ) }
 
         <DataFilters
+          values={this.props.values}
           onChange={this.fetchData}
           dataFilters={this.props.dataFilters}
           nielsenAppliers={nielsenAppliers}
