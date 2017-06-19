@@ -11,7 +11,7 @@ export default class TopBar extends React.Component {
           Home
         </Link>
         <Link to='nielsen-barchart' style={{ color: 'white' }}>
-          Nielsen container
+          Nielsen container showcase
         </Link>
       </header>
     );
