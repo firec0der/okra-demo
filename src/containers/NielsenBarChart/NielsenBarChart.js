@@ -7,23 +7,13 @@ import _ from 'lodash/fp';
 
 // import from constants
 import { API_BASE_URL } from '../../constants/api';
-import {
-  NIELSEN_LEVEL_FILTER,
-  NIELSEN_MANUFACTURER_FILTER,
-  NIELSEN_CHANNEL_FILTER,
-  NIELSEN_AREA_FILTER,
-  NIELSEN_BRAND_FILTER,
-  NIELSEN_APPLIER_FILTER,
-  NIELSEN_GENRE_FILTER,
-  NIELSEN_PACKAGING_FILTER,
-  NIELSEN_DATA_FILTERS
-} from '../../constants/nielsenDataFilters';
+import { NIELSEN_DATA_FILTERS } from '../../constants/nielsenDataFilters';
 import DATA_FILTERS_PROP_TYPES from './dataFiltersPropTypes';
 
 // import from components
 import StackedBarChart from '../../components/StackedBarChart/StackedBarChart';
 import MetricsFilters from '../../components/MetricsFilters/MetricsFilters';
-import DataFilters from './DataFilters';
+import DataFilters from '../../components/DataFilters/DataFilters';
 
 // import from utils
 import { mergeObjects } from '../../utils/object';
@@ -229,6 +219,7 @@ class NielsenBarChart extends React.Component {
           values={this.props.values}
           onChange={this.fetchData}
           dataFilters={this.props.dataFilters}
+          dataFiltersConfig={NIELSEN_DATA_FILTERS}
           nielsenAppliers={nielsenAppliers}
           nielsenAreas={nielsenAreas}
           nielsenBrands={nielsenBrands}
