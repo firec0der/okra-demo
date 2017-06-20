@@ -23,7 +23,7 @@ export default class DataFilters extends React.Component {
   static defaultTypes = {
     onChange: values => {},
     dataFilters: {},
-    dataFilters: {}
+    dataFiltersConfig: {}
   };
 
   constructor(props, ...args) {
