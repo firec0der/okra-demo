@@ -10,8 +10,11 @@ export default class TopBar extends React.Component {
         <Link to='/' style={{ color: 'white', marginRight: '10px' }}>
           Home
         </Link>
-        <Link to='nielsen-barchart' style={{ color: 'white' }}>
+        <Link to='nielsen-barchart' style={{ color: 'white', marginRight: '10px' }}>
           Nielsen container showcase
+        </Link>
+        <Link to='q1' style={{ color: 'white', marginRight: '10px' }}>
+          Q1
         </Link>
       </header>
     );
