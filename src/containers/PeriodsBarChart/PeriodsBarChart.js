@@ -71,7 +71,7 @@ class PeriodsBarChart extends React.Component {
 
     const dataSetName = this.getDataSetName();
 
-    const BarChartContainer = datasetChartContainerMap[datasetName];
+    const BarChartContainer = dataSetChartContainerMap[dataSetName];
 
     return (
       <div>
