@@ -1,4 +1,4 @@
-import { apiBase } from '../../constants/api';
+import { API_BASE_URL } from '../../constants/api';
 
 const LOADING = 'KANTAR/PACKAGINS_LOADING';
 const SUCCESS = 'KANTAR/PACKAGINS_SUCCESS';
@@ -42,7 +42,7 @@ export default (state = initialState, action) => {
 export const fetchKantarPackagings = () => dispatch => {
   dispatch(loading());
 
-  return fetch(`${apiBase}/kantar/packagings`)
+  return fetch(`${API_BASE_URL}/kantar/packagings`)
     .then(response => response.json())
     .then(json => dispatch(success(json)));
 };

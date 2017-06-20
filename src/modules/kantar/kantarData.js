@@ -1,11 +1,10 @@
 import _ from 'lodash/fp';
 
-import { apiBase } from '../../constants/api';
+import { API_BASE_URL } from '../../constants/api';
 
 const LOADING = 'KANTAR/DATA_LOADING';
 const SUCCESS = 'KANTAR/DATA_SUCCESS';
 const CLEAR = 'KANTAR/DATA_CLEAR';
-// const FAILURE = 'KANTAR/DATA_FAILURE';
 
 const initialState = {
   isLoading: false,
@@ -63,7 +62,7 @@ export const fetchKantarData = dataFilters => dispatch => {
     )
     .join('&');
 
-  return fetch(`${apiBase}/kantar/data?${queryString}`)
+  return fetch(`${API_BASE_URL}/kantar/data?${queryString}`)
     .then(response => response.json())
     .then(json => dispatch(success(json)));
 };

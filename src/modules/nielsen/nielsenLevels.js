@@ -1,4 +1,4 @@
-import { apiBase } from '../../constants/api';
+import { API_BASE_URL } from '../../constants/api';
 
 const LOADING = 'NIELSEN/LEVELS_LOADING';
 const SUCCESS = 'NIELSEN/LEVELS_SUCCESS';
@@ -40,7 +40,7 @@ export default (state = initialState, action) => {
 export const fetchNielsenLevels = () => dispatch => {
   dispatch(loading());
 
-  return fetch(`${apiBase}/nielsen/levels`)
+  return fetch(`${API_BASE_URL}/nielsen/levels`)
     .then(response => response.json())
     .then(json => dispatch(success(json)));
 };

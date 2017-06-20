@@ -1,4 +1,4 @@
-import { apiBase } from '../../constants/api';
+import { API_BASE_URL } from '../../constants/api';
 
 const LOADING = 'NIELSEN/BRANDS_LOADING';
 const SUCCESS = 'NIELSEN/BRANDS_SUCCESS';
@@ -40,7 +40,7 @@ export default (state = initialState, action) => {
 export const fetchNielsenBrands = () => dispatch => {
   dispatch(loading());
 
-  return fetch(`${apiBase}/nielsen/brands`)
+  return fetch(`${API_BASE_URL}/nielsen/brands`)
     .then(response => response.json())
     .then(json => dispatch(success(json)));
 };
