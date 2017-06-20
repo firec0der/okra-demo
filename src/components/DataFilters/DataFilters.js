@@ -8,6 +8,8 @@ import _ from 'lodash/fp';
 // import from components
 import DataFilter from '../DataFilter/DataFilter';
 
+import { DATA_FILTERS_CONFIG } from '../../constants/dataFilters';
+
 // import from utils
 import { mergeObjects } from '../../utils/object';
 
@@ -15,22 +17,21 @@ export default class DataFilters extends React.Component {
 
   static propTypes = {
     dataFilters: PropTypes.arrayOf(PropTypes.string),
-    dataFiltersConfig: PropTypes.object,
+    dataSetName: PropTypes.string.isRequired,
     values: PropTypes.object,
     onChange: PropTypes.func
   };
 
   static defaultTypes = {
     onChange: values => {},
-    dataFilters: {},
-    dataFiltersConfig: {}
+    dataSetName: 'nielsen'
   };
 
   constructor(props, ...args) {
     super(props, ...args);
 
     this.state = { values: this.initialValues() };
-    this.onChangeCallbacks = this.initCallbacks();
+    this.onChangeCallbacks = this.onChangeCallbacks();
   }
 
   componentDidMount() {
@@ -45,9 +46,9 @@ export default class DataFilters extends React.Component {
     this.setState({ values }, () => this.props.onChange(this.state.values));
   };
 
-  onChangeMultiple = (propery, arrayWithValues) => {
+  onChangeMultiple = (stateKey, arrayWithValues) => {
     const values = mergeObjects(this.state.values, {
-      [propery]: arrayWithValues.map(value => parseInt(value.value))
+      [stateKey]: arrayWithValues.map(value => parseInt(value.value))
     });
 
     this.setState({ values }, () => this.props.onChange(this.state.values));
@@ -57,13 +58,17 @@ export default class DataFilters extends React.Component {
   getIsLoading = propKey => _.getOr(false, `${propKey}.isLoading`, this.props);
 
   getSelectedValue = filter => {
-    const { dataFiltersConfig } = this.props;
+    const { dataSetName } = this.props;
 
     // it's impossible, but anyway, something bad could happen.
-    if (!dataFiltersConfig[filter]) { return null; }
+    if (!DATA_FILTERS_CONFIG[filter]) { return null; }
 
-    const { propKey, key, multi } = dataFiltersConfig[filter];
-    const dictionary = this.getDictionary(propKey);
+    const { key, multi } = DATA_FILTERS_CONFIG[filter];
+
+    const propKey = `${dataSetName}PropKey`;
+    const dictionary = this.getDictionary(
+      DATA_FILTERS_CONFIG[filter][propKey]
+    );
 
     if (_.isEmpty(dictionary) || !this.state.values[key]) { return null; }
 
@@ -78,49 +83,71 @@ export default class DataFilters extends React.Component {
   };
 
   initialValues = () => {
-    const { dataFiltersConfig, values } = this.props;
+    const { values } = this.props;
 
-    const getValue = filter => values && values[dataFiltersConfig[filter].key]
-      ? values[dataFiltersConfig[filter].key]
-      : dataFiltersConfig[filter].multi ? [] : null;
+    const getValue = filter => values && values[DATA_FILTERS_CONFIG[filter].key]
+      ? values[DATA_FILTERS_CONFIG[filter].key]
+      : DATA_FILTERS_CONFIG[filter].multi
+        ? []
+        : null;
 
-    return Object.keys(dataFiltersConfig).reduce(
-      (acc, filterName) => mergeObjects(acc, {
-        [dataFiltersConfig[filterName].key]: getValue(filterName)
-      }),
-      {}
-    );
+    return Object
+      .keys(DATA_FILTERS_CONFIG)
+      .reduce((acc, filterName) => mergeObjects(acc, {
+        [DATA_FILTERS_CONFIG[filterName].key]: getValue(filterName)
+      }), {});
   };
 
-  initCallbacks = () => {
-    const { dataFiltersConfig, dataFilters } = this.props;
+  configForCurrentSetup = () => {
+    const { dataFilters, dataSetName } = this.props;
 
-    return _.flow([
-      _.filter(filter => Object.keys(dataFiltersConfig).includes(filter)),
-      _.reduce((acc, filter) => mergeObjects(acc, {
-        [filter]: dataFiltersConfig[filter].multi
-          ? this.onChangeMultiple.bind(null, dataFiltersConfig[filter].key)
-          : this.onChangeSingle.bind(null, dataFiltersConfig[filter].key)
-      }), {})
-    ])(dataFilters);
+    // Get all available filters for current data set.
+    const filtersForCurrentDataSet = Object
+      .keys(DATA_FILTERS_CONFIG)
+      .filter(filterName => DATA_FILTERS_CONFIG[filterName][`${dataSetName}PropKey`]);
+
+    // Assemble configs for all requested filters.
+    return dataFilters
+      .filter(filterName => filtersForCurrentDataSet.includes(filterName))
+      .reduce((acc, filterName) => mergeObjects(acc, {
+        [filterName]: DATA_FILTERS_CONFIG[filterName]
+      }), {});
+  }
+
+  onChangeCallbacks = () => {
+    const configForCurrentDataSet = this.configForCurrentSetup();
+
+    return Object
+      .keys(configForCurrentDataSet)
+      .reduce((acc, filterName) => mergeObjects(acc, {
+        [filterName]: DATA_FILTERS_CONFIG[filterName].multi
+          ? this.onChangeMultiple.bind(null, configForCurrentDataSet[filterName].key)
+          : this.onChangeSingle.bind(null, configForCurrentDataSet[filterName].key)
+      }), {});
   }
 
   renderFilters = () => {
-    const { dataFiltersConfig, dataFilters } = this.props;
+    const { dataFilters, dataSetName } = this.props;
+
+    const configForCurrentDataSet = this.configForCurrentSetup();
+
+    const dataFilterProps = filterName => {
+      const config = configForCurrentDataSet[filterName];
+
+      return {
+        key: filterName,
+        value: this.getSelectedValue(filterName),
+        label: config.label,
+        multi: config.multi,
+        dictionary: this.getDictionary(config[`${dataSetName}PropKey`]),
+        isLoading: this.getIsLoading(config[`${dataSetName}PropKey`]),
+        onChange: this.onChangeCallbacks[filterName]
+      };
+    };
 
     return _.flow([
-      _.filter(filter => Object.keys(dataFiltersConfig).includes(filter)),
-      _.map(filter => (
-        <DataFilter
-          key={filter}
-          value={this.getSelectedValue(filter)}
-          label={dataFiltersConfig[filter].label}
-          multi={dataFiltersConfig[filter].multi}
-          dictionary={this.getDictionary(dataFiltersConfig[filter].propKey)}
-          isLoading={this.getIsLoading(dataFiltersConfig[filter].propKey)}
-          onChange={this.onChangeCallbacks[filter]}
-        />
-      )),
+      _.keys,
+      _.map(filterName => <DataFilter {...dataFilterProps(filterName)} />),
       _.chunk(4),
       _.map((row, index) => (
         <Grid key={index}>
@@ -131,7 +158,7 @@ export default class DataFilters extends React.Component {
           )) }
         </Grid>
       ))
-    ])(dataFilters);
+    ])(configForCurrentDataSet);
   }
 
   render() {
