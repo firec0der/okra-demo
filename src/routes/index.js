@@ -8,8 +8,9 @@ import Q1Page from '../pages/Q1Page/Q1Page';
 import { fetchMetrics } from '../modules/metrics';
 import { fetchKantarBrands } from '../modules/kantar/kantarBrands';
 import { fetchKantarAreas } from '../modules/kantar/kantarAreas';
-import { fetchKantarPackagings } from '../modules/kantar/kantarPackagings';
 import { fetchKantarGenres } from '../modules/kantar/kantarGenres';
+import { fetchKantarLevels } from '../modules/kantar/kantarLevels';
+import { fetchKantarPackagings } from '../modules/kantar/kantarPackagings';
 
 import { fetchNielsenAppliers } from '../modules/nielsen/nielsenAppliers';
 import { fetchNielsenAreas } from '../modules/nielsen/nielsenAreas';
@@ -21,11 +22,13 @@ import { fetchNielsenManufacturers } from '../modules/nielsen/nielsenManufacture
 import { fetchNielsenPackagings } from '../modules/nielsen/nielsenPackagings';
 
 export const fetchAllStaticData = ({ dispatch }) => () => {
-  dispatch(fetchKantarBrands());
-  dispatch(fetchKantarAreas());
   dispatch(fetchMetrics());
-  dispatch(fetchKantarPackagings());
+
+  dispatch(fetchKantarAreas());
+  dispatch(fetchKantarBrands());
   dispatch(fetchKantarGenres());
+  dispatch(fetchKantarLevels());
+  dispatch(fetchKantarPackagings());
 
   dispatch(fetchNielsenAppliers());
   dispatch(fetchNielsenAreas());

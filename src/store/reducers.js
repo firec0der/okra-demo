@@ -2,11 +2,13 @@ import { combineReducers } from 'redux';
 
 import locationReducer from './location';
 import metrics from '../modules/metrics';
-import kantarBrands from '../modules/kantar/kantarBrands';
-import kantarData from '../modules/kantar/kantarData';
+
 import kantarAreas from '../modules/kantar/kantarAreas';
-import kantarPackagings from '../modules/kantar/kantarPackagings';
+import kantarBrands from '../modules/kantar/kantarBrands';
 import kantarGenres from '../modules/kantar/kantarGenres';
+import kantarLevels from '../modules/kantar/kantarLevels';
+import kantarPackagings from '../modules/kantar/kantarPackagings';
+import kantarData from '../modules/kantar/kantarData';
 
 import nielsenAppliers from '../modules/nielsen/nielsenAppliers';
 import nielsenAreas from '../modules/nielsen/nielsenAreas';
@@ -20,11 +22,14 @@ import nielsenPackagings from '../modules/nielsen/nielsenPackagings';
 export default combineReducers({
   location: locationReducer,
   metrics,
-  kantarBrands,
-  kantarData,
   kantarAreas,
-  kantarPackagings,
+  kantarBrands,
   kantarGenres,
+  kantarLevels,
+  kantarPackagings,
+
+  kantarData,
+
   nielsenAppliers,
   nielsenAreas,
   nielsenBrands,
