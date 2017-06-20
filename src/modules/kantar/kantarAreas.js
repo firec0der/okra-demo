@@ -2,21 +2,20 @@ import { apiBase } from '../../constants/api';
 
 const LOADING = 'KANTAR/AREAS_LOADING';
 const SUCCESS = 'KANTAR/AREAS_SUCCESS';
-// const FAILURE = 'KANTAR/BRANDS_FAILURE';
 
 const initialState = {
   isLoading: false,
   error: null,
-  table: {}
+  dictionary: {}
 };
 
 const loading = () => ({
   type: LOADING
 });
 
-const success = (data) => ({
+const success = ({ dictionary }) => ({
   type: SUCCESS,
-  payload: { table: data }
+  payload: { dictionary }
 });
 
 export default (state = initialState, action) => {
@@ -24,7 +23,7 @@ export default (state = initialState, action) => {
     case SUCCESS:
       return {
         ...state,
-        table: action.payload.table,
+        dictionary: action.payload.dictionary,
         isLoading: false,
         error: null
       };
