@@ -1,7 +1,6 @@
 import CoreLayout from '../layouts/PageLayout/PageLayout';
 
 import HomePage from '../pages/HomePage/HomePage';
-import NielsenBarChartPage from '../pages/NielsenBarChartPage/NielsenBarChartPage';
 
 import Q1Page from '../pages/Q1Page/Q1Page';
 
@@ -45,11 +44,6 @@ export default (store) => ({
   component: CoreLayout,
   indexRoute: { component: HomePage, onEnter: fetchAllStaticData(store) },
   childRoutes: [
-    {
-      path: '/nielsen-barchart',
-      component: NielsenBarChartPage,
-      onEnter: fetchAllStaticData(store)
-    },
     {
       path: '/q1',
       component: Q1Page,

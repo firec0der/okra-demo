@@ -8,9 +8,6 @@ import _ from 'lodash/fp';
 // import from components
 import SearchBar from '../../components/SearchBar/SearchBar';
 
-// import from containers
-import KantarBarChart from '../../containers/KantarBarChart/KantarBarChart';
-
 // import from styles
 import './HomePage.scss';
 
