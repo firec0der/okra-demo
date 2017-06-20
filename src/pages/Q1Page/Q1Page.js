@@ -17,6 +17,7 @@ import {
 
 // import from containers
 import NielsenPeriodsBarChart from '../../containers/NielsenPeriodsBarChart/NielsenPeriodsBarChart';
+import NielsenPeriodsLineChart from '../../containers/NielsenPeriodsLineChart/NielsenPeriodsLineChart';
 
 export default class Q1Page extends React.Component {
 
@@ -50,6 +51,12 @@ export default class Q1Page extends React.Component {
         </Grid>
 
         <NielsenPeriodsBarChart
+          dataFilters={dataFilters}
+          values={values}
+          requiredFilters={requiredFilters}
+        />
+
+        <NielsenPeriodsLineChart
           dataFilters={dataFilters}
           values={values}
           requiredFilters={requiredFilters}
