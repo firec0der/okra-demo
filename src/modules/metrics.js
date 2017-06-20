@@ -1,4 +1,4 @@
-import { apiBase } from '../constants/api';
+import { API_BASE_URL } from '../constants/api';
 
 const LOADING = 'METRICS_LOADING';
 const SUCCESS = 'METRICS_SUCCESS';
@@ -40,7 +40,7 @@ export default (state = initialState, action) => {
 export const fetchMetrics = () => dispatch => {
   dispatch(loading());
 
-  return fetch(`${apiBase}/metrics`)
+  return fetch(`${API_BASE_URL}/metrics`)
     .then(response => response.json())
     .then(data => dispatch(success(data)));
 };
