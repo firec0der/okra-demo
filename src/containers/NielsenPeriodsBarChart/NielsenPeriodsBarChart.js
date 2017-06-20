@@ -17,12 +17,11 @@ import moment from 'moment';
 
 // import from constants
 import { API_BASE_URL } from '../../constants/api';
-import { NIELSEN_DATA_FILTERS_CONFIG } from '../../constants/nielsenDataFilters';
+import { DATA_FILTERS_CONFIG } from '../../constants/dataFilters';
 import DATA_FILTERS_PROP_TYPES from './dataFiltersPropTypes';
 import { colorPalette } from '../../constants/colors';
 
 // import from components
-import MetricsFilters from '../../components/MetricsFilters/MetricsFilters';
 import DataFilters from '../../components/DataFilters/DataFilters';
 
 // import from utils
@@ -47,13 +46,15 @@ class NielsenPeriodsBarChart extends React.Component {
     values: PropTypes.object,
     dataFilters: PropTypes.arrayOf(PropTypes.string),
     requiredFilters: PropTypes.arrayOf(PropTypes.string),
-    showMetricsFilters: PropTypes.bool
+    showMetricsFilters: PropTypes.bool,
+    metric: PropTypes.string,
   });
 
   static defaultProps = {
-    dataFilters: Object.keys(NIELSEN_DATA_FILTERS_CONFIG),
+    dataFilters: [],
     requiredFilters: [],
-    showMetricsFilters: true
+    showMetricsFilters: true,
+    metric: 'numericDistribution'
   };
 
   constructor(props, ...args) {
@@ -63,8 +64,7 @@ class NielsenPeriodsBarChart extends React.Component {
       data: {
         items: [],
         isLoading: false
-      },
-      chosenMetric: 'numericDistribution'
+      }
     };
   }
 
@@ -81,7 +81,7 @@ class NielsenPeriodsBarChart extends React.Component {
 
     const usefulValuesKeys = Object.keys(usefulValues);
     const requiredFiltersKeys = requiredFilters.map(
-      filter => NIELSEN_DATA_FILTERS_CONFIG[filter].key
+      filter => DATA_FILTERS_CONFIG[filter].key
     );
 
     const shouldFetchData = usefulValuesKeys.length > 0
@@ -102,32 +102,30 @@ class NielsenPeriodsBarChart extends React.Component {
         []
       ),
       _.join('&')
-    ])(NIELSEN_DATA_FILTERS_CONFIG);
+    ])(DATA_FILTERS_CONFIG);
 
     this.setState(
       { data: { items: [], isLoading: false } },
       () => fetch(`${API_BASE_URL}/nielsen/data?${queryString}`)
         .then(response => response.json())
         .then(json => this.setState({ data: { items: json, isLoading: false } }))
-    )
+    );
   }
-
-  onMetricFilterChange = chosenMetric => this.setState({ chosenMetric });
 
   barChartData = () => {
     const {
       nielsenBrands: { dictionary: brandsDict },
-      nielsenAreas: { dictionary: areasDict }
+      metric
     } = this.props;
-    const { chosenMetric, data } = this.state;
+    const { data } = this.state;
 
     return _.flow([
-      _.filter(item => item[chosenMetric] && item.date),
+      _.filter(item => item[metric] && item.date),
       _.groupBy('date'),
       _.entries,
       _.map(([ date, list ]) => list
         .reduce(
-        (acc, item) => mergeObjects(acc, { [brandsDict[item.brandId]]: item[chosenMetric] }),
+        (acc, item) => mergeObjects(acc, { [brandsDict[item.brandId]]: item[metric] }),
         { name: moment(date).format('MMM, YY').toUpperCase() }
       ))
     ])(data.items);
@@ -152,13 +150,6 @@ class NielsenPeriodsBarChart extends React.Component {
     ))
   }
 
-  getMetrics = () => _.flow([
-    _.filter(({ items }) => items.some(item => item.dataset === 'nielsen')),
-    _.map(group => mergeObjects(group, {
-      items: group.items.filter(item => item.dataset === 'nielsen')
-    }))
-  ])(this.props.metrics.list);
-
   render() {
     const {
       nielsenAppliers,
@@ -169,17 +160,9 @@ class NielsenPeriodsBarChart extends React.Component {
       nielsenLevels,
       nielsenManufacturers,
       nielsenPackagings,
-      header
     } = this.props;
 
-    const { chosenMetric, data } = this.state;
-
-    const searchOnSubmit = (value) => window.alert(`It works, value: ${value}`);
-
-    const metrics = this.getMetrics();
-    const shouldShowMetrics = this.props.showMetricsFilters
-      && !this.props.isLoading
-      && metrics.length;
+    const { data } = this.state;
 
     const barChartProps = {
       width: 600,
@@ -191,31 +174,11 @@ class NielsenPeriodsBarChart extends React.Component {
 
     return (
       <div>
-        { !_.isNil(header) && (
-          <Grid style={{ marginBottom: '30px' }}>
-            <Col xs={12} md={8} mdOffset={2}>
-              <h1 className="text-center">{ header }</h1>
-            </Col>
-          </Grid>
-        ) }
-
-        { shouldShowMetrics && (
-          <Grid style={{ marginBottom: '30px' }}>
-            <Col xs={12} md={8} mdOffset={2}>
-              <MetricsFilters
-                metrics={metrics}
-                onChange={this.onMetricFilterChange}
-                selectedValue={chosenMetric}
-              />
-            </Col>
-          </Grid>
-        ) }
-
         <DataFilters
           values={this.props.values}
           onChange={this.fetchData}
           dataFilters={this.props.dataFilters}
-          dataFiltersConfig={NIELSEN_DATA_FILTERS_CONFIG}
+          dataSetName='nielsen'
           nielsenAppliers={nielsenAppliers}
           nielsenAreas={nielsenAreas}
           nielsenBrands={nielsenBrands}
