@@ -17,7 +17,7 @@ import moment from 'moment';
 
 // import from constants
 import { API_BASE_URL } from '../../../constants/api';
-import { DATA_FILTERS_CONFIG } from '../../../constants/dataFilters';
+import { DATA_FILTERS_CONFIG, AREA_FILTER } from '../../../constants/dataFilters';
 import DATA_FILTERS_PROP_TYPES from './dataFiltersPropTypes';
 import { colorPalette } from '../../../constants/colors';
 
@@ -95,7 +95,7 @@ class NielsenPeriodsBarChart extends React.Component {
 
     const queryString = _.flow([
       _.values,
-      _.filter(item => _.keys(usefulValues).includes(item.key)),
+      _.filter(filter => _.keys(usefulValues).includes(filter.key)),
       _.reduce(
         (acc, { key, multi }) => [].concat(acc, multi
           ? values[key].map(value => `${key}[]=${value}`)
@@ -117,9 +117,12 @@ class NielsenPeriodsBarChart extends React.Component {
   barChartData = () => {
     const {
       nielsenBrands: { dictionary: brandsDict },
+      nielsenAreas: { dictionary: areasDict },
       metric
     } = this.props;
-    const { data } = this.state;
+    const { data, dataFiltersValues } = this.state;
+
+    const areaIds = dataFiltersValues[DATA_FILTERS_CONFIG[AREA_FILTER].key];
 
     return _.flow([
       _.filter(item => item[metric] && item.date),
@@ -127,29 +130,43 @@ class NielsenPeriodsBarChart extends React.Component {
       _.entries,
       _.map(([ date, list ]) => list
         .reduce(
-        (acc, item) => mergeObjects(acc, { [brandsDict[item.brandId]]: item[metric] }),
+        (acc, item) => mergeObjects(acc, {
+          [`${areasDict[item.areaId]}, ${brandsDict[item.brandId]}`]: item[metric]
+        }),
         { name: moment(date).format('MMM, YY').toUpperCase() }
       ))
     ])(data.items);
   }
 
   renderBarStacks = () => {
-    const { nielsenBrands: { dictionary: brandsDict } } = this.props;
-    const { data: { items } } = this.state;
+    const {
+      nielsenBrands: { dictionary: brandsDict },
+      nielsenAreas: { dictionary: areasDict },
+    } = this.props;
+    const { data: { items }, dataFiltersValues } = this.state;
+
+    const areaIds = dataFiltersValues[DATA_FILTERS_CONFIG[AREA_FILTER].key];
 
     const brands = _.flow([
       _.uniqBy('brandId'),
       _.map(item => brandsDict[item.brandId])
     ])(items);
 
-    return brands.map((brandName, i) => (
-      <Bar
-        key={brandName}
-        stackId={1}
-        dataKey={brandName}
-        fill={colorPalette[i]}
-      />
-    ));
+    return areaIds.reduce((acc, areaId, i) => {
+      const areaName = areasDict[areaId];
+
+      return [].concat(
+        acc,
+        brands.map((brandName, j) => (
+          <Bar
+            key={`${areaName}-${brandName}`}
+            stackId={i + 1}
+            fill={colorPalette[j]}
+            dataKey={`${areaName}, ${brandName}`}
+          />
+        ))
+      );
+    }, []);
   }
 
   render() {
