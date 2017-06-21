@@ -42,7 +42,6 @@ const mapStateToProps = state => ({
 class NielsenPeriodsBarChart extends React.Component {
 
   static propTypes = mergeObjects(DATA_FILTERS_PROP_TYPES, {
-    header: PropTypes.string,
     values: PropTypes.object,
     dataFilters: PropTypes.arrayOf(PropTypes.string),
     requiredFilters: PropTypes.arrayOf(PropTypes.string),
@@ -122,15 +121,11 @@ class NielsenPeriodsBarChart extends React.Component {
     } = this.props;
     const { data, dataFiltersValues } = this.state;
 
-    const areaIds = dataFiltersValues[DATA_FILTERS_CONFIG[AREA_FILTER].key];
-
     return _.flow([
       _.filter(item => item[metric] && item.date),
       _.groupBy('date'),
       _.entries,
-      _.map(([ date, list ]) => list
-        .reduce(
-        (acc, item) => mergeObjects(acc, {
+      _.map(([ date, list ]) => list.reduce((acc, item) => mergeObjects(acc, {
           [`${areasDict[item.areaId]}, ${brandsDict[item.brandId]}`]: item[metric]
         }),
         { name: moment(date).format('MMM, YY').toUpperCase() }
