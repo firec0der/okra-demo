@@ -14,12 +14,14 @@ import {
 
 // import from containers
 import PeriodsBarChart from '../../containers/PeriodsBarChart/PeriodsBarChart';
+import NielsenPeriodsLineChart from '../../containers/NielsenPeriodsLineChart/NielsenPeriodsLineChart';
 
 export default class Q1Page extends React.Component {
 
   render() {
     const barChartDataFilters = [
       AREA_FILTER,
+      CHANNEL_FILTER,
       GENRE_FILTER,
       PACKAGING_FILTER
     ];
@@ -29,6 +31,23 @@ export default class Q1Page extends React.Component {
     ];
 
     const barChartValues = {
+      [DATA_FILTERS_CONFIG[CHANNEL_FILTER].key]: 1,
+      [DATA_FILTERS_CONFIG[LEVEL_FILTER].key]: 2,
+      [DATA_FILTERS_CONFIG[GENRE_FILTER].key]: 1,
+      [DATA_FILTERS_CONFIG[AREA_FILTER].key]: [1],
+    };
+
+    const lineChartDataFilters = [
+      AREA_FILTER,
+      GENRE_FILTER,
+      PACKAGING_FILTER
+    ];
+
+    const lineChartRequiredFilters = [
+      AREA_FILTER
+    ];
+
+    const lineChartValues = {
       [DATA_FILTERS_CONFIG[CHANNEL_FILTER].key]: 1,
       [DATA_FILTERS_CONFIG[LEVEL_FILTER].key]: 2,
       [DATA_FILTERS_CONFIG[GENRE_FILTER].key]: 1,
@@ -49,6 +68,12 @@ export default class Q1Page extends React.Component {
           dataFilters={barChartDataFilters}
           values={barChartValues}
           requiredFilters={barChartRequiredFilters}
+          chosenMetric='weightedDistribution'
+        />
+        <NielsenPeriodsLineChart
+          dataFilters={lineChartDataFilters}
+          values={lineChartValues}
+          requiredFilters={lineChartRequiredFilters}
           chosenMetric='weightedDistribution'
         />
       </div>
