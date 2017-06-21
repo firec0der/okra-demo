@@ -101,6 +101,7 @@ class PeriodsBarChart extends React.Component {
             datasetName={dataSetName}
             dataFilters={this.props.dataFilters}
             values={this.props.values}
+            showPeriodFilters
           />
         ) }
       </div>

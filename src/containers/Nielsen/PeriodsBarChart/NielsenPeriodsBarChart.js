@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Grid, Col } from 'react-bootstrap';
+import { Grid, Col, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 import {
   BarChart as RechartsBarChart,
   XAxis,
@@ -23,6 +23,7 @@ import { colorPalette } from '../../../constants/colors';
 
 // import from components
 import DataFilters from '../../../components/DataFilters/DataFilters';
+import DatePicker from '../../../components/DatePicker/DatePicker';
 
 // import from utils
 import { mergeObjects } from '../../../utils/object';
@@ -45,6 +46,7 @@ class NielsenPeriodsBarChart extends React.Component {
     values: PropTypes.object,
     dataFilters: PropTypes.arrayOf(PropTypes.string),
     requiredFilters: PropTypes.arrayOf(PropTypes.string),
+    showPeriodFilters: PropTypes.bool,
     showMetricsFilters: PropTypes.bool,
     metric: PropTypes.string,
   });
@@ -52,6 +54,7 @@ class NielsenPeriodsBarChart extends React.Component {
   static defaultProps = {
     dataFilters: [],
     requiredFilters: [],
+    showPeriodFilters: true,
     showMetricsFilters: true,
     metric: 'numericDistribution'
   };
@@ -59,22 +62,29 @@ class NielsenPeriodsBarChart extends React.Component {
   constructor(props, ...args) {
     super(props, ...args);
 
+    const dataFiltersValues = props.showPeriodFilters
+      ? { periodFrom: moment(2016, 'YYYY').unix(), periodTo: moment().unix() }
+      : {}
+
     this.state = {
       data: {
         items: [],
         isLoading: false
       },
-      dataFiltersValues: {}
+      dataFiltersValues
     };
   }
 
   onDataFiltersChange = dataFiltersValues => this.setState(
-    { dataFiltersValues },
+    { dataFiltersValues: mergeObjects(this.state.dataFiltersValues, dataFiltersValues) },
     () => this.fetchData(this.state.dataFiltersValues)
   );
 
+  onDateChange = (key, value) => this.onDataFiltersChange({ [key]: moment(value).unix() });
+
   fetchData = (values = {}) => {
-    const { requiredFilters } = this.props;
+    const { requiredFilters, showPeriodFilters } = this.props;
+
     const usefulValues = _.omitBy(
       value => _.isNil(value) || value.length === 0,
       values
@@ -92,7 +102,7 @@ class NielsenPeriodsBarChart extends React.Component {
       return;
     }
 
-    const queryString = _.flow([
+    const queryStringParts = _.flow([
       _.values,
       _.filter(filter => _.keys(usefulValues).includes(filter.key)),
       _.reduce(
@@ -101,9 +111,14 @@ class NielsenPeriodsBarChart extends React.Component {
           : `${key}=${values[key]}`
         ),
         []
-      ),
-      _.join('&')
+      )
     ])(DATA_FILTERS_CONFIG);
+
+    const queryString = (
+      showPeriodFilters
+        ? [...queryStringParts, `periodFrom=${values.periodFrom}`, `periodTo=${values.periodTo}`]
+        : queryStringParts
+    ).join('&');
 
     this.setState(
       { data: { items: [], isLoading: false } },
@@ -174,6 +189,7 @@ class NielsenPeriodsBarChart extends React.Component {
       nielsenLevels,
       nielsenManufacturers,
       nielsenPackagings,
+      showPeriodFilters
     } = this.props;
 
     const { data } = this.state;
@@ -185,6 +201,9 @@ class NielsenPeriodsBarChart extends React.Component {
       margin: { top: 20, right: 30, left: 20, bottom: 5 },
       barGap: 0
     };
+
+    const datePickerFromSelected = moment.unix(this.state.dataFiltersValues.periodFrom);
+    const datePickerToSelected = moment.unix(this.state.dataFiltersValues.periodTo);
 
     return (
       <div>
@@ -202,6 +221,35 @@ class NielsenPeriodsBarChart extends React.Component {
           nielsenManufacturers={nielsenManufacturers}
           nielsenPackagings={nielsenPackagings}
         />
+
+        { showPeriodFilters && (
+          <Grid>
+            <Col xs={12} md={3} style={{ marginBottom: '30px' }}>
+              <FormGroup>
+                <ControlLabel>Period from</ControlLabel>
+                <DatePicker
+                  customInput={<FormControl />}
+                  selected={datePickerFromSelected}
+                  showYearDropdown
+                  showMonthDropdown
+                  onChange={this.onDateChange.bind(null, 'periodFrom')}
+                />
+              </FormGroup>
+            </Col>
+            <Col xs={12} md={3} style={{ marginBottom: '30px' }}>
+              <FormGroup>
+                <ControlLabel>Period to</ControlLabel>
+                <DatePicker
+                  customInput={<FormControl />}
+                  selected={datePickerToSelected}
+                  showYearDropdown
+                  showMonthDropdown
+                  onChange={this.onDateChange.bind(null, 'periodTo')}
+                />
+              </FormGroup>
+            </Col>
+          </Grid>
+        ) }
 
         { !data.isLoading && data.items.length > 0 && (
           <Grid>

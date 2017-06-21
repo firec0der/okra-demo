@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Grid, Col } from 'react-bootstrap';
+import { Grid, Col, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 import {
   BarChart as RechartsBarChart,
   XAxis,
@@ -23,6 +23,7 @@ import { colorPalette } from '../../../constants/colors';
 
 // import from components
 import DataFilters from '../../../components/DataFilters/DataFilters';
+import DatePicker from '../../../components/DatePicker/DatePicker';
 
 // import from utils
 import { mergeObjects } from '../../../utils/object';
@@ -43,12 +44,14 @@ class KantarPeriodsBarChart extends React.Component {
     dataFilters: PropTypes.arrayOf(PropTypes.string),
     requiredFilters: PropTypes.arrayOf(PropTypes.string),
     showMetricsFilters: PropTypes.bool,
+    showPeriodFilters: PropTypes.bool,
     metric: PropTypes.string,
   });
 
   static defaultProps = {
     dataFilters: [],
     requiredFilters: [],
+    showPeriodFilters: true,
     showMetricsFilters: true,
     metric: 'penetration'
   };
@@ -56,22 +59,29 @@ class KantarPeriodsBarChart extends React.Component {
   constructor(props, ...args) {
     super(props, ...args);
 
+    const dataFiltersValues = props.showPeriodFilters
+      ? { periodFrom: moment(2016, 'YYYY').unix(), periodTo: moment().unix() }
+      : {};
+
     this.state = {
       data: {
         items: [],
         isLoading: false
       },
-      dataFiltersValues: {}
+      dataFiltersValues
     };
   }
 
   onDataFiltersChange = dataFiltersValues => this.setState(
-    { dataFiltersValues },
+    { dataFiltersValues: mergeObjects(this.state.dataFiltersValues, dataFiltersValues) },
     () => this.fetchData(this.state.dataFiltersValues)
   );
 
+  onDateChange = (key, value) => this.onDataFiltersChange({ [key]: moment(value).unix() });
+
   fetchData = (values = {}) => {
-    const { requiredFilters } = this.props;
+    const { requiredFilters, showPeriodFilters } = this.props;
+
     const usefulValues = _.omitBy(
       value => _.isNil(value) || value.length === 0,
       values
@@ -89,7 +99,7 @@ class KantarPeriodsBarChart extends React.Component {
       return;
     }
 
-    const queryString = _.flow([
+    const queryStringParts = _.flow([
       _.values,
       _.filter(filter => _.keys(usefulValues).includes(filter.key)),
       _.reduce(
@@ -102,8 +112,14 @@ class KantarPeriodsBarChart extends React.Component {
       _.join('&')
     ])(DATA_FILTERS_CONFIG);
 
+    const queryString = (
+      showPeriodFilters
+        ? [...queryStringParts, `periodFrom=${values.periodFrom}`, `periodTo=${values.periodTo}`]
+        : queryStringParts
+    ).join('&');
+
     this.setState(
-      { data: { items: [], isLoading: false } },
+      { data: { items: [], isLoading: true } },
       () => fetch(`${API_BASE_URL}/kantar/data?${queryString}`)
         .then(response => response.json())
         .then(json => this.setState({ data: { items: json, isLoading: false } }))
@@ -168,7 +184,8 @@ class KantarPeriodsBarChart extends React.Component {
       kantarBrands,
       kantarGenres,
       kantarLevels,
-      kantarPackagings
+      kantarPackagings,
+      showPeriodFilters
     } = this.props;
 
     const { data } = this.state;
@@ -180,6 +197,11 @@ class KantarPeriodsBarChart extends React.Component {
       margin: { top: 20, right: 30, left: 20, bottom: 5 },
       barGap: 0
     };
+
+    const datePickerFromSelected = moment.unix(this.state.dataFiltersValues.periodFrom);
+    const datePickerToSelected = moment.unix(this.state.dataFiltersValues.periodTo);
+
+    console.log(datePickerFromSelected, datePickerToSelected);
 
     return (
       <div>
@@ -194,6 +216,35 @@ class KantarPeriodsBarChart extends React.Component {
           kantarLevels={kantarLevels}
           kantarPackagings={kantarPackagings}
         />
+
+        { showPeriodFilters && (
+          <Grid>
+            <Col xs={12} md={3} style={{ marginBottom: '30px' }}>
+              <FormGroup>
+                <ControlLabel>Period from</ControlLabel>
+                <DatePicker
+                  customInput={<FormControl />}
+                  selected={datePickerFromSelected}
+                  showYearDropdown
+                  showMonthDropdown
+                  onChange={this.onDateChange.bind(null, 'periodFrom')}
+                />
+              </FormGroup>
+            </Col>
+            <Col xs={12} md={3} style={{ marginBottom: '30px' }}>
+              <FormGroup>
+                <ControlLabel>Period to</ControlLabel>
+                <DatePicker
+                  customInput={<FormControl />}
+                  selected={datePickerToSelected}
+                  showYearDropdown
+                  showMonthDropdown
+                  onChange={this.onDateChange.bind(null, 'periodTo')}
+                />
+              </FormGroup>
+            </Col>
+          </Grid>
+        ) }
 
         { !data.isLoading && data.items.length > 0 && (
           <Grid>
