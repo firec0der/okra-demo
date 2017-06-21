@@ -16,16 +16,16 @@ import _ from 'lodash/fp';
 import moment from 'moment';
 
 // import from constants
-import { API_BASE_URL } from '../../constants/api';
-import { DATA_FILTERS_CONFIG } from '../../constants/dataFilters';
+import { API_BASE_URL } from '../../../constants/api';
+import { DATA_FILTERS_CONFIG } from '../../../constants/dataFilters';
 import DATA_FILTERS_PROP_TYPES from './dataFiltersPropTypes';
-import { colorPalette } from '../../constants/colors';
+import { colorPalette } from '../../../constants/colors';
 
 // import from components
-import DataFilters from '../../components/DataFilters/DataFilters';
+import DataFilters from '../../../components/DataFilters/DataFilters';
 
 // import from utils
-import { mergeObjects } from '../../utils/object';
+import { mergeObjects } from '../../../utils/object';
 
 const mapStateToProps = state => ({
   metrics: state.metrics,

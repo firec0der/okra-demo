@@ -14,7 +14,7 @@ import {
 
 // import from containers
 import PeriodsBarChart from '../../containers/PeriodsBarChart/PeriodsBarChart';
-import NielsenPeriodsLineChart from '../../containers/NielsenPeriodsLineChart/NielsenPeriodsLineChart';
+import NielsenPeriodsLineChart from '../../containers/Nielsen/PeriodsLineChart/NielsenPeriodsLineChart';
 
 export default class Q1Page extends React.Component {
 

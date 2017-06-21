@@ -12,8 +12,8 @@ import { DATA_FILTERS_CONFIG } from '../../constants/dataFilters';
 import MetricsFilters from '../../components/MetricsFilters/MetricsFilters';
 
 // import from containers
-import NielsenPeriodsBarChart from '../NielsenPeriodsBarChart/NielsenPeriodsBarChart';
-import KantarPeriodsBarChart from '../KantarPeriodsBarChart/KantarPeriodsBarChart';
+import NielsenPeriodsBarChart from '../Nielsen/PeriodsBarChart/NielsenPeriodsBarChart';
+import KantarPeriodsBarChart from '../Kantar/PeriodsBarChart/KantarPeriodsBarChart';
 
 // import from utils
 import { mergeObjects } from '../../utils/object';

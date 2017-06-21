@@ -4,28 +4,28 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Grid, Col } from 'react-bootstrap';
 import {
-  LineChart as RechartsLineChart,
+  BarChart as RechartsBarChart,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  Line,
+  Bar,
   ResponsiveContainer
 } from 'recharts';
 import _ from 'lodash/fp';
 import moment from 'moment';
 
 // import from constants
-import { API_BASE_URL } from '../../constants/api';
-import { DATA_FILTERS_CONFIG } from '../../constants/dataFilters';
+import { API_BASE_URL } from '../../../constants/api';
+import { DATA_FILTERS_CONFIG } from '../../../constants/dataFilters';
 import DATA_FILTERS_PROP_TYPES from './dataFiltersPropTypes';
-import { colorPalette } from '../../constants/colors';
+import { colorPalette } from '../../../constants/colors';
 
 // import from components
-import DataFilters from '../../components/DataFilters/DataFilters';
+import DataFilters from '../../../components/DataFilters/DataFilters';
 
 // import from utils
-import { mergeObjects } from '../../utils/object';
+import { mergeObjects } from '../../../utils/object';
 
 const mapStateToProps = state => ({
   metrics: state.metrics,
@@ -39,14 +39,15 @@ const mapStateToProps = state => ({
   nielsenPackagings: state.nielsenPackagings,
 });
 
-class NielsenPeriodsLineChart extends React.Component {
+class NielsenPeriodsBarChart extends React.Component {
 
   static propTypes = mergeObjects(DATA_FILTERS_PROP_TYPES, {
     header: PropTypes.string,
     values: PropTypes.object,
     dataFilters: PropTypes.arrayOf(PropTypes.string),
     requiredFilters: PropTypes.arrayOf(PropTypes.string),
-    showMetricsFilters: PropTypes.bool
+    showMetricsFilters: PropTypes.bool,
+    metric: PropTypes.string,
   });
 
   static defaultProps = {
@@ -63,13 +64,15 @@ class NielsenPeriodsLineChart extends React.Component {
       data: {
         items: [],
         isLoading: false
-      }
+      },
+      dataFiltersValues: {}
     };
   }
 
-  componentDidMount() {
-    // fetch data using some predefined values.
-  }
+  onDataFiltersChange = dataFiltersValues => this.setState(
+    { dataFiltersValues },
+    () => this.fetchData(this.state.dataFiltersValues)
+  );
 
   fetchData = (values = {}) => {
     const { requiredFilters } = this.props;
@@ -108,10 +111,10 @@ class NielsenPeriodsLineChart extends React.Component {
       () => fetch(`${API_BASE_URL}/nielsen/data?${queryString}`)
         .then(response => response.json())
         .then(json => this.setState({ data: { items: json, isLoading: false } }))
-    )
+    );
   }
 
-  lineChartData = () => {
+  barChartData = () => {
     const {
       nielsenBrands: { dictionary: brandsDict },
       metric
@@ -130,7 +133,7 @@ class NielsenPeriodsLineChart extends React.Component {
     ])(data.items);
   }
 
-  renderLines = () => {
+  renderBarStacks = () => {
     const { nielsenBrands: { dictionary: brandsDict } } = this.props;
     const { data: { items } } = this.state;
 
@@ -140,13 +143,13 @@ class NielsenPeriodsLineChart extends React.Component {
     ])(items);
 
     return brands.map((brandName, i) => (
-      <Line
+      <Bar
         key={brandName}
-        type="monotone"
+        stackId={1}
         dataKey={brandName}
-        stroke={colorPalette[i]}
+        fill={colorPalette[i]}
       />
-    ))
+    ));
   }
 
   render() {
@@ -159,7 +162,6 @@ class NielsenPeriodsLineChart extends React.Component {
       nielsenLevels,
       nielsenManufacturers,
       nielsenPackagings,
-      header
     } = this.props;
 
     const { data } = this.state;
@@ -167,24 +169,16 @@ class NielsenPeriodsLineChart extends React.Component {
     const barChartProps = {
       width: 600,
       height: 450,
-      data: this.lineChartData(),
+      data: this.barChartData(),
       margin: { top: 20, right: 30, left: 20, bottom: 5 },
       barGap: 0
     };
 
     return (
       <div>
-        { !_.isNil(header) && (
-          <Grid style={{ marginBottom: '30px' }}>
-            <Col xs={12} md={8} mdOffset={2}>
-              <h1 className="text-center">{ header }</h1>
-            </Col>
-          </Grid>
-        ) }
-
         <DataFilters
           values={this.props.values}
-          onChange={this.fetchData}
+          onChange={this.onDataFiltersChange}
           dataFilters={this.props.dataFilters}
           dataSetName='nielsen'
           nielsenAppliers={nielsenAppliers}
@@ -201,13 +195,13 @@ class NielsenPeriodsLineChart extends React.Component {
           <Grid>
             <Col xs={12} md={10} mdOffset={1} style={{ marginBottom: '30px' }}>
               <ResponsiveContainer width='100%' height={450}>
-                <RechartsLineChart {...barChartProps}>
+                <RechartsBarChart {...barChartProps}>
                   <XAxis dataKey='name' />
                   <YAxis tickCount={10} />
                   <CartesianGrid strokeDasharray='3 3' />
                   <Tooltip />
-                  { this.renderLines() }
-                </RechartsLineChart>
+                  { this.renderBarStacks() }
+                </RechartsBarChart>
               </ResponsiveContainer>
             </Col>
           </Grid>
@@ -218,4 +212,4 @@ class NielsenPeriodsLineChart extends React.Component {
 
 }
 
-export default connect(mapStateToProps)(NielsenPeriodsLineChart);
+export default connect(mapStateToProps)(NielsenPeriodsBarChart);
