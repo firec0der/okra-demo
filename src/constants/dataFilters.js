@@ -53,7 +53,7 @@ export const DATA_FILTERS_CONFIG = {
     label: 'Genre',
     multi: false,
     nielsenPropKey: 'nielsenGenres',
-    genrePropKey: 'kantarGenres'
+    kantarPropKey: 'kantarGenres',
   },
   [PACKAGING_FILTER]: {
     key: 'packagingId',
