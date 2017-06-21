@@ -17,7 +17,7 @@ import moment from 'moment';
 
 // import from constants
 import { API_BASE_URL } from '../../../constants/api';
-import { DATA_FILTERS_CONFIG } from '../../../constants/dataFilters';
+import { DATA_FILTERS_CONFIG, AREA_FILTER } from '../../../constants/dataFilters';
 import DATA_FILTERS_PROP_TYPES from './dataFiltersPropTypes';
 import { colorPalette } from '../../../constants/colors';
 
@@ -39,7 +39,6 @@ const mapStateToProps = state => ({
 class KantarPeriodsBarChart extends React.Component {
 
   static propTypes = mergeObjects(DATA_FILTERS_PROP_TYPES, {
-    header: PropTypes.string,
     values: PropTypes.object,
     dataFilters: PropTypes.arrayOf(PropTypes.string),
     requiredFilters: PropTypes.arrayOf(PropTypes.string),
@@ -61,13 +60,15 @@ class KantarPeriodsBarChart extends React.Component {
       data: {
         items: [],
         isLoading: false
-      }
+      },
+      dataFiltersValues: {}
     };
   }
 
-  componentDidMount() {
-    // fetch data using some predefined values.
-  }
+  onDataFiltersChange = dataFiltersValues => this.setState(
+    { dataFiltersValues },
+    () => this.fetchData(this.state.dataFiltersValues)
+  );
 
   fetchData = (values = {}) => {
     const { requiredFilters } = this.props;
@@ -90,7 +91,7 @@ class KantarPeriodsBarChart extends React.Component {
 
     const queryString = _.flow([
       _.values,
-      _.filter(item => _.keys(usefulValues).includes(item.key)),
+      _.filter(filter => _.keys(usefulValues).includes(filter.key)),
       _.reduce(
         (acc, { key, multi }) => [].concat(acc, multi
           ? values[key].map(value => `${key}[]=${value}`)
@@ -112,6 +113,7 @@ class KantarPeriodsBarChart extends React.Component {
   barChartData = () => {
     const {
       kantarBrands: { dictionary: brandsDict },
+      kantarAreas: { dictionary: areasDict },
       metric
     } = this.props;
     const { data } = this.state;
@@ -120,32 +122,45 @@ class KantarPeriodsBarChart extends React.Component {
       _.filter(item => item[metric] && item.date),
       _.groupBy('date'),
       _.entries,
-      _.map(([ date, list ]) => list
-        .reduce(
-        (acc, item) => mergeObjects(acc, { [brandsDict[item.brandId]]: item[metric] }),
+      _.map(([ date, list ]) => list.reduce(
+        (acc, item) => mergeObjects(acc, {
+          [`${areasDict[item.areaId]}, ${brandsDict[item.brandId]}`]: item[metric]
+        }),
         { name: 'Q' + moment(date).format('Q\' YY').toUpperCase() }
       ))
     ])(data.items);
-  }
+  };
 
   renderBarStacks = () => {
-    const { kantarBrands: { dictionary: brandsDict } } = this.props;
-    const { data: { items } } = this.state;
+    const {
+      kantarBrands: { dictionary: brandsDict },
+      kantarAreas: { dictionary: areasDict },
+    } = this.props;
+    const { data: { items }, dataFiltersValues } = this.state;
+
+    const areaIds = dataFiltersValues[DATA_FILTERS_CONFIG[AREA_FILTER].key];
 
     const brands = _.flow([
       _.uniqBy('brandId'),
       _.map(item => brandsDict[item.brandId])
     ])(items);
 
-    return brands.map((brandName, i) => (
-      <Bar
-        key={brandName}
-        stackId={1}
-        dataKey={brandName}
-        fill={colorPalette[i]}
-      />
-    ))
-  }
+    return areaIds.reduce((acc, areaId, i) => {
+      const areaName = areasDict[areaId];
+
+      return [].concat(
+        acc,
+        brands.map((brandName, j) => (
+          <Bar
+            key={`${areaName}-${brandName}`}
+            stackId={i + 1}
+            fill={colorPalette[j]}
+            dataKey={`${areaName}, ${brandName}`}
+          />
+        ))
+      );
+    }, []);
+  };
 
   render() {
     const {
@@ -153,8 +168,7 @@ class KantarPeriodsBarChart extends React.Component {
       kantarBrands,
       kantarGenres,
       kantarLevels,
-      kantarPackagings,
-      header
+      kantarPackagings
     } = this.props;
 
     const { data } = this.state;
@@ -171,7 +185,7 @@ class KantarPeriodsBarChart extends React.Component {
       <div>
         <DataFilters
           values={this.props.values}
-          onChange={this.fetchData}
+          onChange={this.onDataFiltersChange}
           dataFilters={this.props.dataFilters}
           dataSetName='kantar'
           kantarAreas={kantarAreas}
