@@ -64,13 +64,15 @@ class NielsenPeriodsBarChart extends React.Component {
       data: {
         items: [],
         isLoading: false
-      }
+      },
+      dataFiltersValues: {}
     };
   }
 
-  componentDidMount() {
-    // fetch data using some predefined values.
-  }
+  onDataFiltersChange = dataFiltersValues => this.setState(
+    { dataFiltersValues },
+    () => this.fetchData(this.state.dataFiltersValues)
+  );
 
   fetchData = (values = {}) => {
     const { requiredFilters } = this.props;
@@ -147,7 +149,7 @@ class NielsenPeriodsBarChart extends React.Component {
         dataKey={brandName}
         fill={colorPalette[i]}
       />
-    ))
+    ));
   }
 
   render() {
@@ -176,7 +178,7 @@ class NielsenPeriodsBarChart extends React.Component {
       <div>
         <DataFilters
           values={this.props.values}
-          onChange={this.fetchData}
+          onChange={this.onDataFiltersChange}
           dataFilters={this.props.dataFilters}
           dataSetName='nielsen'
           nielsenAppliers={nielsenAppliers}
