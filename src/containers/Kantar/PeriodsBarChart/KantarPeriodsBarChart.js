@@ -109,7 +109,6 @@ class KantarPeriodsBarChart extends React.Component {
         ),
         []
       ),
-      _.join('&')
     ])(DATA_FILTERS_CONFIG);
 
     const queryString = (
@@ -200,8 +199,6 @@ class KantarPeriodsBarChart extends React.Component {
 
     const datePickerFromSelected = moment.unix(this.state.dataFiltersValues.periodFrom);
     const datePickerToSelected = moment.unix(this.state.dataFiltersValues.periodTo);
-
-    console.log(datePickerFromSelected, datePickerToSelected);
 
     return (
       <div>
