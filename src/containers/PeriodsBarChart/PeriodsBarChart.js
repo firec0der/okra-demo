@@ -14,13 +14,15 @@ import MetricsFilters from '../../components/MetricsFilters/MetricsFilters';
 // import from containers
 import NielsenPeriodsBarChart from '../Nielsen/PeriodsBarChart/NielsenPeriodsBarChart';
 import KantarPeriodsBarChart from '../Kantar/PeriodsBarChart/KantarPeriodsBarChart';
+import NwbPeriodsBarChart from '../Nwb/PeriodsBarChart/NwbPeriodsBarChart';
 
 // import from utils
 import { mergeObjects } from '../../utils/object';
 
 const dataSetChartContainerMap = {
   nielsen: NielsenPeriodsBarChart,
-  kantar: KantarPeriodsBarChart
+  kantar: KantarPeriodsBarChart,
+  nwb: NwbPeriodsBarChart
 };
 
 class PeriodsBarChart extends React.Component {
@@ -78,7 +80,7 @@ class PeriodsBarChart extends React.Component {
         { !_.isNil(header) && (
           <Grid style={{ marginBottom: '30px' }}>
             <Col xs={12} md={8} mdOffset={2}>
-              <h1 className="text-center">{ header }</h1>
+              <h1 className='text-center'>{ header }</h1>
             </Col>
           </Grid>
         ) }
