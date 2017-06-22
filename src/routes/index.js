@@ -11,6 +11,7 @@ import { fetchKantarAreas } from '../modules/kantar/kantarAreas';
 import { fetchKantarGenres } from '../modules/kantar/kantarGenres';
 import { fetchKantarLevels } from '../modules/kantar/kantarLevels';
 import { fetchKantarPackagings } from '../modules/kantar/kantarPackagings';
+import { fetchKantarSubcategories } from '../modules/kantar/kantarSubcategories';
 
 import { fetchNielsenAppliers } from '../modules/nielsen/nielsenAppliers';
 import { fetchNielsenAreas } from '../modules/nielsen/nielsenAreas';
@@ -20,10 +21,12 @@ import { fetchNielsenChannels } from '../modules/nielsen/nielsenChannels';
 import { fetchNielsenLevels } from '../modules/nielsen/nielsenLevels';
 import { fetchNielsenManufacturers } from '../modules/nielsen/nielsenManufacturers';
 import { fetchNielsenPackagings } from '../modules/nielsen/nielsenPackagings';
+import { fetchNielsenSubcategories } from '../modules/nielsen/nielsenSubcategories';
 
 import { fetchNwbBrands } from '../modules/nwb/nwbBrands';
 import { fetchNwbGenres } from '../modules/nwb/nwbGenres';
 import { fetchNwbManufacturers } from '../modules/nwb/nwbManufacturers';
+import { fetchNwbSubcategories } from '../modules/nwb/nwbSubcategories';
 
 export const fetchAllStaticData = ({ dispatch }) => () => {
   dispatch(fetchMetrics());
@@ -33,6 +36,7 @@ export const fetchAllStaticData = ({ dispatch }) => () => {
   dispatch(fetchKantarGenres());
   dispatch(fetchKantarLevels());
   dispatch(fetchKantarPackagings());
+  dispatch(fetchKantarSubcategories());
 
   dispatch(fetchNielsenAppliers());
   dispatch(fetchNielsenAreas());
@@ -42,10 +46,12 @@ export const fetchAllStaticData = ({ dispatch }) => () => {
   dispatch(fetchNielsenLevels());
   dispatch(fetchNielsenManufacturers());
   dispatch(fetchNielsenPackagings());
+  dispatch(fetchNielsenSubcategories());
 
   dispatch(fetchNwbBrands());
   dispatch(fetchNwbGenres());
   dispatch(fetchNwbManufacturers());
+  dispatch(fetchNwbSubcategories());
 };
 
 export default (store) => ({
