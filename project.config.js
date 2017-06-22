@@ -14,7 +14,7 @@ module.exports = {
   /** The base path for all projects assets (relative to the website root) */
   publicPath: '/',
   /** Whether to generate sourcemaps */
-  sourcemaps: true,
+  sourcemaps: false,
   /** A hash map of keys that the compiler should treat as external to the project */
   externals: {},
   /** A hash map of variables and their values to expose globally */
@@ -31,5 +31,11 @@ module.exports = {
     'react-redux',
     'redux-thunk',
     'react-router',
+    'react-select',
+    'react-bootstrap',
+    'recharts',
+    'lodash',
+    'moment',
+    'react-datepicker'
   ],
 };
