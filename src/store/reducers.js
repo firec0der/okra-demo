@@ -8,7 +8,6 @@ import kantarBrands from '../modules/kantar/kantarBrands';
 import kantarGenres from '../modules/kantar/kantarGenres';
 import kantarPackagings from '../modules/kantar/kantarPackagings';
 import kantarSubcategories from '../modules/kantar/kantarSubcategories';
-import kantarData from '../modules/kantar/kantarData';
 
 import nielsenAppliers from '../modules/nielsen/nielsenAppliers';
 import nielsenAreas from '../modules/nielsen/nielsenAreas';
@@ -27,13 +26,12 @@ import nwbSubcategories from '../modules/nwb/nwbSubcategories';
 export default combineReducers({
   location: locationReducer,
   metrics,
+
   kantarAreas,
   kantarBrands,
   kantarGenres,
   kantarPackagings,
   kantarSubcategories,
-
-  kantarData,
 
   nielsenAppliers,
   nielsenAreas,
