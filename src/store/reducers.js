@@ -8,6 +8,7 @@ import kantarBrands from '../modules/kantar/kantarBrands';
 import kantarGenres from '../modules/kantar/kantarGenres';
 import kantarLevels from '../modules/kantar/kantarLevels';
 import kantarPackagings from '../modules/kantar/kantarPackagings';
+import kantarSubcategories from '../modules/kantar/kantarSubcategories';
 import kantarData from '../modules/kantar/kantarData';
 
 import nielsenAppliers from '../modules/nielsen/nielsenAppliers';
@@ -18,10 +19,12 @@ import nielsenGenres from '../modules/nielsen/nielsenGenres';
 import nielsenLevels from '../modules/nielsen/nielsenLevels';
 import nielsenManufacturers from '../modules/nielsen/nielsenManufacturers';
 import nielsenPackagings from '../modules/nielsen/nielsenPackagings';
+import nielsenSubcategories from '../modules/nielsen/nielsenSubcategories';
 
 import nwbBrands from '../modules/nwb/nwbBrands';
 import nwbGenres from '../modules/nwb/nwbGenres';
 import nwbManufacturers from '../modules/nwb/nwbManufacturers';
+import nwbSubcategories from '../modules/nwb/nwbSubcategories';
 
 export default combineReducers({
   location: locationReducer,
@@ -31,6 +34,7 @@ export default combineReducers({
   kantarGenres,
   kantarLevels,
   kantarPackagings,
+  kantarSubcategories,
 
   kantarData,
 
@@ -42,8 +46,10 @@ export default combineReducers({
   nielsenLevels,
   nielsenManufacturers,
   nielsenPackagings,
+  nielsenSubcategories,
 
   nwbBrands,
   nwbGenres,
-  nwbManufacturers
+  nwbManufacturers,
+  nwbSubcategories
 });
