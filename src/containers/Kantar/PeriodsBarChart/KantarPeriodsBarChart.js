@@ -34,7 +34,8 @@ const mapStateToProps = state => ({
   kantarBrands: state.kantarBrands,
   kantarGenres: state.kantarGenres,
   kantarLevels: state.kantarLevels,
-  kantarPackagings: state.kantarPackagings
+  kantarPackagings: state.kantarPackagings,
+  kantarSubcategories: state.kantarSubcategories
 });
 
 class KantarPeriodsBarChart extends React.Component {
@@ -176,6 +177,7 @@ class KantarPeriodsBarChart extends React.Component {
       kantarGenres,
       kantarLevels,
       kantarPackagings,
+      kantarSubcategories,
       showPeriodFilters
     } = this.props;
 
@@ -204,6 +206,7 @@ class KantarPeriodsBarChart extends React.Component {
           kantarGenres={kantarGenres}
           kantarLevels={kantarLevels}
           kantarPackagings={kantarPackagings}
+          kantarSubcategories={kantarSubcategories}
         />
 
         { showPeriodFilters && (

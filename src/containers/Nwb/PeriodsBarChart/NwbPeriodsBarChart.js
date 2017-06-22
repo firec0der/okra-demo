@@ -32,7 +32,8 @@ const mapStateToProps = state => ({
   metrics: state.metrics,
   nwbBrands: state.nwbBrands,
   nwbGenres: state.nwbGenres,
-  nwbManufacturers: state.nwbManufacturers
+  nwbManufacturers: state.nwbManufacturers,
+  nwbSubcategories: state.nwbSubcategories,
 });
 
 class NwbPeriodsBarChart extends React.Component {
@@ -161,6 +162,7 @@ class NwbPeriodsBarChart extends React.Component {
       nwbBrands,
       nwbGenres,
       nwbManufacturers,
+      nwbSubcategories,
       showPeriodFilters
     } = this.props;
 
@@ -187,6 +189,7 @@ class NwbPeriodsBarChart extends React.Component {
           nwbBrands={nwbBrands}
           nwbGenres={nwbGenres}
           nwbManufacturers={nwbManufacturers}
+          nwbSubcategories={nwbSubcategories}
         />
 
         { showPeriodFilters && (

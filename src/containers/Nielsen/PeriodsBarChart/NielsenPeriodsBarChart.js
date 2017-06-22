@@ -38,6 +38,7 @@ const mapStateToProps = state => ({
   nielsenLevels: state.nielsenLevels,
   nielsenManufacturers: state.nielsenManufacturers,
   nielsenPackagings: state.nielsenPackagings,
+  nielsenSubcategories: state.nielsenSubcategories,
 });
 
 class NielsenPeriodsBarChart extends React.Component {
@@ -181,6 +182,7 @@ class NielsenPeriodsBarChart extends React.Component {
       nielsenLevels,
       nielsenManufacturers,
       nielsenPackagings,
+      nielsenSubcategories,
       showPeriodFilters
     } = this.props;
 
@@ -212,6 +214,7 @@ class NielsenPeriodsBarChart extends React.Component {
           nielsenLevels={nielsenLevels}
           nielsenManufacturers={nielsenManufacturers}
           nielsenPackagings={nielsenPackagings}
+          nielsenSubcategories={nielsenSubcategories}
         />
 
         { showPeriodFilters && (

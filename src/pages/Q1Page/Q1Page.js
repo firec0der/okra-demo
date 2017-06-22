@@ -9,6 +9,7 @@ import {
   AREA_FILTER,
   GENRE_FILTER,
   PACKAGING_FILTER,
+  SUBCATEGORY_FILTER,
   DATA_FILTERS_CONFIG
 } from '../../constants/dataFilters';
 
@@ -20,15 +21,14 @@ export default class Q1Page extends React.Component {
 
   render() {
     const barChartDataFilters = [
+      SUBCATEGORY_FILTER,
       AREA_FILTER,
       CHANNEL_FILTER,
       GENRE_FILTER,
       PACKAGING_FILTER
     ];
 
-    const barChartRequiredFilters = [
-      GENRE_FILTER
-    ];
+    const barChartRequiredFilters = [];
 
     const barChartValues = {
       [DATA_FILTERS_CONFIG[CHANNEL_FILTER].key]: 1,

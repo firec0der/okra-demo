@@ -7,6 +7,7 @@ export const BRAND_FILTER = 'brands';
 export const APPLIER_FILTER = 'applier';
 export const GENRE_FILTER = 'genre';
 export const PACKAGING_FILTER = 'packaging';
+export const SUBCATEGORY_FILTER = 'subcategory';
 
 export const DATA_FILTERS_CONFIG = {
   [LEVEL_FILTER]: {
@@ -64,5 +65,13 @@ export const DATA_FILTERS_CONFIG = {
     multi: false,
     nielsenPropKey: 'nielsenPackagings',
     kantarPropKey: 'kantarPackagings',
+  },
+  [SUBCATEGORY_FILTER]: {
+    key: 'subcategoryId',
+    label: 'Subcategory',
+    multi: false,
+    nielsenPropKey: 'nielsenSubcategories',
+    kantarPropKey: 'kantarSubcategories',
+    nwbPropKey: 'nwbSubcategories',
   }
 };

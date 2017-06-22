@@ -22,5 +22,9 @@ export default {
     isLoading: PropTypes.bool.isRequired,
     dictionary: PropTypes.object.isRequired,
     applicableForBrands: PropTypes.arrayOf(PropTypes.number).isRequired,
-  })
+  }),
+  kantarSubcategories: PropTypes.shape({
+    isLoading: PropTypes.bool.isRequired,
+    dictionary: PropTypes.object.isRequired,
+  }),
 };
