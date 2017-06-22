@@ -14,39 +14,41 @@ export const DATA_FILTERS_CONFIG = {
     label: 'Level',
     multi: false,
     nielsenPropKey: 'nielsenLevels',
-    kantarPropKey: 'kantarLevels'
+    kantarPropKey: 'kantarLevels',
   },
   [MANUFACTURER_FILTER]: {
     key: 'manufacturerId',
     label: 'Manufacturers',
     multi: false,
-    nielsenPropKey: 'nielsenManufacturers'
+    nielsenPropKey: 'nielsenManufacturers',
+    nwbPropKey: 'nwbManufacturers',
   },
   [CHANNEL_FILTER]: {
     key: 'channelId',
     label: 'Channel',
     multi: false,
-    nielsenPropKey: 'nielsenChannels'
+    nielsenPropKey: 'nielsenChannels',
   },
   [AREA_FILTER]: {
     key: 'areaIds',
     label: 'Areas',
     multi: true,
     nielsenPropKey: 'nielsenAreas',
-    kantarPropKey: 'kantarAreas'
+    kantarPropKey: 'kantarAreas',
   },
   [BRAND_FILTER]: {
     key: 'brandIds',
     label: 'Brands',
     multi: true,
     nielsenPropKey: 'nielsenBrands',
-    kantarPropKey: 'kantarBrands'
+    kantarPropKey: 'kantarBrands',
+    nwbPropKey: 'nwbBrands',
   },
   [APPLIER_FILTER]: {
     key: 'applierId',
     label: 'Applier',
     multi: false,
-    nielsenPropKey: 'nielsenAppliers'
+    nielsenPropKey: 'nielsenAppliers',
   },
   [GENRE_FILTER]: {
     key: 'genreId',
@@ -54,12 +56,13 @@ export const DATA_FILTERS_CONFIG = {
     multi: false,
     nielsenPropKey: 'nielsenGenres',
     kantarPropKey: 'kantarGenres',
+    nwbPropKey: 'nwbGenres',
   },
   [PACKAGING_FILTER]: {
     key: 'packagingId',
     label: 'Packaging',
     multi: false,
     nielsenPropKey: 'nielsenPackagings',
-    kantarPropKey: 'kantarPackagings'
+    kantarPropKey: 'kantarPackagings',
   }
 };
