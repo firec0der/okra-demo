@@ -38,42 +38,35 @@ const mapStateToProps = state => ({
 class NwbPeriodsBarChart extends React.Component {
 
   static propTypes = mergeObjects(DATA_FILTERS_PROP_TYPES, {
-    values: PropTypes.object,
     dataFilters: PropTypes.arrayOf(PropTypes.string),
+    dataFiltersValues: PropTypes.object,
+    onDataFiltersChange: PropTypes.func.isRequired,
     requiredFilters: PropTypes.arrayOf(PropTypes.string),
-    showMetricsFilters: PropTypes.bool,
     showPeriodFilters: PropTypes.bool,
     metric: PropTypes.string,
   });
 
   static defaultProps = {
     dataFilters: [],
+    dataFiltersValues: {},
+    onDataFiltersChange: () => {},
     requiredFilters: [],
     showPeriodFilters: true,
-    showMetricsFilters: true,
     metric: 'beValue'
   };
 
-  constructor(props, ...args) {
-    super(props, ...args);
-
-    const dataFiltersValues = props.showPeriodFilters
-      ? { periodFrom: moment(2016, 'YYYY').unix(), periodTo: moment().unix() }
-      : {};
+  constructor(...args) {
+    super(...args);
 
     this.state = {
       data: {
         items: [],
         isLoading: false
-      },
-      dataFiltersValues
+      }
     };
   }
 
-  onDataFiltersChange = dataFiltersValues => this.setState(
-    { dataFiltersValues: mergeObjects(this.state.dataFiltersValues, dataFiltersValues) },
-    () => this.fetchData(this.state.dataFiltersValues)
-  );
+  onDataFiltersChange = values => this.props.onDataFiltersChange(values, this.fetchData);
 
   onDateChange = (key, value) => this.onDataFiltersChange({ [key]: moment(value).unix() });
 
@@ -142,8 +135,11 @@ class NwbPeriodsBarChart extends React.Component {
   };
 
   renderBarStacks = () => {
-    const { nwbBrands: { dictionary: brandsDict } } = this.props;
-    const { data: { items }, dataFiltersValues } = this.state;
+    const {
+      nwbBrands: { dictionary: brandsDict },
+      dataFiltersValues
+    } = this.props;
+    const { data: { items } } = this.state;
 
     const brands = _.flow([
       _.uniqBy('brandId'),
@@ -178,13 +174,13 @@ class NwbPeriodsBarChart extends React.Component {
       barGap: 0
     };
 
-    const datePickerFromSelected = moment.unix(this.state.dataFiltersValues.periodFrom);
-    const datePickerToSelected = moment.unix(this.state.dataFiltersValues.periodTo);
+    const datePickerFromSelected = moment.unix(this.props.dataFiltersValues.periodFrom);
+    const datePickerToSelected = moment.unix(this.props.dataFiltersValues.periodTo);
 
     return (
       <div>
         <DataFilters
-          values={this.props.values}
+          values={this.props.dataFiltersValues}
           onChange={this.onDataFiltersChange}
           dataFilters={this.props.dataFilters}
           dataSetName='nwb'

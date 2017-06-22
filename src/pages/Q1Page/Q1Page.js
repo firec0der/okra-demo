@@ -27,7 +27,7 @@ export default class Q1Page extends React.Component {
     ];
 
     const barChartRequiredFilters = [
-      AREA_FILTER
+      GENRE_FILTER
     ];
 
     const barChartValues = {
@@ -66,16 +66,16 @@ export default class Q1Page extends React.Component {
 
         <PeriodsBarChart
           dataFilters={barChartDataFilters}
-          values={barChartValues}
+          dataFiltersValues={barChartValues}
           requiredFilters={barChartRequiredFilters}
           chosenMetric='weightedDistribution'
         />
-        <NielsenPeriodsLineChart
-          dataFilters={lineChartDataFilters}
-          values={lineChartValues}
-          requiredFilters={lineChartRequiredFilters}
-          chosenMetric='weightedDistribution'
-        />
+        {/*<NielsenPeriodsLineChart*/}
+          {/*dataFilters={lineChartDataFilters}*/}
+          {/*values={lineChartValues}*/}
+          {/*requiredFilters={lineChartRequiredFilters}*/}
+          {/*chosenMetric='weightedDistribution'*/}
+        {/*/>*/}
       </div>
     );
   }

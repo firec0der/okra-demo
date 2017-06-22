@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Grid, Col } from 'react-bootstrap';
 import _ from 'lodash/fp';
+import moment from 'moment';
 
 // import from constants
 import { DATA_FILTERS_CONFIG } from '../../constants/dataFilters';
@@ -29,26 +30,48 @@ class PeriodsBarChart extends React.Component {
 
   static propTypes = {
     header: PropTypes.string,
-    values: PropTypes.object,
     dataFilters: PropTypes.arrayOf(PropTypes.string),
+    dataFiltersValues: PropTypes.object,
     requiredFilters: PropTypes.arrayOf(PropTypes.string),
-    chosenMetric: PropTypes.string
+
+    chosenMetric: PropTypes.string,
+    shouldShowMetrics: PropTypes.bool,
+    showPeriodFilters: PropTypes.bool,
   };
 
   static defaultProps = {
     dataFilters: Object.keys(DATA_FILTERS_CONFIG),
+    dataFiltersValues: {},
     requiredFilters: [],
-    chosenMetric: 'numericDistribution'
+    chosenMetric: 'numericDistribution',
+    shouldShowMetrics: true,
+    showPeriodFilters: true
   };
 
   constructor(props, ...args) {
     super(props, ...args);
 
-    this.state = { chosenMetric: props.chosenMetric };
+    const dataFiltersValues = mergeObjects(
+      props.dataFiltersValues,
+      props.showPeriodFilters
+        ? { periodFrom: moment(2016, 'YYYY').unix(), periodTo: moment().unix() }
+        : {}
+    );
+
+    this.state = {
+      chosenMetric: props.chosenMetric,
+      dataFiltersValues
+    };
   }
 
-  onMetricFilterChange = chosenMetric => {
-    this.setState({ chosenMetric });
+  onMetricFilterChange = chosenMetric => this.setState({ chosenMetric });
+
+  onDataFiltersChange = (values, callback = () => {}) => {
+    console.log(values);
+    this.setState(
+      { dataFiltersValues: mergeObjects(this.state.dataFiltersValues, values) },
+      () => callback(this.state.dataFiltersValues)
+    );
   }
 
   getDataSetName = () => {
@@ -67,7 +90,7 @@ class PeriodsBarChart extends React.Component {
 
   render() {
     const { metrics, header } = this.props;
-    const { chosenMetric } = this.state;
+    const { chosenMetric, dataFiltersValues } = this.state;
 
     const shouldShowMetrics = !metrics.list.isLoading && metrics.list.length;
 
@@ -102,7 +125,9 @@ class PeriodsBarChart extends React.Component {
             metric={chosenMetric}
             datasetName={dataSetName}
             dataFilters={this.props.dataFilters}
-            values={this.props.values}
+            dataFiltersValues={this.state.dataFiltersValues}
+            requiredFilters={this.props.requiredFilters}
+            onDataFiltersChange={this.onDataFiltersChange}
             showPeriodFilters
           />
         ) }
