@@ -9,7 +9,6 @@ import { fetchMetrics } from '../modules/metrics'
 import { fetchKantarBrands } from '../modules/kantar/kantarBrands';
 import { fetchKantarAreas } from '../modules/kantar/kantarAreas';
 import { fetchKantarGenres } from '../modules/kantar/kantarGenres';
-import { fetchKantarLevels } from '../modules/kantar/kantarLevels';
 import { fetchKantarPackagings } from '../modules/kantar/kantarPackagings';
 import { fetchKantarSubcategories } from '../modules/kantar/kantarSubcategories';
 
@@ -18,7 +17,6 @@ import { fetchNielsenAreas } from '../modules/nielsen/nielsenAreas';
 import { fetchNielsenBrands } from '../modules/nielsen/nielsenBrands';
 import { fetchNielsenGenres } from '../modules/nielsen/nielsenGenres';
 import { fetchNielsenChannels } from '../modules/nielsen/nielsenChannels';
-import { fetchNielsenLevels } from '../modules/nielsen/nielsenLevels';
 import { fetchNielsenManufacturers } from '../modules/nielsen/nielsenManufacturers';
 import { fetchNielsenPackagings } from '../modules/nielsen/nielsenPackagings';
 import { fetchNielsenSubcategories } from '../modules/nielsen/nielsenSubcategories';
@@ -34,7 +32,6 @@ export const fetchAllStaticData = ({ dispatch }) => () => {
   dispatch(fetchKantarAreas());
   dispatch(fetchKantarBrands());
   dispatch(fetchKantarGenres());
-  dispatch(fetchKantarLevels());
   dispatch(fetchKantarPackagings());
   dispatch(fetchKantarSubcategories());
 
@@ -43,7 +40,6 @@ export const fetchAllStaticData = ({ dispatch }) => () => {
   dispatch(fetchNielsenBrands());
   dispatch(fetchNielsenChannels());
   dispatch(fetchNielsenGenres());
-  dispatch(fetchNielsenLevels());
   dispatch(fetchNielsenManufacturers());
   dispatch(fetchNielsenPackagings());
   dispatch(fetchNielsenSubcategories());

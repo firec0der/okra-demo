@@ -32,7 +32,6 @@ export default class Q1Page extends React.Component {
 
     const barChartValues = {
       [DATA_FILTERS_CONFIG[CHANNEL_FILTER].key]: 1,
-      [DATA_FILTERS_CONFIG[LEVEL_FILTER].key]: 3,
       [DATA_FILTERS_CONFIG[GENRE_FILTER].key]: 1,
       [DATA_FILTERS_CONFIG[AREA_FILTER].key]: [1],
     };

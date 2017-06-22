@@ -6,7 +6,6 @@ import metrics from '../modules/metrics';
 import kantarAreas from '../modules/kantar/kantarAreas';
 import kantarBrands from '../modules/kantar/kantarBrands';
 import kantarGenres from '../modules/kantar/kantarGenres';
-import kantarLevels from '../modules/kantar/kantarLevels';
 import kantarPackagings from '../modules/kantar/kantarPackagings';
 import kantarSubcategories from '../modules/kantar/kantarSubcategories';
 import kantarData from '../modules/kantar/kantarData';
@@ -16,7 +15,6 @@ import nielsenAreas from '../modules/nielsen/nielsenAreas';
 import nielsenBrands from '../modules/nielsen/nielsenBrands';
 import nielsenChannels from '../modules/nielsen/nielsenChannels';
 import nielsenGenres from '../modules/nielsen/nielsenGenres';
-import nielsenLevels from '../modules/nielsen/nielsenLevels';
 import nielsenManufacturers from '../modules/nielsen/nielsenManufacturers';
 import nielsenPackagings from '../modules/nielsen/nielsenPackagings';
 import nielsenSubcategories from '../modules/nielsen/nielsenSubcategories';
@@ -32,7 +30,6 @@ export default combineReducers({
   kantarAreas,
   kantarBrands,
   kantarGenres,
-  kantarLevels,
   kantarPackagings,
   kantarSubcategories,
 
@@ -43,7 +40,6 @@ export default combineReducers({
   nielsenBrands,
   nielsenChannels,
   nielsenGenres,
-  nielsenLevels,
   nielsenManufacturers,
   nielsenPackagings,
   nielsenSubcategories,
