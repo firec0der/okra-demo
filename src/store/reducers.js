@@ -19,6 +19,10 @@ import nielsenLevels from '../modules/nielsen/nielsenLevels';
 import nielsenManufacturers from '../modules/nielsen/nielsenManufacturers';
 import nielsenPackagings from '../modules/nielsen/nielsenPackagings';
 
+import nwbBrands from '../modules/nwb/nwbBrands';
+import nwbGenres from '../modules/nwb/nwbGenres';
+import nwbManufacturers from '../modules/nwb/nwbManufacturers';
+
 export default combineReducers({
   location: locationReducer,
   metrics,
@@ -37,5 +41,9 @@ export default combineReducers({
   nielsenGenres,
   nielsenLevels,
   nielsenManufacturers,
-  nielsenPackagings
+  nielsenPackagings,
+
+  nwbBrands,
+  nwbGenres,
+  nwbManufacturers
 });
