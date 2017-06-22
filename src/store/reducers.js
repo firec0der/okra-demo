@@ -1,7 +1,9 @@
 import { combineReducers } from 'redux';
 
 import locationReducer from './location';
+
 import metrics from '../modules/metrics';
+import brands from '../modules/brands';
 
 import kantarAreas from '../modules/kantar/kantarAreas';
 import kantarBrands from '../modules/kantar/kantarBrands';
@@ -25,7 +27,9 @@ import nwbSubcategories from '../modules/nwb/nwbSubcategories';
 
 export default combineReducers({
   location: locationReducer,
+
   metrics,
+  brands,
 
   kantarAreas,
   kantarBrands,

@@ -4,7 +4,8 @@ import HomePage from '../pages/HomePage/HomePage';
 
 import Q1Page from '../pages/Q1Page/Q1Page';
 
-import { fetchMetrics } from '../modules/metrics'
+import { fetchMetrics } from '../modules/metrics';
+import { fetchBrands } from '../modules/brands';
 
 import { fetchKantarBrands } from '../modules/kantar/kantarBrands';
 import { fetchKantarAreas } from '../modules/kantar/kantarAreas';
@@ -28,6 +29,7 @@ import { fetchNwbSubcategories } from '../modules/nwb/nwbSubcategories';
 
 export const fetchAllStaticData = ({ dispatch }) => () => {
   dispatch(fetchMetrics());
+  dispatch(fetchBrands());
 
   dispatch(fetchKantarAreas());
   dispatch(fetchKantarBrands());
