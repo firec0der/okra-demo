@@ -1,0 +1,16 @@
+.metrics-filters {
+  text-align: center;
+
+  .metric-button {
+    width: 30px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    padding: 3px;
+
+    &.-selected {
+      border: 1px solid rgb(0, 125, 187);
+      border-radius: 20px;
+    }
+  }
+}

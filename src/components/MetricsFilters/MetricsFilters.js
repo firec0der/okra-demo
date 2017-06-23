@@ -4,8 +4,80 @@ import PropTypes from 'prop-types';
 import { ButtonToolbar, Button } from 'react-bootstrap';
 import _ from 'lodash/fp';
 
-// import from utils
-import { mergeObjects } from '../../utils/object';
+import PenetrationGroupIcon from './icons/penetration_icon.png';
+import MarketShapeGroupIcon from './icons/Market_Share_icon.png';
+import PricePositionGroupIcon from './icons/Price_Positioning_icon.png';
+import DistributionGroupIcon from './icons/Distribution_Icon.png';
+import BrandEquityGroupIcon from './icons/Brand_Equity_icon.png';
+
+import PenetrationIcon from './icons/sub_Penetration/%Penetration.png';
+import VolumeUnitsIcon from './icons/sub_Penetration/Volume_units.png';
+import PenetrationGrowthIcon from './icons/sub_Penetration/penetration_growth.png';
+
+import TotatMarketShareIcon from './icons/sub_Market_share/market_share.png';
+import AveragePriceIcon from './icons/sub_Market_share/unit share.png';
+import MarketShareGrowthIcon from './icons/sub_Market_share/market_share_growth.png';
+import VolumeShareGrowth from './icons/sub_Market_share/volume_Share_growth.png';
+
+import AverageUnitPriceIcon from './icons/sub_price/unit_price.jpg';
+import VolumeBuyersIcon from './icons/sub_price/volume_of_buyers.png';
+import TotalValueIcon from './icons/sub_price/Total_value.png';
+import PriceGrowthIcon from './icons/sub_price/price_growth.jpg';
+
+import NumericDistributionIcon from './icons/sub_distribution/numeric_distribution.jpg';
+import WeightedDistributionIcon from './icons/sub_distribution/weighted_disribution.png';
+import NumericDistributionOutIcon from './icons/sub_distribution/numeric_out_of_stock.png';
+import WeightedDistributionOutIcon from './icons/sub_distribution/weighted_out_of_Stock.png';
+import PopWeightedDistribution from './icons/sub_distribution/pop_icon_black.png';
+
+import ConvictionIcon from './icons/sub_BE/conviction.jpg';
+import PresenceIcon from './icons/sub_BE/presence.png';
+import RelevanceIcon from './icons/sub_BE/relevance.png';
+import beIcon from './icons/sub_BE/be.jpg';
+
+// import from styles
+import './MetricsFilters.scss';
+
+const groupsIcons = {
+  1: PenetrationGroupIcon,
+  2: MarketShapeGroupIcon,
+  3: PricePositionGroupIcon,
+  4: DistributionGroupIcon,
+  5: BrandEquityGroupIcon
+};
+
+const icons = {
+  1: {
+    penetration: PenetrationIcon,
+    volumeUnits: VolumeUnitsIcon,
+    penetrationGrowth: PenetrationGrowthIcon,
+  },
+  2: {
+    totatMarketShare: TotatMarketShareIcon,
+    averagePrice: AveragePriceIcon,
+    marketShareGrowth: MarketShareGrowthIcon,
+    volumeShareGrowth: VolumeShareGrowth
+  },
+  3: {
+    averagePrice: AverageUnitPriceIcon,
+    buyers: VolumeBuyersIcon,
+    value: TotalValueIcon,
+    priceGrowth: PriceGrowthIcon
+  },
+  4: {
+    numericDistributionStock: NumericDistributionIcon,
+    weightedDistributionStock: WeightedDistributionIcon,
+    numericDistribution: NumericDistributionOutIcon,
+    weightedDistribution: WeightedDistributionOutIcon,
+    popWeightedDistribution: PopWeightedDistribution
+  },
+  5: {
+    presence: PresenceIcon,
+    relevance: RelevanceIcon,
+    conviction: ConvictionIcon,
+    beValue: beIcon
+  }
+}
 
 export default class MetricsFilters extends React.Component {
 
@@ -65,19 +137,25 @@ export default class MetricsFilters extends React.Component {
     const { selectedGroupId } = this.state;
 
     const buttons = metrics.map(group => {
-      const baseProps = {
-        bsSize: 'xsmall',
+      const props = {
         key: group.id,
         onClick: this.onGroupSelect.bind(null, group.id),
-        style: { marginBottom: '5px' }
       };
 
-      const props = mergeObjects(
-        baseProps,
-        selectedGroupId === group.id ? { bsStyle: 'primary' } : {}
-      );
+      const className = [].concat(
+        'metric-button',
+        selectedGroupId === group.id ? '-selected' : [],
+      ).join(' ');
 
-      return <Button {...props}>{ group.name }</Button>;
+      return (
+        <span {...props}>
+          <img
+            src={groupsIcons[group.id]}
+            className={className}
+            title={group.name}
+          />
+        </span>
+      );
     });
 
     return <ButtonToolbar>{ buttons }</ButtonToolbar>;
@@ -94,18 +172,25 @@ export default class MetricsFilters extends React.Component {
     );
 
     const buttons = items.map(metric => {
-      const baseProps = {
-        bsSize: 'xsmall',
+      const props = {
         key: metric.value,
-        onClick: onChange.bind(null, metric.value)
+        onClick: onChange.bind(null, metric.value),
       };
 
-      const props = mergeObjects(
-        baseProps,
-        selectedValue === metric.value ? { bsStyle: 'primary' } : {}
-      );
+      const className = [].concat(
+        'metric-button',
+        selectedValue === metric.value ? '-selected' : [],
+      ).join(' ');
 
-      return <Button {...props}>{ metric.label }</Button>;
+      return (
+        <span {...props}>
+          <img
+            src={icons[selectedGroupId][metric.value]}
+            className={className}
+            title={metric.label}
+          />
+        </span>
+      );
     });
 
     return <ButtonToolbar>{ buttons }</ButtonToolbar>;
@@ -113,7 +198,7 @@ export default class MetricsFilters extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className='metrics-filters'>
         { this.renderGroups() }
         { this.renderButtons() }
       </div>

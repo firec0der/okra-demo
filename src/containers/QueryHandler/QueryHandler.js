@@ -25,6 +25,9 @@ import { mergeObjects } from '../../utils/object';
 // import from containers
 import PeriodsBarChart from '../../containers/PeriodsBarChart/PeriodsBarChart';
 
+// import from styles
+import './QueryHandler.scss';
+
 const mapStateToProps = state => ({
   metrics: state.metrics,
   brands: state.brands
@@ -86,17 +89,19 @@ class QueryHandler extends React.Component {
     const { parsedBrands } = this.state;
 
     return (
-      <div>
+      <div className='query-handler'>
         <Grid>
           <Col xs={12} md={6} mdOffset={3}>
             <SearchBar onSubmit={this.searchOnSubmit} />
           </Col>
         </Grid>
 
-        { parsedBrands.length > 0
-          ? this.getBarChart()
-          : <BrandLogos />
-        }
+        <div className='result-body'>
+          { parsedBrands.length > 0
+            ? this.getBarChart()
+            : <BrandLogos />
+          }
+        </div>
       </div>
     );
   }
