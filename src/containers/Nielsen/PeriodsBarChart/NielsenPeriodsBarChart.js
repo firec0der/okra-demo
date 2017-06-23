@@ -228,6 +228,7 @@ class NielsenPeriodsBarChart extends React.Component {
                   showYearDropdown
                   showMonthDropdown
                   onChange={this.onDateChange.bind(null, 'periodFrom')}
+                  dropdownMode="select"
                 />
               </FormGroup>
             </Col>
@@ -240,6 +241,7 @@ class NielsenPeriodsBarChart extends React.Component {
                   showYearDropdown
                   showMonthDropdown
                   onChange={this.onDateChange.bind(null, 'periodTo')}
+                  dropdownMode="select"
                 />
               </FormGroup>
             </Col>

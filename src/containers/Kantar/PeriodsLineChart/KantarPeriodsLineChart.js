@@ -30,18 +30,15 @@ import { mergeObjects } from '../../../utils/object';
 
 const mapStateToProps = state => ({
   metrics: state.metrics,
-  nielsenAppliers: state.nielsenAppliers,
-  nielsenAreas: state.nielsenAreas,
-  nielsenBrands: state.nielsenBrands,
-  nielsenChannels: state.nielsenChannels,
-  nielsenGenres: state.nielsenGenres,
-  nielsenLevels: state.nielsenLevels,
-  nielsenManufacturers: state.nielsenManufacturers,
-  nielsenPackagings: state.nielsenPackagings,
-  nielsenSubcategories: state.nielsenSubcategories,
+  kantarAreas: state.kantarAreas,
+  kantarBrands: state.kantarBrands,
+  kantarGenres: state.kantarGenres,
+  kantarLevels: state.kantarLevels,
+  kantarPackagings: state.kantarPackagings,
+  kantarSubcategories: state.kantarSubcategories
 });
 
-class NielsenPeriodsLineChart extends React.Component {
+class KantarPeriodsLineChart extends React.Component {
 
   static propTypes = mergeObjects(DATA_FILTERS_PROP_TYPES, {
     dataFilters: PropTypes.arrayOf(PropTypes.string),
@@ -58,7 +55,7 @@ class NielsenPeriodsLineChart extends React.Component {
     onDataFiltersChange: () => {},
     requiredFilters: [],
     showPeriodFilters: true,
-    metric: 'numericDistribution'
+    metric: 'penetration'
   };
 
   constructor(props, ...args) {
@@ -116,7 +113,7 @@ class NielsenPeriodsLineChart extends React.Component {
 
     this.setState(
       { data: { items: [], isLoading: false } },
-      () => fetch(`${API_BASE_URL}/nielsen/data?${queryString}`)
+      () => fetch(`${API_BASE_URL}/kantar/data?${queryString}`)
         .then(response => response.json())
         .then(json => this.setState({ data: { items: json, isLoading: false } }))
     )
@@ -124,7 +121,7 @@ class NielsenPeriodsLineChart extends React.Component {
 
   lineChartData = () => {
     const {
-      nielsenBrands: { dictionary: brandsDict },
+      kantarBrands: { dictionary: brandsDict },
       metric
     } = this.props;
     const { data } = this.state;
@@ -142,7 +139,7 @@ class NielsenPeriodsLineChart extends React.Component {
   }
 
   renderLines = () => {
-    const { nielsenBrands: { dictionary: brandsDict } } = this.props;
+    const { kantarBrands: { dictionary: brandsDict } } = this.props;
     const { data: { items } } = this.state;
 
     const brands = _.flow([
@@ -162,15 +159,12 @@ class NielsenPeriodsLineChart extends React.Component {
 
   render() {
     const {
-      nielsenAppliers,
-      nielsenAreas,
-      nielsenBrands,
-      nielsenChannels,
-      nielsenGenres,
-      nielsenLevels,
-      nielsenManufacturers,
-      nielsenPackagings,
-      nielsenSubcategories,
+      kantarAreas,
+      kantarBrands,
+      kantarGenres,
+      kantarLevels,
+      kantarPackagings,
+      kantarSubcategories,
       showPeriodFilters
     } = this.props;
 
@@ -193,16 +187,13 @@ class NielsenPeriodsLineChart extends React.Component {
           values={this.props.dataFiltersValues}
           onChange={this.onDataFiltersChange}
           dataFilters={this.props.dataFilters}
-          dataSetName='nielsen'
-          nielsenAppliers={nielsenAppliers}
-          nielsenAreas={nielsenAreas}
-          nielsenBrands={nielsenBrands}
-          nielsenChannels={nielsenChannels}
-          nielsenGenres={nielsenGenres}
-          nielsenLevels={nielsenLevels}
-          nielsenManufacturers={nielsenManufacturers}
-          nielsenPackagings={nielsenPackagings}
-          nielsenSubcategories={nielsenSubcategories}
+          dataSetName='kantar'
+          kantarAreas={kantarAreas}
+          kantarBrands={kantarBrands}
+          kantarGenres={kantarGenres}
+          kantarLevels={kantarLevels}
+          kantarPackagings={kantarPackagings}
+          kantarSubcategories={kantarSubcategories}
         />
 
         { showPeriodFilters && (
@@ -257,4 +248,4 @@ class NielsenPeriodsLineChart extends React.Component {
 
 }
 
-export default connect(mapStateToProps)(NielsenPeriodsLineChart);
+export default connect(mapStateToProps)(KantarPeriodsLineChart);

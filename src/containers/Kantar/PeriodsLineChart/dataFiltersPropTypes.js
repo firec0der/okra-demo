@@ -1,19 +1,23 @@
 import PropTypes from 'prop-types';
 
 export default {
-  nwbBrands: PropTypes.shape({
+  kantarAreas: PropTypes.shape({
     isLoading: PropTypes.bool.isRequired,
     dictionary: PropTypes.object.isRequired,
   }),
-  nwbGenres: PropTypes.shape({
+  kantarBrands: PropTypes.shape({
     isLoading: PropTypes.bool.isRequired,
     dictionary: PropTypes.object.isRequired,
   }),
-  nwbManufacturers: PropTypes.shape({
+  kantarGenres: PropTypes.shape({
     isLoading: PropTypes.bool.isRequired,
     dictionary: PropTypes.object.isRequired,
   }),
-  nwbSubcategories: PropTypes.shape({
+  kantarPackagings: PropTypes.shape({
+    isLoading: PropTypes.bool.isRequired,
+    dictionary: PropTypes.object.isRequired,
+  }),
+  kantarSubcategories: PropTypes.shape({
     isLoading: PropTypes.bool.isRequired,
     dictionary: PropTypes.object.isRequired,
   }),
