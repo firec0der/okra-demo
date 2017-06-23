@@ -1,5 +1,4 @@
 // Filter names. Names must be singular nouns.
-export const LEVEL_FILTER = 'level';
 export const MANUFACTURER_FILTER = 'manufacturers';
 export const CHANNEL_FILTER = 'channel';
 export const AREA_FILTER = 'areas';
@@ -10,13 +9,6 @@ export const PACKAGING_FILTER = 'packaging';
 export const SUBCATEGORY_FILTER = 'subcategory';
 
 export const DATA_FILTERS_CONFIG = {
-  [LEVEL_FILTER]: {
-    key: 'levelId',
-    label: 'Level',
-    multi: false,
-    nielsenPropKey: 'nielsenLevels',
-    kantarPropKey: 'kantarLevels',
-  },
   [MANUFACTURER_FILTER]: {
     key: 'manufacturerId',
     label: 'Manufacturers',
