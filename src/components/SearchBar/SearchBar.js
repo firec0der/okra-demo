@@ -45,7 +45,8 @@ export default class SearchBar extends React.Component {
       placeholder,
       value,
       onChange: this.onChange,
-      onKeyPress: this.onKeyPress
+      onKeyPress: this.onKeyPress,
+      style: { borderColor: '#007dbb' }
     };
 
     return (
@@ -54,7 +55,9 @@ export default class SearchBar extends React.Component {
           <InputGroup>
             <FormControl type='text' {...inputProps} />
             <InputGroup.Button>
-              <Button onClick={this.onSubmit}>{ buttonText }</Button>
+              <Button style={{ borderColor: '#007dbb', color: '#007dbb' }} onClick={this.onSubmit}>
+                { buttonText }
+              </Button>
             </InputGroup.Button>
           </InputGroup>
         </FormGroup>
