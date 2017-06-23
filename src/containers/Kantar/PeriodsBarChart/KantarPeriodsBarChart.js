@@ -240,8 +240,8 @@ class KantarPeriodsBarChart extends React.Component {
 
         { !data.isLoading && data.items.length > 0 && (
           <Grid>
-            <Col xs={12} md={10} mdOffset={1} style={{ marginBottom: '30px' }}>
-              <ResponsiveContainer width='100%' height={450}>
+            <Col xs={12} md={8} mdOffset={2} style={{ marginBottom: '30px' }}>
+              <ResponsiveContainer width='100%' height={300}>
                 <RechartsBarChart {...barChartProps}>
                   <XAxis dataKey='name' />
                   <YAxis tickCount={10} />
