@@ -219,6 +219,7 @@ class KantarPeriodsBarChart extends React.Component {
                   selected={datePickerFromSelected}
                   showYearDropdown
                   showMonthDropdown
+                  dropdownMode="select"
                   onChange={this.onDateChange.bind(null, 'periodFrom')}
                 />
               </FormGroup>
@@ -231,6 +232,7 @@ class KantarPeriodsBarChart extends React.Component {
                   selected={datePickerToSelected}
                   showYearDropdown
                   showMonthDropdown
+                  dropdownMode="select"
                   onChange={this.onDateChange.bind(null, 'periodTo')}
                 />
               </FormGroup>
