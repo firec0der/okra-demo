@@ -4,7 +4,6 @@ export default {
   nielsenAppliers: PropTypes.shape({
     isLoading: PropTypes.bool.isRequired,
     dictionary: PropTypes.object.isRequired,
-    applicableForBrands: PropTypes.arrayOf(PropTypes.number).isRequired,
   }),
   nielsenAreas: PropTypes.shape({
     isLoading: PropTypes.bool.isRequired,
@@ -21,11 +20,6 @@ export default {
   nielsenGenres: PropTypes.shape({
     isLoading: PropTypes.bool.isRequired,
     dictionary: PropTypes.object.isRequired,
-    applicableForBrands: PropTypes.arrayOf(PropTypes.number).isRequired,
-  }),
-  nielsenLevels: PropTypes.shape({
-    isLoading: PropTypes.bool.isRequired,
-    dictionary: PropTypes.object.isRequired,
   }),
   nielsenManufacturers: PropTypes.shape({
     isLoading: PropTypes.bool.isRequired,
@@ -34,7 +28,6 @@ export default {
   nielsenPackagings: PropTypes.shape({
     isLoading: PropTypes.bool.isRequired,
     dictionary: PropTypes.object.isRequired,
-    applicableForBrands: PropTypes.arrayOf(PropTypes.number).isRequired,
   }),
   nielsenSubcategories: PropTypes.shape({
     isLoading: PropTypes.bool.isRequired,
