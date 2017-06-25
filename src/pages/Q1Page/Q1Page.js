@@ -32,7 +32,7 @@ export default class Q1Page extends React.Component {
     const barChartValues = {
       [DATA_FILTERS_CONFIG[CHANNEL_FILTER].key]: 1,
       [DATA_FILTERS_CONFIG[GENRE_FILTER].key]: 1,
-      [DATA_FILTERS_CONFIG[AREA_FILTER].key]: [1],
+      [DATA_FILTERS_CONFIG[AREA_FILTER].key]: [8],
     };
 
     const lineChartDataFilters = [
@@ -48,7 +48,7 @@ export default class Q1Page extends React.Component {
     const lineChartValues = {
       [DATA_FILTERS_CONFIG[CHANNEL_FILTER].key]: 1,
       [DATA_FILTERS_CONFIG[GENRE_FILTER].key]: 1,
-      [DATA_FILTERS_CONFIG[AREA_FILTER].key]: [1],
+      [DATA_FILTERS_CONFIG[AREA_FILTER].key]: [8],
     };
 
     return (

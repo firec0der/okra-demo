@@ -67,7 +67,7 @@ class QueryHandler extends React.Component {
 
     const barChartValues = {
       [DATA_FILTERS_CONFIG[BRAND_FILTER].key]: parsedBrands.map(brand => brand.id),
-      [DATA_FILTERS_CONFIG[AREA_FILTER].key]: [7],
+      [DATA_FILTERS_CONFIG[AREA_FILTER].key]: [8],
     };
 
     return (
