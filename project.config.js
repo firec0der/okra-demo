@@ -36,6 +36,7 @@ module.exports = {
     'recharts',
     'lodash',
     'moment',
-    'react-datepicker'
+    'react-datepicker',
+    'classnames'
   ],
 };

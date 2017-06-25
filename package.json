@@ -25,6 +25,7 @@
   },
   "author": "OKRA Technologies <ivan@okra-technologies.com> (http://okra-technologies.com/)",
   "dependencies": {
+    "classnames": "2.2.5",
     "compression": "^1.6.2",
     "express": "^4.14.0",
     "lodash": "^4.17.4",
