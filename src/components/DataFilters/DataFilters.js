@@ -1,7 +1,7 @@
 // import from vendors
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Col, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { Grid, Col, Row, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 import _ from 'lodash/fp';
 import moment from 'moment';
 
@@ -147,9 +147,36 @@ export default class DataFilters extends React.Component {
   }
 
   renderFilters = () => {
-    const { dataFilters, dataSetName } = this.props;
+    const { dataFilters, showPeriodFilters, dataSetName } = this.props;
 
     const configForCurrentDataSet = this.configForCurrentSetup();
+
+    const periodFilters = showPeriodFilters
+      ? [
+        <FormGroup key='periodFrom'>
+          <ControlLabel>Period from</ControlLabel>
+          <DatePicker
+            customInput={<FormControl />}
+            selected={moment.unix(this.state.values.periodFrom)}
+            showYearDropdown
+            showMonthDropdown
+            dropdownMode='select'
+            onChange={this.onPeriodChange.bind(null, 'periodFrom')}
+          />
+        </FormGroup>,
+        <FormGroup key='periodTo'>
+          <ControlLabel>Period to</ControlLabel>
+          <DatePicker
+            customInput={<FormControl />}
+            selected={moment.unix(this.state.values.periodTo)}
+            showYearDropdown
+            showMonthDropdown
+            dropdownMode='select'
+            onChange={this.onPeriodChange.bind(null, 'periodTo')}
+          />
+        </FormGroup>
+      ]
+      : [];
 
     const dataFilterProps = filterName => {
       const config = configForCurrentDataSet[filterName];
@@ -165,63 +192,34 @@ export default class DataFilters extends React.Component {
       };
     };
 
-    return _.flow([
+    const filters = _.flow([
       _.keys,
-      _.map(filterName => <DataFilter {...dataFilterProps(filterName)} />),
+      _.map(filterName => <DataFilter {...dataFilterProps(filterName)} />)
+    ])(configForCurrentDataSet);
+
+    return _.flow([
       _.chunk(4),
-      _.map((row, index) => (
-        <Grid key={index}>
-          { row.map((item, index) => (
-            <Col key={index} xs={12} md={3}>
+      _.map((row, i) => (
+        <Row key={row.map(item => item.key).join('+')}>
+          { row.map((item, j) => (
+            <Col key={j} xs={12} md={3}>
               { item }
             </Col>
           )) }
-        </Grid>
+        </Row>
       ))
-    ])(configForCurrentDataSet);
+    ])([...filters, ...periodFilters]);
   }
 
   render() {
     const { showPeriodFilters } = this.props;
     const { periodFrom, periodTo } = this.state.values;
 
-    console.log(showPeriodFilters);
-
     return (
-      <div>
-        { this.renderFilters() }
-
-        { showPeriodFilters && (
-          <Grid>
-            <Col xs={12} md={3} style={{ marginBottom: '30px' }}>
-              <FormGroup>
-                <ControlLabel>Period from</ControlLabel>
-                <DatePicker
-                  customInput={<FormControl />}
-                  selected={moment.unix(periodFrom)}
-                  showYearDropdown
-                  showMonthDropdown
-                  dropdownMode='select'
-                  onChange={this.onPeriodChange.bind(null, 'periodFrom')}
-                />
-              </FormGroup>
-            </Col>
-
-            <Col xs={12} md={3} style={{ marginBottom: '30px' }}>
-              <FormGroup>
-                <ControlLabel>Period to</ControlLabel>
-                <DatePicker
-                  customInput={<FormControl />}
-                  selected={moment.unix(periodTo)}
-                  showYearDropdown
-                  showMonthDropdown
-                  dropdownMode='select'
-                  onChange={this.onPeriodChange.bind(null, 'periodTo')}
-                />
-              </FormGroup>
-            </Col>
-          </Grid>
-        ) }
+      <div className='data-filters'>
+        <Grid>
+          { this.renderFilters() }
+        </Grid>
       </div>
     )
   }
