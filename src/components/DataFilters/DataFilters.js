@@ -1,9 +1,10 @@
 // import from vendors
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Col, Row, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { Grid, Col, Row, FormGroup, FormControl, ControlLabel, Button } from 'react-bootstrap';
 import _ from 'lodash/fp';
 import moment from 'moment';
+import classNames from 'classnames';
 
 // import from components
 import DataFilter from '../DataFilter/DataFilter';
@@ -15,9 +16,13 @@ import { DATA_FILTERS_CONFIG } from '../../constants/dataFilters';
 // import from utils
 import { mergeObjects } from '../../utils/object';
 
+// import from styles
+import './DataFilters.scss';
+
 export default class DataFilters extends React.Component {
 
   static propTypes = {
+    header: PropTypes.string,
     dataFilters: PropTypes.arrayOf(PropTypes.string),
     dataSetName: PropTypes.string.isRequired,
     values: PropTypes.object,
@@ -26,6 +31,7 @@ export default class DataFilters extends React.Component {
   };
 
   static defaultProps = {
+    header: 'These filters are being used for your query',
     onChange: values => {},
     dataSetName: 'nielsen',
     showPeriodFilters: true
@@ -34,7 +40,10 @@ export default class DataFilters extends React.Component {
   constructor(props, ...args) {
     super(props, ...args);
 
-    this.state = { values: this.initialValues() };
+    this.state = {
+      values: this.initialValues(),
+      expanded: true,
+    };
     this.onChangeCallbacks = this.onChangeCallbacks();
   }
 
@@ -147,9 +156,7 @@ export default class DataFilters extends React.Component {
   }
 
   renderFilters = () => {
-    const { dataFilters, showPeriodFilters, dataSetName } = this.props;
-
-    const configForCurrentDataSet = this.configForCurrentSetup();
+    const { showPeriodFilters, dataSetName } = this.props;
 
     const periodFilters = showPeriodFilters
       ? [
@@ -177,6 +184,8 @@ export default class DataFilters extends React.Component {
         </FormGroup>
       ]
       : [];
+
+    const configForCurrentDataSet = this.configForCurrentSetup();
 
     const dataFilterProps = filterName => {
       const config = configForCurrentDataSet[filterName];
@@ -211,17 +220,39 @@ export default class DataFilters extends React.Component {
     ])([...filters, ...periodFilters]);
   }
 
+  expandContainer = () => this.setState({ expanded: !this.state.expanded });
+
   render() {
-    const { showPeriodFilters } = this.props;
-    const { periodFrom, periodTo } = this.state.values;
+    const { header } = this.props;
+    const { expanded } = this.state;
+
+    const containerClassName = classNames('data-filters', { '-expanded': expanded });
+
+    const headerProps = mergeObjects(
+      { className: 'data-filters-header' },
+      !expanded ? { onClick: this.expandContainer } : {}
+    );
 
     return (
-      <div className='data-filters'>
-        <Grid>
-          { this.renderFilters() }
-        </Grid>
-      </div>
-    )
+      <Grid>
+        <Row>
+          <Col md={8} mdOffset={2}>
+            <div className={containerClassName}>
+              <div {...headerProps}>{ header }</div>
+
+              { expanded && [
+                <div className='data-filters-body' key='body'>
+                  { this.renderFilters() }
+                </div>,
+                <div className='data-filters-footer' key='footer'>
+                  <Button onClick={this.expandContainer}>Confirm</Button>
+                </div>
+              ] }
+            </div>
+          </Col>
+        </Row>
+      </Grid>
+    );
   }
 
 }
