@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Grid, Col, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { Grid, Col } from 'react-bootstrap';
 import {
   BarChart as RechartsBarChart,
   XAxis,
@@ -23,7 +23,6 @@ import { colorPalette } from '../../../constants/colors';
 
 // import from components
 import DataFilters from '../../../components/DataFilters/DataFilters';
-import DatePicker from '../../../components/DatePicker/DatePicker';
 
 // import from utils
 import { mergeObjects } from '../../../utils/object';
@@ -68,8 +67,6 @@ class NwbPeriodsBarChart extends React.Component {
   }
 
   onDataFiltersChange = values => this.props.onDataFiltersChange(values, this.fetchData);
-
-  onDateChange = (key, value) => this.onDataFiltersChange({ [key]: moment(value).unix() });
 
   fetchData = (values = {}) => {
     const { requiredFilters, showPeriodFilters } = this.props;
@@ -176,9 +173,6 @@ class NwbPeriodsBarChart extends React.Component {
       barGap: 0
     };
 
-    const datePickerFromSelected = moment.unix(this.props.dataFiltersValues.periodFrom);
-    const datePickerToSelected = moment.unix(this.props.dataFiltersValues.periodTo);
-
     return (
       <div>
         <DataFilters
@@ -190,38 +184,8 @@ class NwbPeriodsBarChart extends React.Component {
           nwbGenres={nwbGenres}
           nwbManufacturers={nwbManufacturers}
           nwbSubcategories={nwbSubcategories}
+          showPeriodFilters={showPeriodFilters}
         />
-
-        { showPeriodFilters && (
-          <Grid>
-            <Col xs={12} md={3} style={{ marginBottom: '30px' }}>
-              <FormGroup>
-                <ControlLabel>Period from</ControlLabel>
-                <DatePicker
-                  customInput={<FormControl />}
-                  selected={datePickerFromSelected}
-                  showYearDropdown
-                  showMonthDropdown
-                  dropdownMode="select"
-                  onChange={this.onDateChange.bind(null, 'periodFrom')}
-                />
-              </FormGroup>
-            </Col>
-            <Col xs={12} md={3} style={{ marginBottom: '30px' }}>
-              <FormGroup>
-                <ControlLabel>Period to</ControlLabel>
-                <DatePicker
-                  customInput={<FormControl />}
-                  selected={datePickerToSelected}
-                  showYearDropdown
-                  showMonthDropdown
-                  dropdownMode="select"
-                  onChange={this.onDateChange.bind(null, 'periodTo')}
-                />
-              </FormGroup>
-            </Col>
-          </Grid>
-        ) }
 
         { !data.isLoading && data.items.length > 0 && (
           <Grid>

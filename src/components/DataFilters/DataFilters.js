@@ -1,13 +1,15 @@
 // import from vendors
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { Grid, Col } from 'react-bootstrap';
+import { Grid, Col, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 import _ from 'lodash/fp';
+import moment from 'moment';
 
 // import from components
 import DataFilter from '../DataFilter/DataFilter';
+import DatePicker from '../DatePicker/DatePicker';
 
+// import from constants
 import { DATA_FILTERS_CONFIG } from '../../constants/dataFilters';
 
 // import from utils
@@ -19,12 +21,14 @@ export default class DataFilters extends React.Component {
     dataFilters: PropTypes.arrayOf(PropTypes.string),
     dataSetName: PropTypes.string.isRequired,
     values: PropTypes.object,
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
+    showPeriodFilters: PropTypes.bool,
   };
 
-  static defaultTypes = {
+  static defaultProps = {
     onChange: values => {},
-    dataSetName: 'nielsen'
+    dataSetName: 'nielsen',
+    showPeriodFilters: true
   };
 
   constructor(props, ...args) {
@@ -53,6 +57,14 @@ export default class DataFilters extends React.Component {
 
     this.setState({ values }, () => this.props.onChange(this.state.values));
   };
+
+  onPeriodChange = (property, value) => {
+    const values = mergeObjects(this.state.values, {
+      [property]: value ? moment(value).unix() : null
+    });
+
+    this.setState({ values }, () => this.props.onChange(this.state.values));
+  }
 
   getDictionary = propKey => _.getOr({}, `${propKey}.dictionary`, this.props);
   getIsLoading = propKey => _.getOr(false, `${propKey}.isLoading`, this.props);
@@ -83,7 +95,7 @@ export default class DataFilters extends React.Component {
   };
 
   initialValues = () => {
-    const { values } = this.props;
+    const { values, showPeriodFilters } = this.props;
 
     const getValue = filter => values && values[DATA_FILTERS_CONFIG[filter].key]
       ? values[DATA_FILTERS_CONFIG[filter].key]
@@ -91,11 +103,19 @@ export default class DataFilters extends React.Component {
         ? []
         : null;
 
-    return Object
+    const initialValues = Object
       .keys(DATA_FILTERS_CONFIG)
       .reduce((acc, filterName) => mergeObjects(acc, {
         [DATA_FILTERS_CONFIG[filterName].key]: getValue(filterName)
       }), {});
+
+    if (!showPeriodFilters) { return initialValues; }
+
+    return mergeObjects(initialValues, {
+      // make sure that timestamps are here. values must be INTs.
+      periodFrom: values.periodFrom,
+      periodTo: values.periodTo
+    });
   };
 
   configForCurrentSetup = () => {
@@ -162,8 +182,47 @@ export default class DataFilters extends React.Component {
   }
 
   render() {
+    const { showPeriodFilters } = this.props;
+    const { periodFrom, periodTo } = this.state.values;
+
+    console.log(showPeriodFilters);
+
     return (
-      <div>{ this.renderFilters() }</div>
+      <div>
+        { this.renderFilters() }
+
+        { showPeriodFilters && (
+          <Grid>
+            <Col xs={12} md={3} style={{ marginBottom: '30px' }}>
+              <FormGroup>
+                <ControlLabel>Period from</ControlLabel>
+                <DatePicker
+                  customInput={<FormControl />}
+                  selected={moment.unix(periodFrom)}
+                  showYearDropdown
+                  showMonthDropdown
+                  dropdownMode='select'
+                  onChange={this.onPeriodChange.bind(null, 'periodFrom')}
+                />
+              </FormGroup>
+            </Col>
+
+            <Col xs={12} md={3} style={{ marginBottom: '30px' }}>
+              <FormGroup>
+                <ControlLabel>Period to</ControlLabel>
+                <DatePicker
+                  customInput={<FormControl />}
+                  selected={moment.unix(periodTo)}
+                  showYearDropdown
+                  showMonthDropdown
+                  dropdownMode='select'
+                  onChange={this.onPeriodChange.bind(null, 'periodTo')}
+                />
+              </FormGroup>
+            </Col>
+          </Grid>
+        ) }
+      </div>
     )
   }
 
