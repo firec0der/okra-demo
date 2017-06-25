@@ -207,11 +207,11 @@ export default class DataFilters extends React.Component {
     ])(configForCurrentDataSet);
 
     return _.flow([
-      _.chunk(4),
+      _.chunk(3),
       _.map((row, i) => (
         <Row key={row.map(item => item.key).join('+')}>
           { row.map((item, j) => (
-            <Col key={j} xs={12} md={3}>
+            <Col key={j} xs={12} md={4}>
               { item }
             </Col>
           )) }
