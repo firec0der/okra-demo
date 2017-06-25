@@ -214,7 +214,7 @@ class NielsenPeriodsBarChart extends React.Component {
 
         { !data.isLoading && data.items.length > 0 && (
           <Grid>
-            <Col xs={12} md={8} mdOffset={2} style={{ marginBottom: '30px' }}>
+            <Col xs={12} md={8} mdOffset={2} style={{ marginBottom: '30px', backgroundColor: '#fff' }}>
               <ResponsiveContainer width='100%' height={300}>
                 <RechartsBarChart {...barChartProps}>
                   <XAxis dataKey='name' />
