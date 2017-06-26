@@ -11,6 +11,7 @@ import { fetchManufacturers } from '../modules/manufacturers';
 import { fetchKantarBrands } from '../modules/kantar/kantarBrands';
 import { fetchKantarAreas } from '../modules/kantar/kantarAreas';
 import { fetchKantarGenres } from '../modules/kantar/kantarGenres';
+import { fetchKantarManufacturers } from '../modules/kantar/kantarManufacturers';
 import { fetchKantarPackagings } from '../modules/kantar/kantarPackagings';
 import { fetchKantarSubcategories } from '../modules/kantar/kantarSubcategories';
 
@@ -36,6 +37,7 @@ export const fetchAllStaticData = ({ dispatch }) => () => {
   dispatch(fetchKantarAreas());
   dispatch(fetchKantarBrands());
   dispatch(fetchKantarGenres());
+  dispatch(fetchKantarManufacturers());
   dispatch(fetchKantarPackagings());
   dispatch(fetchKantarSubcategories());
 
