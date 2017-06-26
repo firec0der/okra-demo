@@ -87,7 +87,7 @@ class PeriodsBarChart extends React.Component {
 
   render() {
     const { metrics, header } = this.props;
-    const { chosenMetric, dataFiltersValues } = this.state;
+    const { chosenMetric } = this.state;
 
     const shouldShowMetrics = !metrics.list.isLoading && metrics.list.length;
 
