@@ -77,8 +77,10 @@ class QueryHandler extends React.Component {
       5: ['Area V', 'AreaV', 'Area 5', 'Area5', 'Interior of São Paulo', 'Interior SP', 'Countryside SP', 'Country SP'],
       // SOUTH
       6: ['Area VI', 'AreaVI', 'Area 6', 'Area6', 'SOUTH', 'Paraná', 'Santa Catarina', 'Rio Grande do Sul', 'Parana', 'SantaCatarina', 'RioGrande do Sul'],
-      7: ['MIDWEST'],
-      8: ['T BRAZIL']
+      // Midwest
+      7: ['Area VII', 'AreaVII', 'Area7', 'Area 7', 'Midwst', 'Federal district', 'Federal', 'Central-west', 'Central west', 'west', 'central'],
+      // T Brazil
+      8: ['Brasil', 'br']
     };
 
     const lowerCasedQuery = query.toLowerCase();
