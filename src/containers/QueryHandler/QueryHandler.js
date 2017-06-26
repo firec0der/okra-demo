@@ -151,8 +151,10 @@ class QueryHandler extends React.Component {
 
     const barChartRequiredFilters = [];
 
-    const manufacturerId = parsedManufacturer && parsedBrands.find(brand => brand.name === parsedManufacturer.name)
-      ? parsedManufacturer.id
+    const manufacturerId = parsedManufacturer
+      ? parsedBrands.find(brand => brand.name === parsedManufacturer.name)
+        ? null
+        : parsedManufacturer.id
       : null;
 
     const barChartValues = {
