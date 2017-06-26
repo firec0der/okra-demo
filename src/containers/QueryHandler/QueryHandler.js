@@ -12,6 +12,7 @@ import {
   BRAND_FILTER,
   PACKAGING_FILTER,
   APPLIER_FILTER,
+  MANUFACTURER_FILTER,
   DATA_FILTERS_CONFIG
 } from '../../constants/dataFilters';
 
@@ -30,7 +31,8 @@ import './QueryHandler.scss';
 
 const mapStateToProps = state => ({
   metrics: state.metrics,
-  brands: state.brands
+  brands: state.brands,
+  manufacturers: state.manufacturers,
 });
 
 class QueryHandler extends React.Component {
@@ -43,7 +45,8 @@ class QueryHandler extends React.Component {
       parsedBrands: [],
       parsedGenre: null,
       parsedApplier: null,
-      parsedPackaging: null
+      parsedPackaging: null,
+      parsedManufacturers: null
     };
   }
 
@@ -53,6 +56,16 @@ class QueryHandler extends React.Component {
     const lowerCasedQuery = query.toLowerCase();
 
     return brands.list.filter(brand => lowerCasedQuery.includes(brand.name.toLowerCase()));
+  }
+
+  detectManufacturer = query => {
+    const { manufacturers } = this.props;
+
+    const lowerCasedQuery = query.toLowerCase();
+
+    return manufacturers.list.find(
+      manufacturer => lowerCasedQuery.includes(manufacturer.name.toLowerCase())
+    );
   }
 
   detectGenre = query => {
@@ -124,9 +137,10 @@ class QueryHandler extends React.Component {
   }
 
   getBarChart = () => {
-    const { parsedAreas, parsedApplier, parsedBrands, parsedGenre, parsedPackaging } = this.state;
+    const { parsedAreas, parsedApplier, parsedBrands, parsedGenre, parsedPackaging, parsedManufacturer } = this.state;
 
     const barChartDataFilters = [
+      MANUFACTURER_FILTER,
       BRAND_FILTER,
       AREA_FILTER,
       CHANNEL_FILTER,
@@ -143,6 +157,7 @@ class QueryHandler extends React.Component {
       [DATA_FILTERS_CONFIG[GENRE_FILTER].key]: parsedGenre,
       [DATA_FILTERS_CONFIG[APPLIER_FILTER].key]: parsedApplier,
       [DATA_FILTERS_CONFIG[PACKAGING_FILTER].key]: parsedPackaging,
+      [DATA_FILTERS_CONFIG[MANUFACTURER_FILTER].key]: parsedManufacturer ? parsedManufacturer.id : null,
     };
 
     return (
@@ -161,13 +176,15 @@ class QueryHandler extends React.Component {
     parsedApplier: this.detectApplier(value),
     parsedBrands: this.detectBrand(value),
     parsedGenre: this.detectGenre(value),
-    parsedPackaging: this.detectPackaging(value)
+    parsedPackaging: this.detectPackaging(value),
+    parsedManufacturer: this.detectManufacturer(value)
   });
 
   render() {
-    const { parsedBrands, parsedGenre, parsedApplier, parsedPackaging } = this.state;
+    const { parsedBrands, parsedGenre, parsedApplier, parsedPackaging, parsedManufacturer } = this.state;
 
     const shouldShowResults = parsedBrands.length ||
+      parsedManufacturer ||
       parsedGenre ||
       parsedApplier ||
       parsedPackaging;
