@@ -11,7 +11,7 @@ import {
   GENRE_FILTER,
   BRAND_FILTER,
   PACKAGING_FILTER,
-  SUBCATEGORY_FILTER,
+  APPLIER_FILTER,
   DATA_FILTERS_CONFIG
 } from '../../constants/dataFilters';
 
@@ -39,7 +39,8 @@ class QueryHandler extends React.Component {
     super(...args);
 
     this.state = {
-      parsedBrands: []
+      parsedBrands: [],
+      parsedGenre: null
     };
   }
 
@@ -51,14 +52,24 @@ class QueryHandler extends React.Component {
     return brands.list.filter(brand => lowerCasedQuery.includes(brand.name.toLowerCase()));
   }
 
+  detectGenre = query => {
+    const genres = { 1: 'female', 2: 'male', 3: 'unisex' };
+
+    const lowerCasedQuery = query.toLowerCase();
+
+    return Object
+      .keys(genres)
+      .find(id => lowerCasedQuery.includes(genres[id]));
+  };
+
   getBarChart = () => {
-    const { parsedBrands } = this.state;
+    const { parsedBrands, parsedGenre } = this.state;
 
     const barChartDataFilters = [
       BRAND_FILTER,
-      SUBCATEGORY_FILTER,
       AREA_FILTER,
       CHANNEL_FILTER,
+      APPLIER_FILTER,
       GENRE_FILTER,
       PACKAGING_FILTER
     ];
@@ -68,6 +79,7 @@ class QueryHandler extends React.Component {
     const barChartValues = {
       [DATA_FILTERS_CONFIG[BRAND_FILTER].key]: parsedBrands.map(brand => brand.id),
       [DATA_FILTERS_CONFIG[AREA_FILTER].key]: [8],
+      [DATA_FILTERS_CONFIG[GENRE_FILTER].key]: parsedGenre,
     };
 
     return (
@@ -82,11 +94,14 @@ class QueryHandler extends React.Component {
   };
 
   searchOnSubmit = value => this.setState({
-    parsedBrands: this.detectBrand(value)
+    parsedBrands: this.detectBrand(value),
+    parsedGenre: this.detectGenre(value)
   });
 
   render() {
-    const { parsedBrands } = this.state;
+    const { parsedBrands, parsedGenre } = this.state;
+
+    const shouldShowResults = parsedBrands.length || parsedGenre;
 
     return (
       <div className='query-handler'>
@@ -97,7 +112,7 @@ class QueryHandler extends React.Component {
         </Grid>
 
         <div className='result-body'>
-          { parsedBrands.length > 0
+          { shouldShowResults
             ? this.getBarChart()
             : <BrandLogos />
           }
