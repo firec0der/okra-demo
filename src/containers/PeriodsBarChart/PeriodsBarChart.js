@@ -66,13 +66,10 @@ class PeriodsBarChart extends React.Component {
 
   onMetricFilterChange = chosenMetric => this.setState({ chosenMetric });
 
-  onDataFiltersChange = (values, callback = () => {}) => {
-    console.log(values);
-    this.setState(
-      { dataFiltersValues: mergeObjects(this.state.dataFiltersValues, values) },
-      () => callback(this.state.dataFiltersValues)
-    );
-  }
+  onDataFiltersChange = (values, callback = () => {}) => this.setState(
+    { dataFiltersValues: mergeObjects(this.state.dataFiltersValues, values) },
+    () => callback(this.state.dataFiltersValues)
+  );
 
   getDataSetName = () => {
     const { metrics } = this.props;
