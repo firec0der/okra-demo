@@ -22,7 +22,6 @@ import './DataFilters.scss';
 export default class DataFilters extends React.Component {
 
   static propTypes = {
-    header: PropTypes.string,
     dataFilters: PropTypes.arrayOf(PropTypes.string),
     dataSetName: PropTypes.string.isRequired,
     values: PropTypes.object,
@@ -31,7 +30,6 @@ export default class DataFilters extends React.Component {
   };
 
   static defaultProps = {
-    header: 'These filters are being used for your query',
     onChange: values => {},
     dataSetName: 'nielsen',
     showPeriodFilters: true
@@ -223,7 +221,6 @@ export default class DataFilters extends React.Component {
   expandContainer = () => this.setState({ expanded: !this.state.expanded });
 
   render() {
-    const { header } = this.props;
     const { expanded } = this.state;
 
     const containerClassName = classNames('data-filters', { '-expanded': expanded });
@@ -238,7 +235,9 @@ export default class DataFilters extends React.Component {
         <Row>
           <Col md={8} mdOffset={2}>
             <div className={containerClassName}>
-              <div {...headerProps}>{ header }</div>
+              <div {...headerProps}>
+                { expanded ? 'These filters are being used for your query' : 'Filters' }
+              </div>
 
               { expanded && [
                 <div className='data-filters-body' key='body'>
