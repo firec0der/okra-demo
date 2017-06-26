@@ -11,10 +11,11 @@ export const SUBCATEGORY_FILTER = 'subcategory';
 export const DATA_FILTERS_CONFIG = {
   [MANUFACTURER_FILTER]: {
     key: 'manufacturerId',
-    label: 'Manufacturers',
+    label: 'Manufacturer',
     multi: false,
     nielsenPropKey: 'nielsenManufacturers',
     nwbPropKey: 'nwbManufacturers',
+    kantarPropKey: 'kantarManufacturers',
   },
   [CHANNEL_FILTER]: {
     key: 'channelId',
