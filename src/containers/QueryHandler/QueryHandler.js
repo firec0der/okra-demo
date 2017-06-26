@@ -42,6 +42,8 @@ class QueryHandler extends React.Component {
       parsedAreas: [],
       parsedBrands: [],
       parsedGenre: null,
+      parsedApplier: null,
+      parsedPackaging: null
     };
   }
 
@@ -61,6 +63,37 @@ class QueryHandler extends React.Component {
     return Object
       .keys(genres)
       .find(id => lowerCasedQuery.includes(genres[id]));
+  };
+
+  detectApplier = query => {
+    const appliers = {
+      1: 'Aerosol',
+      2: 'Rollon',
+      3: 'Stick',
+      4: 'Spray',
+      5: 'Gel stick',
+      6: 'Creme/Bisnaga'
+    };
+
+    const lowerCasedQuery = query.toLowerCase();
+
+    return Object
+      .keys(appliers)
+      .find(id => lowerCasedQuery.includes(appliers[id].toLowerCase()));
+  };
+
+  detectPackaging = query => {
+    const packagings = {
+      1: 'Compact',
+      2: 'Compressed',
+      3: 'Regular'
+    };
+
+    const lowerCasedQuery = query.toLowerCase();
+
+    return Object
+      .keys(packagings)
+      .find(id => lowerCasedQuery.includes(packagings[id].toLowerCase()));
   };
 
   detectArea = query => {
@@ -91,7 +124,7 @@ class QueryHandler extends React.Component {
   }
 
   getBarChart = () => {
-    const { parsedAreas, parsedBrands, parsedGenre } = this.state;
+    const { parsedAreas, parsedApplier, parsedBrands, parsedGenre, parsedPackaging } = this.state;
 
     const barChartDataFilters = [
       BRAND_FILTER,
@@ -108,6 +141,8 @@ class QueryHandler extends React.Component {
       [DATA_FILTERS_CONFIG[BRAND_FILTER].key]: parsedBrands.map(brand => brand.id),
       [DATA_FILTERS_CONFIG[AREA_FILTER].key]: parsedAreas.length ? parsedAreas : [8],
       [DATA_FILTERS_CONFIG[GENRE_FILTER].key]: parsedGenre,
+      [DATA_FILTERS_CONFIG[APPLIER_FILTER].key]: parsedApplier,
+      [DATA_FILTERS_CONFIG[PACKAGING_FILTER].key]: parsedPackaging,
     };
 
     return (
@@ -123,14 +158,19 @@ class QueryHandler extends React.Component {
 
   searchOnSubmit = value => this.setState({
     parsedAreas: this.detectArea(value).map(id => parseInt(id)),
+    parsedApplier: this.detectApplier(value),
     parsedBrands: this.detectBrand(value),
     parsedGenre: this.detectGenre(value),
+    parsedPackaging: this.detectPackaging(value)
   });
 
   render() {
-    const { parsedBrands, parsedGenre } = this.state;
+    const { parsedBrands, parsedGenre, parsedApplier, parsedPackaging } = this.state;
 
-    const shouldShowResults = parsedBrands.length || parsedGenre;
+    const shouldShowResults = parsedBrands.length ||
+      parsedGenre ||
+      parsedApplier ||
+      parsedPackaging;
 
     return (
       <div className='query-handler'>
