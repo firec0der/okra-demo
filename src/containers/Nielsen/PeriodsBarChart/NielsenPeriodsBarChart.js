@@ -143,7 +143,7 @@ class NielsenPeriodsBarChart extends React.Component {
           <Bar
             key={`${areaName}-${brandName}`}
             stackId={i + 1}
-            fill={colorPalette[j]}
+            fill={colorPalette[j + 14]}
             dataKey={`${areaName}, ${brandName}`}
           />
         ))

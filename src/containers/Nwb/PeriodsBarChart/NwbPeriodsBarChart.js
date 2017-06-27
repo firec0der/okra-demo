@@ -130,7 +130,7 @@ class NwbPeriodsBarChart extends React.Component {
         key={brandName}
         stackId={1}
         dataKey={brandName}
-        fill={colorPalette[i]}
+        fill={colorPalette[i + 14]}
       />
     ));
   };
