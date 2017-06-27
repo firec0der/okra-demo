@@ -120,6 +120,21 @@ export default class MetricsFilters extends React.Component {
       || !_.isEqual(this.state.selectedGroupId, nextState.selectedGroupId);
   };
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.selectedValue !== this.props.selectedValue) {
+      const selectedGroup = _.find(
+        group => group.items.some(item => item.value === nextProps.selectedValue),
+        this.props.metrics
+      );
+
+      const selectedGroupId = _.getOr(null, 'id', selectedGroup);
+
+      if (selectedGroupId !== this.state.selectedGroupId) {
+        this.setState({ selectedGroupId });
+      }
+    }
+  }
+
   onGroupSelect = selectedGroupId => {
     const { metrics, onChange } = this.props;
 
