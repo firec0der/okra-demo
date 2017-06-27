@@ -74,6 +74,20 @@ class PeriodsBarChart extends React.Component {
     this.setState({ barChartContainer: dataSetChartContainerMap[dataSetName] });
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.chosenMetric !== this.state.chosenMetric) {
+      const previousDataSetName = this.getDataSetName(this.state.chosenMetric);
+      const nextDataSetName = this.getDataSetName(nextProps.chosenMetric);
+
+      this.setState(
+        mergeObjects({ chosenMetric: nextProps.chosenMetric },
+          nextDataSetName !== previousDataSetName
+            ? { barChartContainer: dataSetChartContainerMap[nextDataSetName] }
+            : {}
+        ));
+    }
+  }
+
   onMetricFilterChange = chosenMetric => {
     const previousDataSetName = this.getDataSetName(this.state.chosenMetric);
     const nextDataSetName = this.getDataSetName(chosenMetric);
