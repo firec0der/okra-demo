@@ -138,13 +138,38 @@ class QueryHandler extends React.Component {
   };
 
   detectMertic = query => {
-    const { metrics } = this.props;
+    const dictionary = {
+      penetration: ['penetrate', '%penetration', '%penetr', 'penetration'],
+      volumeUnits: [],
+      penetrationGrowth: [],
+
+      totatMarketShare: ['marketshare', 'm share', 'mshare'],
+      averagePrice: ['volumeshare', 'volume share'],
+      marketShareGrowth: ['marketsharegrowth', 'market share growth', 'mshare growth', 'mshare growth', 'msharegrowth'],
+      volumeShareGrowth: [],
+
+      averageUnitPrice: [],
+      buyers: [],
+      value: [],
+      priceGrowth: [],
+
+      numericDistributionStock: ['%distribution', 'numericdistr', 'Numeric distr', 'distribution', 'nr distribution', 'nr dist', '% dist'],
+      weightedDistributionStock: ['weighted distr', 'weight distr', 'weight distribution'],
+      numericDistribution: ['nr out of stock', 'nr stock', 'numeric of stock', 'of stock', '% out of stock'],
+      weightedDistribution: ['weighted of stock', 'weight of stock', 'weighted of stock', 'weight stock'],
+      popWeightedDistribution: ['promotion', 'weighted pop', 'pop distr', 'pop distribution', 'promotional'],
+
+      beValue: ['BE', 'BE score', 'BEscore', 'equity', 'brand equity'],
+      conviction: ['convict', 'conviction', 'conv'],
+      presence: ['present', 'presence'],
+      relevance: ['relevant', 'relevance', 'relev']
+    };
 
     const lowerCasedQuery = query.toLowerCase();
 
-    return metrics.list
-      .reduce((acc, group) => [...acc, ...group.items], [])
-      .find(metric => lowerCasedQuery.includes(metric.label.toLowerCase()));
+    return Object
+      .keys(dictionary)
+      .find(id => dictionary[id].some(keyWord => lowerCasedQuery.includes(keyWord.toLowerCase())));
   };
 
   getBarChart = () => {
@@ -192,7 +217,7 @@ class QueryHandler extends React.Component {
         dataFilters={barChartDataFilters}
         dataFiltersValues={barChartValues}
         requiredFilters={barChartRequiredFilters}
-        chosenMetric={parsedMetric ? parsedMetric.value : 'penetration'}
+        chosenMetric={parsedMetric || 'penetration'}
       />
     );
   };
