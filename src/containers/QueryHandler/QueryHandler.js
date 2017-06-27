@@ -191,7 +191,7 @@ class QueryHandler extends React.Component {
         dataFilters={barChartDataFilters}
         dataFiltersValues={barChartValues}
         requiredFilters={barChartRequiredFilters}
-        chosenMetric={parsedMetric ? parsedMetric.value : 'penetrarion'}
+        chosenMetric={parsedMetric ? parsedMetric.value : 'penetration'}
       />
     );
   };
