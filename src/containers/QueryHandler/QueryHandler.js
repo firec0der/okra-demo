@@ -182,6 +182,7 @@ class QueryHandler extends React.Component {
       [DATA_FILTERS_CONFIG[GENRE_FILTER].key]: parsedGenre,
       [DATA_FILTERS_CONFIG[APPLIER_FILTER].key]: parsedApplier,
       [DATA_FILTERS_CONFIG[PACKAGING_FILTER].key]: parsedPackaging,
+      [DATA_FILTERS_CONFIG[CHANNEL_FILTER].key]: 1,
       [DATA_FILTERS_CONFIG[MANUFACTURER_FILTER].key]: manufacturerId
     };
 
