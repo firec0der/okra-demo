@@ -207,7 +207,8 @@ export default class DataFilters extends React.Component {
         multi: config.multi,
         dictionary: this.getDictionary(config[`${dataSetName}PropKey`]),
         isLoading: this.getIsLoading(config[`${dataSetName}PropKey`]),
-        onChange: this.onChangeCallbacks[filterName]
+        onChange: this.onChangeCallbacks[filterName],
+        clearable: filterName !== 'channel'
       };
     };
 
