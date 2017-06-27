@@ -178,7 +178,7 @@ class NwbPeriodsBarChart extends React.Component {
 
         return `The ${growthVariables[metric].text} of ` +
           `${genreValue ? genreValue : ''} ${brandName} ` +
-          `is ${status} in the last quarter by a rate of ${growthValue.toFixed(1)}%`;
+          `is ${status} in the last quarter by a rate of ${Math.abs(growthValue.toFixed(1))}%`;
       });
 
     const colStyles = { marginBottom: '30px', paddingTop: '10px', paddingBottom: '10px', backgroundColor: '#fff' };
