@@ -18,7 +18,7 @@ import moment from 'moment';
 
 // import from constants
 import { API_BASE_URL } from '../../../constants/api';
-import { DATA_FILTERS_CONFIG } from '../../../constants/dataFilters';
+import { DATA_FILTERS_CONFIG, BRAND_FILTER, GENRE_FILTER } from '../../../constants/dataFilters';
 import NWB_PROP_TYPES from '../../../constants/nwbPropTypes';
 import { colorPalette } from '../../../constants/colors';
 
@@ -28,7 +28,8 @@ import { lightenColor } from '../../../utils/color';
 
 const mapStateToProps = state => ({
   metrics: state.metrics,
-  nwbBrands: state.nwbBrands
+  nwbBrands: state.nwbBrands,
+  nwbGenres: state.nwbGenres,
 });
 
 class NwbPeriodsBarChart extends React.Component {
@@ -139,6 +140,7 @@ class NwbPeriodsBarChart extends React.Component {
 
   render() {
     const { data } = this.state;
+    const { metric, dataFiltersValues, nwbGenres, nwbBrands } = this.props;
 
     const barChartProps = {
       width: 600,
@@ -148,11 +150,44 @@ class NwbPeriodsBarChart extends React.Component {
       barGap: 0
     };
 
+    const growthVariables = {
+      beValue: { key: 'beValueGrowth', text: 'BE' },
+      conviction: { key: 'convictionGrowth', text: 'conviction' },
+      presence: { key: 'presenceGrowth', text: 'presence' },
+      relevance: { key: 'relevanceGrowth', text: 'relevance' }
+    };
+
+    const growthValues = _.flow([
+      // dirty hack: we don't need predicted data in this case.
+      _.filter(item => (moment(2017, 'YYYY').unix() > moment(item.date).unix())),
+      _.sortBy(item => moment(item.date).unix()),
+      _.groupBy('brandId'),
+      _.entries,
+      _.reduce((acc, [ brandId, list ]) => mergeObjects(acc, { [brandId]: _.last(list)[growthVariables[metric].key] }), {})
+    ])(data.items);
+
+    const messages = dataFiltersValues[DATA_FILTERS_CONFIG[BRAND_FILTER].key]
+      .filter(brandId => growthValues[brandId])
+      .map(brandId => {
+        const brandName = nwbBrands.dictionary[brandId];
+        const growthValue = growthValues[brandId];
+        const status = growthValue <= 0 ? 'decreased' : 'increased';
+
+        const genreId = dataFiltersValues[DATA_FILTERS_CONFIG[GENRE_FILTER].key];
+        const genreValue = nwbGenres.dictionary[genreId];
+
+        return `The ${growthVariables[metric].text} of ` +
+          `${genreValue ? genreValue : ''} ${brandName} ` +
+          `is ${status} in the last quarter by a rate of ${growthValue.toFixed(1)}%`;
+      });
+
     return (
       <div>
         { !data.isLoading && data.items.length > 0 && (
           <Grid>
             <Col xs={12} md={8} mdOffset={2} style={{ marginBottom: '30px', backgroundColor: '#fff' }}>
+              { messages.map((message, i) => (<div key={i}>{ message }</div>)) }
+
               <ResponsiveContainer width='100%' height={300}>
                 <RechartsBarChart {...barChartProps}>
                   <XAxis dataKey='name' />
