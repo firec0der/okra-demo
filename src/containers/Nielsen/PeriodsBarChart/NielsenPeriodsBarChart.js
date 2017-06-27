@@ -175,7 +175,7 @@ class NielsenPeriodsBarChart extends React.Component {
       weightedDistribution: { key: 'weightedDistributionGrowth', text: 'weighted distribution' },
       numericDistributionStock: { key: 'penetrationGrowth', text: 'numeric distribution stock' },
       weightedDistributionStock: { key: 'weightedOutOfStockGrowth', text: 'weighted distribution stock' },
-      popWeightedDistribution: { key: 'popGrowth', text: 'POP growth' },
+      popWeightedDistribution: { key: 'popGrowth', text: 'POP growth' }
     };
 
     const growthValues = _.flow([
@@ -186,8 +186,6 @@ class NielsenPeriodsBarChart extends React.Component {
       _.entries,
       _.reduce((acc, [ brandId, list ]) => mergeObjects(acc, { [brandId]: _.last(list)[growthVariables[metric].key] }), {})
     ])(data.items);
-
-    console.log(growthValues);
 
     const messages = dataFiltersValues[DATA_FILTERS_CONFIG[BRAND_FILTER].key]
       .filter(brandId => _.isNumber(growthValues[brandId]))
