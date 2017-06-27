@@ -143,7 +143,7 @@ class QueryHandler extends React.Component {
       volumeUnits: [],
       penetrationGrowth: [],
 
-      totatMarketShare: ['marketshare', 'm share', 'mshare'],
+      totatMarketShare: ['marketshare', 'm share', 'mshare', 'market share'],
       averagePrice: ['volumeshare', 'volume share'],
       marketShareGrowth: ['marketsharegrowth', 'market share growth', 'mshare growth', 'mshare growth', 'msharegrowth'],
       volumeShareGrowth: [],
