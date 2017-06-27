@@ -42,7 +42,7 @@ export default class DataFilters extends React.Component {
       values: this.initialValues(),
       expanded: true,
     };
-    this.onChangeCallbacks = this.onChangeCallbacks();
+    this.onChangeCallbacks = this.getOnChangeCallbacks(props.dataSetName);
   }
 
   componentDidMount() {
@@ -52,6 +52,13 @@ export default class DataFilters extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
     return !_.isEqual(nextProps, this.props) ||
       !_.isEqual(nextState, this.state);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    // Dirty hack: refresh callbacks
+    if (nextProps.dataSetName !== this.props.dataSetName) {
+      this.onChangeCallbacks = this.getOnChangeCallbacks(nextProps.dataSetName);
+    }
   }
 
   onChangeSingle = (property, value) => {
@@ -130,8 +137,8 @@ export default class DataFilters extends React.Component {
     });
   };
 
-  configForCurrentSetup = () => {
-    const { dataFilters, dataSetName } = this.props;
+  configForCurrentSetup = dataSetName => {
+    const { dataFilters } = this.props;
 
     // Get all available filters for current data set.
     const filtersForCurrentDataSet = Object
@@ -146,8 +153,8 @@ export default class DataFilters extends React.Component {
       }), {});
   }
 
-  onChangeCallbacks = () => {
-    const configForCurrentDataSet = this.configForCurrentSetup();
+  getOnChangeCallbacks = dataSetName => {
+    const configForCurrentDataSet = this.configForCurrentSetup(dataSetName);
 
     return Object
       .keys(configForCurrentDataSet)
@@ -188,7 +195,7 @@ export default class DataFilters extends React.Component {
       ]
       : [];
 
-    const configForCurrentDataSet = this.configForCurrentSetup();
+    const configForCurrentDataSet = this.configForCurrentSetup(dataSetName);
 
     const dataFilterProps = filterName => {
       const config = configForCurrentDataSet[filterName];
