@@ -16,7 +16,8 @@ export default class DataFilter extends React.Component {
     isLoading: PropTypes.bool,
     multi: PropTypes.bool,
     // TODO: null || { label: 'label', value: 'value' } || [{ label: 'label', value: 'value' }, ...]
-    value: PropTypes.any
+    value: PropTypes.any,
+    clearable: PropTypes.bool
   }
 
   static defaultProps = {
@@ -25,6 +26,7 @@ export default class DataFilter extends React.Component {
     isLoading: false,
     value: null,
     dictionary: null,
+    clearable: true,
   };
 
   shouldComponentUpdate(nextProps) {
@@ -37,22 +39,21 @@ export default class DataFilter extends React.Component {
   }
 
   render() {
-    const { label, dictionary, multi, isLoading, onChange, value } = this.props;
-
     const options = _.flow([
       _.entries,
       _.map(([ id, label ]) => ({ value: parseInt(id), label })),
       _.sortBy('label')
-    ])(dictionary);
+    ])(this.props.dictionary);
 
     return (
       <Select
-        label={label}
+        label={this.props.label}
         options={options}
-        multi={multi}
-        isLoading={isLoading}
-        onChange={onChange}
-        value={value}
+        multi={this.props.multi}
+        isLoading={this.props.isLoading}
+        onChange={this.props.onChange}
+        value={this.props.value}
+        clearable={this.props.clearable}
       />
     );
   }

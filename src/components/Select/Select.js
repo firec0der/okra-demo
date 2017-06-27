@@ -18,7 +18,8 @@ export default class Select extends React.Component {
     // TODO null || { value: 'value', label: 'label' } || [{ value: 'value', label: 'label' }, ...]
     value: PropTypes.any,
     multi: PropTypes.bool,
-    isLoading: PropTypes.bool
+    isLoading: PropTypes.bool,
+    clearable: PropTypes.bool
   };
 
   static defaultProps = {
@@ -26,7 +27,8 @@ export default class Select extends React.Component {
     multi: false,
     isLoading: false,
     options: [],
-    value: null
+    value: null,
+    clearable: true
   };
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -41,17 +43,16 @@ export default class Select extends React.Component {
   handleChange = (value) => this.setState({ value }, this.props.onChange.bind(null, value));
 
   render() {
-    const { label, value, options, multi, isLoading } = this.props;
-
     return (
       <FormGroup>
-        { label && <ControlLabel>{ label }</ControlLabel> }
+        { this.props.label && <ControlLabel>{ this.props.label }</ControlLabel> }
         <ReactSelect
-          options={options}
+          options={this.props.options}
           onChange={this.handleChange}
-          value={value}
-          multi={multi}
-          isLoading={isLoading}
+          value={this.props.value}
+          multi={this.props.multi}
+          isLoading={this.props.isLoading}
+          clearable={this.props.clearable}
         />
       </FormGroup>
     );
