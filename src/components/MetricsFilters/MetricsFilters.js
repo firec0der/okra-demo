@@ -54,7 +54,7 @@ const icons = {
   },
   2: {
     totatMarketShare: TotatMarketShareIcon,
-    averagePrice: AveragePriceIcon,
+    totatVolumeShare: AveragePriceIcon,
     marketShareGrowth: MarketShareGrowthIcon,
     volumeShareGrowth: VolumeShareGrowth
   },

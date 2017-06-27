@@ -172,7 +172,7 @@ class KantarPeriodsBarChart extends React.Component {
       penetrationGrowth: { key: 'penetrationGrowth', text: 'penetration growth' },
 
       totatMarketShare: { key: 'marketShareGrowth', text: 'total market share' },
-      averagePrice: { key: 'marketShareGrowth', text: 'total market share' },
+      totatVolumeShare: { key: 'marketShareGrowth', text: 'total market share' },
       marketShareGrowth: { key: 'marketShareGrowth', text: 'total market share' },
       volumeShareGrowth: { key: 'marketShareGrowth', text: 'total market share' },
 
