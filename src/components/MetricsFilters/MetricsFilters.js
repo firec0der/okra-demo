@@ -59,7 +59,7 @@ const icons = {
     volumeShareGrowth: VolumeShareGrowth
   },
   3: {
-    averagePrice: AverageUnitPriceIcon,
+    averageUnitPrice: AverageUnitPriceIcon,
     buyers: VolumeBuyersIcon,
     value: TotalValueIcon,
     priceGrowth: PriceGrowthIcon
