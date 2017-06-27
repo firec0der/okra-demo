@@ -1,9 +1,9 @@
 export const lightenColor = (color, percent) => {
-	const num = parseInt(color.replace('#', ''), 16);
-	const amt = Math.round(2.55 * percent);
-	const R = (num >> 16) + amt;
-	const B = (num >> 8 & 0x00FF) + amt;
-	const G = (num & 0x0000FF) + amt;
+  const num = parseInt(color.replace('#', ''), 16);
+  const amt = Math.round(2.55 * percent);
+  const R = (num >> 16) + amt;
+  const B = (num >> 8 & 0x00FF) + amt;
+  const G = (num & 0x0000FF) + amt;
 
   const result = (0x1000000 + (
     R < 255
@@ -26,5 +26,5 @@ export const lightenColor = (color, percent) => {
     )
   ).toString(16).slice(1);
 
-	return `#${result}`;
+  return `#${result}`;
 };
