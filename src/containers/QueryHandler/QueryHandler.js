@@ -46,7 +46,8 @@ class QueryHandler extends React.Component {
       parsedGenre: null,
       parsedApplier: null,
       parsedPackaging: null,
-      parsedManufacturers: null
+      parsedManufacturers: null,
+      parsedMetric: null,
     };
   }
 
@@ -134,10 +135,28 @@ class QueryHandler extends React.Component {
     return Object
       .keys(dictionary)
       .filter(id => dictionary[id].some(keyWord => lowerCasedQuery.includes(keyWord.toLowerCase())));
-  }
+  };
+
+  detectMertic = query => {
+    const { metrics } = this.props;
+
+    const lowerCasedQuery = query.toLowerCase();
+
+    return metrics.list
+      .reduce((acc, group) => [...acc, ...group.items], [])
+      .find(metric => lowerCasedQuery.includes(metric.label.toLowerCase()));
+  };
 
   getBarChart = () => {
-    const { parsedAreas, parsedApplier, parsedBrands, parsedGenre, parsedPackaging, parsedManufacturer } = this.state;
+    const {
+      parsedAreas,
+      parsedApplier,
+      parsedBrands,
+      parsedGenre,
+      parsedPackaging,
+      parsedManufacturer,
+      parsedMetric
+    } = this.state;
 
     const barChartDataFilters = [
       MANUFACTURER_FILTER,
@@ -172,7 +191,7 @@ class QueryHandler extends React.Component {
         dataFilters={barChartDataFilters}
         dataFiltersValues={barChartValues}
         requiredFilters={barChartRequiredFilters}
-        chosenMetric='penetration'
+        chosenMetric={parsedMetric ? parsedMetric.value : 'penetrarion'}
       />
     );
   };
@@ -183,7 +202,8 @@ class QueryHandler extends React.Component {
     parsedBrands: this.detectBrand(value),
     parsedGenre: this.detectGenre(value),
     parsedPackaging: this.detectPackaging(value),
-    parsedManufacturer: this.detectManufacturer(value)
+    parsedManufacturer: this.detectManufacturer(value),
+    parsedMetric: this.detectMertic(value)
   });
 
   render() {
