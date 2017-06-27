@@ -18,11 +18,8 @@ import moment from 'moment';
 // import from constants
 import { API_BASE_URL } from '../../../constants/api';
 import { DATA_FILTERS_CONFIG, AREA_FILTER } from '../../../constants/dataFilters';
-import DATA_FILTERS_PROP_TYPES from './dataFiltersPropTypes';
+import NIELSEN_PROP_TYPES from '../../../constants/nielsenPropTypes';
 import { colorPalette } from '../../../constants/colors';
-
-// import from components
-import DataFilters from '../../../components/DataFilters/DataFilters';
 
 // import from utils
 import { mergeObjects } from '../../../utils/object';
@@ -31,63 +28,48 @@ const mapStateToProps = state => ({
   metrics: state.metrics,
   nielsenAppliers: state.nielsenAppliers,
   nielsenAreas: state.nielsenAreas,
-  nielsenBrands: state.nielsenBrands,
-  nielsenChannels: state.nielsenChannels,
-  nielsenGenres: state.nielsenGenres,
-  nielsenLevels: state.nielsenLevels,
-  nielsenManufacturers: state.nielsenManufacturers,
-  nielsenPackagings: state.nielsenPackagings,
-  nielsenSubcategories: state.nielsenSubcategories,
+  nielsenBrands: state.nielsenBrands
 });
 
 class NielsenPeriodsBarChart extends React.Component {
 
-  static propTypes = mergeObjects(DATA_FILTERS_PROP_TYPES, {
-    dataFilters: PropTypes.arrayOf(PropTypes.string),
+  static propTypes = mergeObjects(NIELSEN_PROP_TYPES, {
+    usePeriodFilters: PropTypes.bool,
     dataFiltersValues: PropTypes.object,
-    onDataFiltersChange: PropTypes.func.isRequired,
-    requiredFilters: PropTypes.arrayOf(PropTypes.string),
-    showPeriodFilters: PropTypes.bool,
     metric: PropTypes.string,
   });
 
   static defaultProps = {
-    dataFilters: [],
+    usePeriodFilters: true,
     dataFiltersValues: {},
-    onDataFiltersChange: () => {},
-    requiredFilters: [],
-    showPeriodFilters: true,
     metric: 'numericDistribution'
   };
 
   constructor(...args) {
     super(...args);
 
-    this.state = {
-      data: {
-        items: [],
-        isLoading: false
-      }
-    };
+    this.state = { data: { items: [], isLoading: false } };
   }
 
-  onDataFiltersChange = values => this.props.onDataFiltersChange(values, this.fetchData);
+  componentDidMount() {
+    this.fetchData(this.props.dataFiltersValues);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!_.isEqual(nextProps.dataFiltersValues, this.props.dataFiltersValues)) {
+      this.fetchData(nextProps.dataFiltersValues);
+    }
+  }
 
   fetchData = (values = {}) => {
-    const { requiredFilters, showPeriodFilters } = this.props;
-
     const usefulValues = _.omitBy(
       value => _.isNil(value) || value.length === 0,
       values
     );
 
     const usefulValuesKeys = Object.keys(usefulValues);
-    const requiredFiltersKeys = requiredFilters.map(
-      filter => DATA_FILTERS_CONFIG[filter].key
-    );
 
-    const shouldFetchData = usefulValuesKeys.length > 0
-      && requiredFiltersKeys.every(key => usefulValuesKeys.includes(key));
+    const shouldFetchData = usefulValuesKeys.length > 0;
 
     if (!shouldFetchData) {
       return;
@@ -106,7 +88,7 @@ class NielsenPeriodsBarChart extends React.Component {
     ])(DATA_FILTERS_CONFIG);
 
     const queryString = (
-      showPeriodFilters
+      this.props.usePeriodFilters
         ? [...queryStringParts, `periodFrom=${values.periodFrom}`, `periodTo=${values.periodTo}`]
         : queryStringParts
     ).join('&');
@@ -170,19 +152,6 @@ class NielsenPeriodsBarChart extends React.Component {
   }
 
   render() {
-    const {
-      nielsenAppliers,
-      nielsenAreas,
-      nielsenBrands,
-      nielsenChannels,
-      nielsenGenres,
-      nielsenLevels,
-      nielsenManufacturers,
-      nielsenPackagings,
-      nielsenSubcategories,
-      showPeriodFilters
-    } = this.props;
-
     const { data } = this.state;
 
     const barChartProps = {
@@ -195,23 +164,6 @@ class NielsenPeriodsBarChart extends React.Component {
 
     return (
       <div>
-        <DataFilters
-          values={this.props.dataFiltersValues}
-          onChange={this.onDataFiltersChange}
-          dataFilters={this.props.dataFilters}
-          dataSetName='nielsen'
-          nielsenAppliers={nielsenAppliers}
-          nielsenAreas={nielsenAreas}
-          nielsenBrands={nielsenBrands}
-          nielsenChannels={nielsenChannels}
-          nielsenGenres={nielsenGenres}
-          nielsenLevels={nielsenLevels}
-          nielsenManufacturers={nielsenManufacturers}
-          nielsenPackagings={nielsenPackagings}
-          nielsenSubcategories={nielsenSubcategories}
-          showPeriodFilters={showPeriodFilters}
-        />
-
         { !data.isLoading && data.items.length > 0 && (
           <Grid>
             <Col xs={12} md={8} mdOffset={2} style={{ marginBottom: '30px', backgroundColor: '#fff' }}>

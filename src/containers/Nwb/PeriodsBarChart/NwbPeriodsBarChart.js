@@ -18,71 +18,56 @@ import moment from 'moment';
 // import from constants
 import { API_BASE_URL } from '../../../constants/api';
 import { DATA_FILTERS_CONFIG } from '../../../constants/dataFilters';
-import DATA_FILTERS_PROP_TYPES from './dataFiltersPropTypes';
+import NWB_PROP_TYPES from '../../../constants/nwbPropTypes';
 import { colorPalette } from '../../../constants/colors';
-
-// import from components
-import DataFilters from '../../../components/DataFilters/DataFilters';
 
 // import from utils
 import { mergeObjects } from '../../../utils/object';
 
 const mapStateToProps = state => ({
   metrics: state.metrics,
-  nwbBrands: state.nwbBrands,
-  nwbGenres: state.nwbGenres,
-  nwbManufacturers: state.nwbManufacturers,
-  nwbSubcategories: state.nwbSubcategories,
+  nwbBrands: state.nwbBrands
 });
 
 class NwbPeriodsBarChart extends React.Component {
 
-  static propTypes = mergeObjects(DATA_FILTERS_PROP_TYPES, {
-    dataFilters: PropTypes.arrayOf(PropTypes.string),
+  static propTypes = mergeObjects(NWB_PROP_TYPES, {
+    usePeriodFilters: PropTypes.bool,
     dataFiltersValues: PropTypes.object,
-    onDataFiltersChange: PropTypes.func.isRequired,
-    requiredFilters: PropTypes.arrayOf(PropTypes.string),
-    showPeriodFilters: PropTypes.bool,
     metric: PropTypes.string,
   });
 
   static defaultProps = {
-    dataFilters: [],
+    usePeriodFilters: true,
     dataFiltersValues: {},
-    onDataFiltersChange: () => {},
-    requiredFilters: [],
-    showPeriodFilters: true,
     metric: 'beValue'
   };
 
   constructor(...args) {
     super(...args);
 
-    this.state = {
-      data: {
-        items: [],
-        isLoading: false
-      }
-    };
+    this.state = { data: { items: [], isLoading: false } };
   }
 
-  onDataFiltersChange = values => this.props.onDataFiltersChange(values, this.fetchData);
+  componentDidMount() {
+    this.fetchData(this.props.dataFiltersValues);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!_.isEqual(nextProps.dataFiltersValues, this.props.dataFiltersValues)) {
+      this.fetchData(nextProps.dataFiltersValues);
+    }
+  }
 
   fetchData = (values = {}) => {
-    const { requiredFilters, showPeriodFilters } = this.props;
-
     const usefulValues = _.omitBy(
       value => _.isNil(value) || value.length === 0,
       values
     );
 
     const usefulValuesKeys = Object.keys(usefulValues);
-    const requiredFiltersKeys = requiredFilters.map(
-      filter => DATA_FILTERS_CONFIG[filter].key
-    );
 
-    const shouldFetchData = usefulValuesKeys.length > 0 &&
-      requiredFiltersKeys.every(key => usefulValuesKeys.includes(key));
+    const shouldFetchData = usefulValuesKeys.length > 0;
 
     if (!shouldFetchData) {
       return;
@@ -101,7 +86,7 @@ class NwbPeriodsBarChart extends React.Component {
     ])(DATA_FILTERS_CONFIG);
 
     const queryString = (
-      showPeriodFilters
+      this.props.usePeriodFilters
         ? [...queryStringParts, `periodFrom=${values.periodFrom}`, `periodTo=${values.periodTo}`]
         : queryStringParts
     ).join('&');
@@ -133,16 +118,12 @@ class NwbPeriodsBarChart extends React.Component {
   };
 
   renderBarStacks = () => {
-    const {
-      nwbBrands: { dictionary: brandsDict },
-      dataFiltersValues
-    } = this.props;
-    const { data: { items } } = this.state;
+    const { nwbBrands: { dictionary: brandsDict } } = this.props;
 
     const brands = _.flow([
       _.uniqBy('brandId'),
       _.map(item => brandsDict[item.brandId])
-    ])(items);
+    ])(this.state.data.items);
 
     return brands.map((brandName, i) => (
       <Bar
@@ -155,14 +136,6 @@ class NwbPeriodsBarChart extends React.Component {
   };
 
   render() {
-    const {
-      nwbBrands,
-      nwbGenres,
-      nwbManufacturers,
-      nwbSubcategories,
-      showPeriodFilters
-    } = this.props;
-
     const { data } = this.state;
 
     const barChartProps = {
@@ -175,18 +148,6 @@ class NwbPeriodsBarChart extends React.Component {
 
     return (
       <div>
-        <DataFilters
-          values={this.props.dataFiltersValues}
-          onChange={this.onDataFiltersChange}
-          dataFilters={this.props.dataFilters}
-          dataSetName='nwb'
-          nwbBrands={nwbBrands}
-          nwbGenres={nwbGenres}
-          nwbManufacturers={nwbManufacturers}
-          nwbSubcategories={nwbSubcategories}
-          showPeriodFilters={showPeriodFilters}
-        />
-
         { !data.isLoading && data.items.length > 0 && (
           <Grid>
             <Col xs={12} md={8} mdOffset={2} style={{ marginBottom: '30px', backgroundColor: '#fff' }}>

@@ -8,9 +8,13 @@ import moment from 'moment';
 
 // import from constants
 import { DATA_FILTERS_CONFIG } from '../../constants/dataFilters';
+import KANTAR_PROP_TYPES from '../../constants/kantarPropTypes';
+import NIELSEN_PROP_TYPES from '../../constants/nielsenPropTypes';
+import NWB_PROP_TYPES from '../../constants/nwbPropTypes';
 
 // import from components
 import MetricsFilters from '../../components/MetricsFilters/MetricsFilters';
+import DataFilters from '../../components/DataFilters/DataFilters';
 
 // import from containers
 import NielsenPeriodsBarChart from '../Nielsen/PeriodsBarChart/NielsenPeriodsBarChart';
@@ -23,12 +27,12 @@ import { mergeObjects } from '../../utils/object';
 const dataSetChartContainerMap = {
   nielsen: NielsenPeriodsBarChart,
   kantar: KantarPeriodsBarChart,
-  nwb: NwbPeriodsBarChart
+  nwb: NwbPeriodsBarChart,
 };
 
 class PeriodsBarChart extends React.Component {
 
-  static propTypes = {
+  static propTypes = mergeObjects(KANTAR_PROP_TYPES, NIELSEN_PROP_TYPES, NWB_PROP_TYPES, {
     header: PropTypes.string,
     dataFilters: PropTypes.arrayOf(PropTypes.string),
     dataFiltersValues: PropTypes.object,
@@ -37,7 +41,7 @@ class PeriodsBarChart extends React.Component {
     chosenMetric: PropTypes.string,
     shouldShowMetrics: PropTypes.bool,
     showPeriodFilters: PropTypes.bool,
-  };
+  });
 
   static defaultProps = {
     dataFilters: Object.keys(DATA_FILTERS_CONFIG),
@@ -60,20 +64,37 @@ class PeriodsBarChart extends React.Component {
 
     this.state = {
       chosenMetric: props.chosenMetric,
+      barChartContainer: null,
       dataFiltersValues
     };
   }
 
-  onMetricFilterChange = chosenMetric => this.setState({ chosenMetric });
+  componentDidMount() {
+    const dataSetName = this.getDataSetName(this.state.chosenMetric);
+    this.setState({ barChartContainer: dataSetChartContainerMap[dataSetName] });
+  }
+
+  onMetricFilterChange = chosenMetric => {
+    const previousDataSetName = this.getDataSetName(this.state.chosenMetric);
+    const nextDataSetName = this.getDataSetName(chosenMetric);
+
+    this.setState(
+      mergeObjects(
+        { chosenMetric },
+        nextDataSetName !== previousDataSetName
+          ? { barChartContainer: dataSetChartContainerMap[nextDataSetName] }
+          : {}
+      )
+    );
+  }
 
   onDataFiltersChange = (values, callback = () => {}) => this.setState(
     { dataFiltersValues: mergeObjects(this.state.dataFiltersValues, values) },
     () => callback(this.state.dataFiltersValues)
   );
 
-  getDataSetName = () => {
+  getDataSetName = chosenMetric => {
     const { metrics } = this.props;
-    const { chosenMetric } = this.state;
 
     const metricObject = _.flow([
       _.reduce((acc, { items }) => [...acc, ...items], []),
@@ -85,15 +106,60 @@ class PeriodsBarChart extends React.Component {
     return metricObject.dataset || null;
   }
 
-  render() {
-    const { metrics, header } = this.props;
+  renderDataFilters() {
     const { chosenMetric } = this.state;
 
+    const dataSetName = this.getDataSetName(chosenMetric);
+
+    const propsForDataSet = {
+      kantar: [
+        'kantarAreas',
+        'kantarBrands',
+        'kantarGenres',
+        'kantarLevels',
+        'kantarManufacturers',
+        'kantarPackagings',
+        'kantarSubcategories'
+      ],
+      nielsen: [
+        'nielsenAppliers',
+        'nielsenAreas',
+        'nielsenBrands',
+        'nielsenChannels',
+        'nielsenGenres',
+        'nielsenLevels',
+        'nielsenManufacturers',
+        'nielsenPackagings',
+        'nielsenSubcategories'
+      ],
+      nwb: [
+        'nwbBrands',
+        'nwbGenres',
+        'nwbManufacturers',
+        'nwbSubcategories'
+      ]
+    };
+
+    const props = propsForDataSet[dataSetName]
+      .reduce((acc, propKey) => mergeObjects(acc, { [propKey]: this.props[propKey] }), {});
+
+    return (
+      <DataFilters
+        values={this.props.dataFiltersValues}
+        onChange={this.onDataFiltersChange}
+        dataFilters={this.props.dataFilters}
+        dataSetName={dataSetName}
+        usePeriodFilters
+        {...props}
+      />
+    )
+  }
+
+  render() {
+    const { metrics, header } = this.props;
+    const { chosenMetric, barChartContainer: BarChartContainer } = this.state;
+
     const shouldShowMetrics = !metrics.list.isLoading && metrics.list.length;
-
-    const dataSetName = this.getDataSetName();
-
-    const BarChartContainer = dataSetChartContainerMap[dataSetName];
 
     return (
       <div>
@@ -117,23 +183,54 @@ class PeriodsBarChart extends React.Component {
           </Grid>
         ) }
 
-        { !_.isNil(BarChartContainer) && (
-          <BarChartContainer
-            metric={chosenMetric}
-            datasetName={dataSetName}
-            dataFilters={this.props.dataFilters}
-            dataFiltersValues={this.state.dataFiltersValues}
-            requiredFilters={this.props.requiredFilters}
-            onDataFiltersChange={this.onDataFiltersChange}
-            showPeriodFilters
-          />
-        ) }
+        <div>
+          { this.renderDataFilters() }
+        </div>
+
+        <div style={{ height: '300px' }}>
+          { !_.isNil(BarChartContainer) && (
+            <BarChartContainer
+              metric={chosenMetric}
+              datasetName={this.getDataSetName(chosenMetric)}
+              dataFilters={this.props.dataFilters}
+              dataFiltersValues={this.state.dataFiltersValues}
+              requiredFilters={this.props.requiredFilters}
+              onDataFiltersChange={this.onDataFiltersChange}
+              showPeriodFilters
+            />
+          ) }
+        </div>
       </div>
     );
   }
 
 }
 
-export default connect(
-  ({ metrics }) => ({ metrics })
-)(PeriodsBarChart);
+const mapStateToProps = state => ({
+  metrics: state.metrics,
+
+  kantarAreas: state.kantarAreas,
+  kantarBrands: state.kantarBrands,
+  kantarGenres: state.kantarGenres,
+  kantarLevels: state.kantarLevels,
+  kantarManufacturers: state.kantarManufacturers,
+  kantarPackagings: state.kantarPackagings,
+  kantarSubcategories: state.kantarSubcategories,
+
+  nielsenAppliers: state.nielsenAppliers,
+  nielsenAreas: state.nielsenAreas,
+  nielsenBrands: state.nielsenBrands,
+  nielsenChannels: state.nielsenChannels,
+  nielsenGenres: state.nielsenGenres,
+  nielsenLevels: state.nielsenLevels,
+  nielsenManufacturers: state.nielsenManufacturers,
+  nielsenPackagings: state.nielsenPackagings,
+  nielsenSubcategories: state.nielsenSubcategories,
+
+  nwbBrands: state.nwbBrands,
+  nwbGenres: state.nwbGenres,
+  nwbManufacturers: state.nwbManufacturers,
+  nwbSubcategories: state.nwbSubcategories,
+});
+
+export default connect(mapStateToProps)(PeriodsBarChart);
