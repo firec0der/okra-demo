@@ -169,7 +169,17 @@ class KantarPeriodsBarChart extends React.Component {
     const growthVariables = {
       penetration: { key: 'penetrationGrowth', text: 'penetration' },
       volumeUnits: { key: 'volumeShareGrowth', text: 'volume units' },
-      penetrationGrowth: { key: 'penetrationGrowth', text: 'penetration growth' }
+      penetrationGrowth: { key: 'penetrationGrowth', text: 'penetration growth' },
+
+      totatMarketShare: { key: 'marketShareGrowth', text: 'total market share' },
+      averagePrice: { key: 'marketShareGrowth', text: 'total market share' },
+      marketShareGrowth: { key: 'marketShareGrowth', text: 'total market share' },
+      volumeShareGrowth: { key: 'marketShareGrowth', text: 'total market share' },
+
+      averageUnitPrice: { key: 'priceGrowth', text: 'price position' },
+      buyers: { key: 'priceGrowth', text: 'price position' },
+      value: { key: 'priceGrowth', text: 'price position' },
+      priceGrowth: { key: 'priceGrowth', text: 'price position' },
     };
 
     const growthValues = _.flow([
