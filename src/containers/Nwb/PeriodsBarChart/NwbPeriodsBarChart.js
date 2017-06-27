@@ -181,11 +181,13 @@ class NwbPeriodsBarChart extends React.Component {
           `is ${status} in the last quarter by a rate of ${growthValue.toFixed(1)}%`;
       });
 
+    const colStyles = { marginBottom: '30px', paddingTop: '10px', paddingBottom: '10px', backgroundColor: '#fff' };
+
     return (
       <div>
         { !data.isLoading && data.items.length > 0 && (
           <Grid>
-            <Col xs={12} md={8} mdOffset={2} style={{ marginBottom: '30px', backgroundColor: '#fff' }}>
+            <Col xs={12} md={8} mdOffset={2} style={colStyles}>
               { messages.map((message, i) => (<div key={i}>{ message }</div>)) }
 
               <ResponsiveContainer width='100%' height={300}>
