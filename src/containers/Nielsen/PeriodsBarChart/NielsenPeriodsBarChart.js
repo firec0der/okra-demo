@@ -138,9 +138,6 @@ class NielsenPeriodsBarChart extends React.Component {
       dataFiltersValues
     } = this.props;
 
-    const data = this.barChartData();
-    console.log(data);
-
     const areaIds = dataFiltersValues[DATA_FILTERS_CONFIG[AREA_FILTER].key];
 
     const brands = _.flow([

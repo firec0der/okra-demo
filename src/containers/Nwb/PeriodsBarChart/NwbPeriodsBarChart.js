@@ -167,7 +167,7 @@ class NwbPeriodsBarChart extends React.Component {
     ])(data.items);
 
     const messages = dataFiltersValues[DATA_FILTERS_CONFIG[BRAND_FILTER].key]
-      .filter(brandId => growthValues[brandId])
+      .filter(brandId => _.isNumber(growthValues[brandId]))
       .map(brandId => {
         const brandName = nwbBrands.dictionary[brandId];
         const growthValue = growthValues[brandId];
