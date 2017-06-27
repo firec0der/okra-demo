@@ -26,13 +26,13 @@ export default class DataFilters extends React.Component {
     dataSetName: PropTypes.string.isRequired,
     values: PropTypes.object,
     onChange: PropTypes.func,
-    showPeriodFilters: PropTypes.bool,
+    usePeriodFilters: PropTypes.bool,
   };
 
   static defaultProps = {
     onChange: values => {},
     dataSetName: 'nielsen',
-    showPeriodFilters: true
+    usePeriodFilters: true
   };
 
   constructor(props, ...args) {
@@ -107,7 +107,7 @@ export default class DataFilters extends React.Component {
   };
 
   initialValues = () => {
-    const { values, showPeriodFilters } = this.props;
+    const { values, usePeriodFilters } = this.props;
 
     const getValue = filter => values && values[DATA_FILTERS_CONFIG[filter].key]
       ? values[DATA_FILTERS_CONFIG[filter].key]
@@ -121,7 +121,7 @@ export default class DataFilters extends React.Component {
         [DATA_FILTERS_CONFIG[filterName].key]: getValue(filterName)
       }), {});
 
-    if (!showPeriodFilters) { return initialValues; }
+    if (!usePeriodFilters) { return initialValues; }
 
     return mergeObjects(initialValues, {
       // make sure that timestamps are here. values must be INTs.
@@ -159,9 +159,9 @@ export default class DataFilters extends React.Component {
   }
 
   renderFilters = () => {
-    const { showPeriodFilters, dataSetName } = this.props;
+    const { usePeriodFilters, dataSetName } = this.props;
 
-    const periodFilters = showPeriodFilters
+    const periodFilters = usePeriodFilters
       ? [
         <FormGroup key='periodFrom'>
           <ControlLabel>Period from</ControlLabel>
