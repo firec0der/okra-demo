@@ -9,6 +9,7 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
+  Legend,
   Bar,
   ResponsiveContainer
 } from 'recharts';
@@ -23,6 +24,7 @@ import { colorPalette } from '../../../constants/colors';
 
 // import from utils
 import { mergeObjects } from '../../../utils/object';
+import { lightenColor } from '../../../utils/color';
 
 const mapStateToProps = state => ({
   metrics: state.metrics,
@@ -128,9 +130,9 @@ class NwbPeriodsBarChart extends React.Component {
     return brands.map((brandName, i) => (
       <Bar
         key={brandName}
-        stackId={1}
+        stackId={i}
         dataKey={brandName}
-        fill={colorPalette[i + 14]}
+        fill={lightenColor(colorPalette[14], i * 7)}
       />
     ));
   };
@@ -157,6 +159,7 @@ class NwbPeriodsBarChart extends React.Component {
                   <YAxis tickCount={10} />
                   <CartesianGrid strokeDasharray='3 3' />
                   <Tooltip />
+                  <Legend />
                   { this.renderBarStacks() }
                 </RechartsBarChart>
               </ResponsiveContainer>

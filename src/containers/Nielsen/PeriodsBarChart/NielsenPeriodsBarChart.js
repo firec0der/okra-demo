@@ -9,6 +9,7 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
+  Legend,
   Bar,
   ResponsiveContainer
 } from 'recharts';
@@ -23,6 +24,7 @@ import { colorPalette } from '../../../constants/colors';
 
 // import from utils
 import { mergeObjects } from '../../../utils/object';
+import { lightenColor } from '../../../utils/color';
 
 const mapStateToProps = state => ({
   metrics: state.metrics,
@@ -134,21 +136,14 @@ class NielsenPeriodsBarChart extends React.Component {
       _.map(item => brandsDict[item.brandId])
     ])(this.state.data.items);
 
-    return areaIds.reduce((acc, areaId, i) => {
-      const areaName = areasDict[areaId];
-
-      return [].concat(
-        acc,
-        brands.map((brandName, j) => (
-          <Bar
-            key={`${areaName}-${brandName}`}
-            stackId={i + 1}
-            fill={colorPalette[j + 14]}
-            dataKey={`${areaName}, ${brandName}`}
-          />
-        ))
-      );
-    }, []);
+    return brands.reduce((acc, brandName, i) => [].concat(acc, areaIds.map((areaId, j) => (
+      <Bar
+        key={`${areasDict[areaId]}-${brandName}`}
+        stackId={i + 1}
+        fill={lightenColor(colorPalette[j + 14], i * 7)}
+        dataKey={`${areasDict[areaId]}, ${brandName}`}
+      />
+    ))), []);
   }
 
   render() {
@@ -173,6 +168,7 @@ class NielsenPeriodsBarChart extends React.Component {
                   <YAxis tickCount={10} />
                   <CartesianGrid strokeDasharray='3 3' />
                   <Tooltip />
+                  <Legend />
                   { this.renderBarStacks() }
                 </RechartsBarChart>
               </ResponsiveContainer>
