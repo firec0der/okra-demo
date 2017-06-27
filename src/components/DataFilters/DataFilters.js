@@ -49,6 +49,11 @@ export default class DataFilters extends React.Component {
     this.props.onChange(this.state.values);
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return !_.isEqual(nextProps, this.props) ||
+      !_.isEqual(nextState, this.state);
+  }
+
   onChangeSingle = (property, value) => {
     const values = mergeObjects(this.state.values, {
       [property]: value ? parseInt(value.value) : null
