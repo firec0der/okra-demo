@@ -349,7 +349,8 @@ class QueryHandler extends React.Component {
   }
 
   renderAnswers = () => {
-    const { query } = this.state;
+    const { query, parsedBrands } = this.state;
+    const { brands } = this.props;
 
     const getItems = amount => _.flow([
       _.filter(item => moment(item.date).unix() < moment('2017', 'YYYY').unix()),
@@ -368,7 +369,144 @@ class QueryHandler extends React.Component {
       actionKeyWords
     );
 
-    return <p>{ `your query is about some ${action} things` }</p>;
+    const isPositive = action === 'positive';
+
+    const isGood = value => action === 'positive'
+      ? value > 0
+      : value <= 0;
+
+    const brandIds = parsedBrands.map(item => item.id);
+
+    const messages = brandIds.reduce((acc, brandId) => mergeObjects(acc, { [brandId]: [] }), {});
+
+    // Reason 1.1
+    brandIds.forEach(brandId => {
+      const value = _.meanBy('numericDistributionGrowth', nielsenData[brandId]);
+      const brandName = _.getOr(null, 'name', brands.list.find(brand => brand.id === brandId));
+
+      if (!_.isNumber(value) || !brandName) { return; }
+
+      if (isPositive && value > 0) {
+        messages[brandId].push(
+          'Reason 1.1: ' +
+          `% of stores that sells ${brandName} ` +
+          `has increased by ${Math.abs(value.toFixed(3))}%.`
+        );
+      }
+
+      if (!isPositive && value <= 0) {
+        messages[brandId].push(
+          'Reason 1.1: ' +
+          `% of stores that sells ${brandName} ` +
+          `has decreased by ${Math.abs(value.toFixed(3))}%.`
+        );
+      }
+    });
+
+    // Reason 1.2
+    brandIds.forEach(brandId => {
+      const value = _.meanBy('weightedDistributionGrowth', nielsenData[brandId]);
+      const brandName = _.getOr(null, 'name', brands.list.find(brand => brand.id === brandId));
+
+      if (!_.isNumber(value) || !brandName) { return; }
+
+      if (isPositive && value > 0) {
+        messages[brandId].push(
+          'Reason 1.2: ' +
+          `% of quality stores that sells ${brandName} ` +
+          `has increased by ${Math.abs(value.toFixed(3))}%.`
+        );
+      }
+
+      if (!isPositive && value <= 0) {
+        messages[brandId].push(
+          'Reason 1.2: ' +
+          `% of quality stores that sells ${brandName} ` +
+          `has decreased by ${Math.abs(value.toFixed(3))}%.`
+        );
+      }
+    });
+
+    // Reason 2.1
+    brandIds.forEach(brandId => {
+      const value = _.meanBy('popGrowth', nielsenData[brandId]);
+      const brandName = _.getOr(null, 'name', brands.list.find(brand => brand.id === brandId));
+
+      if (!_.isNumber(value) || !brandName) { return; }
+
+      if (isPositive && value > 0) {
+        messages[brandId].push(
+          'Reason 2.1: ' +
+          `Increased promotional and advertising activity within ` +
+          `the retail stores by ${Math.abs(value.toFixed(3))}%.`
+        );
+      }
+
+      if (!isPositive && value <= 0) {
+        messages[brandId].push(
+          'Reason 2.1: ' +
+          `Decreased promotional and advertising activity within ` +
+          `the retail stores by ${Math.abs(value.toFixed(3))}%.`
+        );
+      }
+    });
+
+    // Reason 2.2
+    brandIds.forEach(brandId => {
+      const value = _.meanBy('popGrowth', nielsenData[brandId]);
+      const brandName = _.getOr(null, 'name', brands.list.find(brand => brand.id === brandId));
+
+      if (!_.isNumber(value) || !brandName) { return; }
+
+      if (isPositive && value > 0) {
+        messages[brandId].push(
+          'Reason 2.2: ' +
+          `Increased promotional and advertising activity within ` +
+          `the quality stores by ${Math.abs(value.toFixed(3))}%.`
+        );
+      }
+
+      if (!isPositive && value <= 0) {
+        messages[brandId].push(
+          'Reason 2.2: ' +
+          `Decreased promotional and advertising activity within ` +
+          `the quality stores by ${Math.abs(value.toFixed(3))}%.`
+        );
+      }
+    });
+
+    // Reason 3.1
+    brandIds.forEach(brandId => {
+      const value = _.meanBy('numericOutOfStockGrowth', nielsenData[brandId]);
+      const brandName = _.getOr(null, 'name', brands.list.find(brand => brand.id === brandId));
+
+      if (!_.isNumber(value) || !brandName) { return; }
+
+      if (isPositive && value > 0) {
+        messages[brandId].push(
+          'Reason 1.2: ' +
+          `Increased out of stock distribution within the retail stores by ${Math.abs(value.toFixed(3))}%.`
+        );
+      }
+
+      if (!isPositive && value <= 0) {
+        messages[brandId].push(
+          'Reason 1.2: ' +
+          `Decreased out of stock distribution within the retail stores by ${Math.abs(value.toFixed(3))}%.`
+        );
+      }
+    });
+
+    return _.flow([
+      _.entries,
+      _.filter(([ brandId, messages ]) => messages.length),
+      _.map(([ brandId, messages ]) => (
+        <div key={brandId}>
+          <p>{ brands.list.find(brand => brand.id === parseInt(brandId)).name }</p>
+          <ul>{ messages.map((message, i) => (<li key={i}>{ message }</li>)) }</ul>
+        </div>
+      ))
+    ])(messages);
   }
 
   render() {
@@ -405,7 +543,6 @@ class QueryHandler extends React.Component {
             <Grid>
               <Col xs={12} md={6} mdOffset={3}>
                 <div>
-                  <p>why question is detected</p>
                   { this.renderAnswers() }
                 </div>
               </Col>
