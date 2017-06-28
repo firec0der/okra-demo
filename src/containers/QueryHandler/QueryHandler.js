@@ -484,15 +484,125 @@ class QueryHandler extends React.Component {
 
       if (isPositive && value > 0) {
         messages[brandId].push(
-          'Reason 1.2: ' +
+          'Reason 3.1: ' +
           `Increased out of stock distribution within the retail stores by ${Math.abs(value.toFixed(3))}%.`
         );
       }
 
       if (!isPositive && value <= 0) {
         messages[brandId].push(
-          'Reason 1.2: ' +
+          'Reason 3.1: ' +
           `Decreased out of stock distribution within the retail stores by ${Math.abs(value.toFixed(3))}%.`
+        );
+      }
+    });
+
+    // Reason 4
+    brandIds.forEach(brandId => {
+      const value = _.meanBy('priceGrowth', kantarData[brandId]);
+      const brandName = _.getOr(null, 'name', brands.list.find(brand => brand.id === brandId));
+
+      if (!_.isNumber(value) || !brandName) { return; }
+
+      if (isPositive && value > 0) {
+        messages[brandId].push(
+          'Reason 4: ' +
+          `The price of ${brandName} increased by ${Math.abs(value.toFixed(3))}%.`
+        );
+      }
+
+      if (!isPositive && value <= 0) {
+        messages[brandId].push(
+          'Reason 4: ' +
+          `The price of ${brandName} decreased by ${Math.abs(value.toFixed(3))}%.`
+        );
+      }
+    });
+
+    // Reason 5
+    brandIds.forEach(brandId => {
+      const value = _.meanBy('penetrationGrowth', kantarData[brandId]);
+      const brandName = _.getOr(null, 'name', brands.list.find(brand => brand.id === brandId));
+
+      if (!_.isNumber(value) || !brandName) { return; }
+
+      if (isPositive && value > 0) {
+        messages[brandId].push(
+          'Reason 5: ' +
+          `The penetration of ${brandName} increased by ${Math.abs(value.toFixed(3))}%.`
+        );
+      }
+
+      if (!isPositive && value <= 0) {
+        messages[brandId].push(
+          'Reason 5: ' +
+          `The penetration of ${brandName} decreased by ${Math.abs(value.toFixed(3))}%.`
+        );
+      }
+    });
+
+    // Reason 6.1
+    brandIds.forEach(brandId => {
+      const value = _.meanBy('convictionGrowth', nwbData[brandId]);
+      const brandName = _.getOr(null, 'name', brands.list.find(brand => brand.id === brandId));
+
+      if (!_.isNumber(value) || !brandName) { return; }
+
+      if (isPositive && value > 0) {
+        messages[brandId].push(
+          'Reason 6.1: ' +
+          `The conviction about ${brandName} increased by ${Math.abs(value.toFixed(3))}%.`
+        );
+      }
+
+      if (!isPositive && value <= 0) {
+        messages[brandId].push(
+          'Reason 6.1: ' +
+          `The conviction about ${brandName} decreased by ${Math.abs(value.toFixed(3))}%.`
+        );
+      }
+    });
+
+    // Reason 6.2
+    brandIds.forEach(brandId => {
+      const value = _.meanBy('presenceGrowth', nwbData[brandId]);
+      const brandName = _.getOr(null, 'name', brands.list.find(brand => brand.id === brandId));
+
+      if (!_.isNumber(value) || !brandName) { return; }
+
+      if (isPositive && value > 0) {
+        messages[brandId].push(
+          'Reason 6.2: ' +
+          `The presence about ${brandName} increased by ${Math.abs(value.toFixed(3))}%.`
+        );
+      }
+
+      if (!isPositive && value <= 0) {
+        messages[brandId].push(
+          'Reason 6.2: ' +
+          `The presence about ${brandName} decreased by ${Math.abs(value.toFixed(3))}%.`
+        );
+      }
+    });
+
+    // Reason 6.3
+    brandIds.forEach(brandId => {
+      const value = _.meanBy('relevanceGrowth', nwbData[brandId]);
+      const brandName = _.getOr(null, 'name', brands.list.find(brand => brand.id === brandId));
+
+      if (!_.isNumber(value) || !brandName) { return; }
+
+      if (isPositive && value > 0) {
+        messages[brandId].push(
+          'Reason 6.3: ' +
+          `The relevance impression about ${brandName} increased by ${Math.abs(value.toFixed(3))}%.`
+        );
+      }
+
+      if (!isPositive && value <= 0) {
+        messages[brandId].push(
+          'Reason 6.3: ' +
+          `The relevance impression about ${brandName} decreased by ${Math.abs(value.toFixed(3))}%.`
         );
       }
     });
