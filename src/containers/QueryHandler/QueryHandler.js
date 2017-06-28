@@ -37,7 +37,7 @@ const mapStateToProps = state => ({
   manufacturers: state.manufacturers,
 });
 
-const actionKeysWords = {
+const actionKeyWords = {
   positive: ['gaining', 'gain', 'gains', 'gained', 'increasing', 'increase', 'increases', 'increased'],
   negative: ['loosing', 'lose', 'loses', 'lost', 'decreasing', 'decrease', 'decreases', 'decreased']
 };
@@ -235,7 +235,7 @@ class QueryHandler extends React.Component {
     const keyWords = _.flow([
       _.entries,
       _.reduce((acc, [ name, list ]) => [...acc, ...list], [])
-    ])(actionKeysWords);
+    ])(actionKeyWords);
 
     return _.startsWith('why', lowerCasedQuery) &&
       keyWords.some(keyWord => lowerCasedQuery.includes(keyWord));
@@ -361,7 +361,7 @@ class QueryHandler extends React.Component {
 
     const action = _.findKey(
       list => list.some(keyWord => query.toLowerCase().includes(keyWord)),
-      actionKeysWords
+      actionKeyWords
     );
 
     return <p>{ `your query is about some ${action} things` }</p>;
