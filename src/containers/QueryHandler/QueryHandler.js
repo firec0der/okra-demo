@@ -48,6 +48,7 @@ class QueryHandler extends React.Component {
       parsedPackaging: null,
       parsedManufacturers: null,
       parsedMetric: null,
+      isWhyQuery: false
     };
   }
 
@@ -172,6 +173,18 @@ class QueryHandler extends React.Component {
       .find(id => dictionary[id].some(keyWord => lowerCasedQuery.includes(keyWord.toLowerCase())));
   };
 
+  isWhyQuery = query => {
+    const lowerCasedQuery = query.toLowerCase();
+
+    const actionKeysWords = [
+      'loosing', 'lose', 'loses', 'lost', 'increasing', 'increase', 'increases', 'increased',
+      'gaining', 'gain', 'gains', 'gained', 'decreasing', 'decrease', 'decreases', 'decreased',
+    ];
+
+    return _.startsWith('why', lowerCasedQuery) &&
+      actionKeysWords.some(keyWord => lowerCasedQuery.includes(keyWord));
+  };
+
   getBarChart = () => {
     const {
       parsedAreas,
@@ -229,11 +242,19 @@ class QueryHandler extends React.Component {
     parsedGenre: this.detectGenre(value),
     parsedPackaging: this.detectPackaging(value),
     parsedManufacturer: this.detectManufacturer(value),
-    parsedMetric: this.detectMertic(value)
+    parsedMetric: this.detectMertic(value),
+    isWhyQuery: this.isWhyQuery(value)
   });
 
   render() {
-    const { parsedBrands, parsedGenre, parsedApplier, parsedPackaging, parsedManufacturer } = this.state;
+    const {
+      isWhyQuery,
+      parsedBrands,
+      parsedGenre,
+      parsedApplier,
+      parsedPackaging,
+      parsedManufacturer
+    } = this.state;
 
     const shouldShowResults = parsedBrands.length ||
       parsedManufacturer ||
@@ -250,7 +271,7 @@ class QueryHandler extends React.Component {
         </Grid>
 
         <div className='result-body'>
-          { shouldShowResults
+          { shouldShowResults && !isWhyQuery
             ? this.getBarChart()
             : <BrandLogos />
           }
