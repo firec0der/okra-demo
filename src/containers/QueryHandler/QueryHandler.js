@@ -38,8 +38,16 @@ const mapStateToProps = state => ({
 });
 
 const actionKeyWords = {
-  positive: ['gaining', 'gain', 'gains', 'gained', 'increasing', 'increase', 'increases', 'increased'],
-  negative: ['loosing', 'lose', 'loses', 'lost', 'decreasing', 'decrease', 'decreases', 'decreased']
+  positive: [
+    'gaining', 'gain', 'gains', 'gained', 'increasing', 'increase', 'increases', 'increased',
+    'high', 'higher', 'grow', 'growing', 'grower', 'better', 'improve', 'improved', 'gain', 'gained',
+    'rise', 'upgrade', 'maximised', 'raise', 'rise', 'raised', 'extended', 'increment', 'build up'
+  ],
+  negative: [
+    'loosing', 'lose', 'loses', 'lost', 'decreasing', 'decrease', 'decreases', 'decreased',
+    'worse', 'declined', 'decline', 'declines', 'declining', 'reduce', 'reducing', 'reduces', 'reduction', 'reduced',
+    'worsen', 'lower', 'low', 'dropped', 'diminished', 'diminish', 'drop', 'drops', 'deplete'
+  ]
 };
 
 class QueryHandler extends React.Component {
