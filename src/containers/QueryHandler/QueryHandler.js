@@ -15,6 +15,7 @@ import {
   MANUFACTURER_FILTER,
   DATA_FILTERS_CONFIG
 } from '../../constants/dataFilters';
+import { API_BASE_URL } from '../../constants/api';
 
 // import from components
 import BrandLogos from '../../components/BrandLogos/BrandLogos';
@@ -48,8 +49,56 @@ class QueryHandler extends React.Component {
       parsedPackaging: null,
       parsedManufacturers: null,
       parsedMetric: null,
-      isWhyQuery: false
+      isWhyQuery: false,
+      kantarData: [],
+      nielsenData: [],
+      nwbData: [],
+      dataIsLoading: false,
+      dataIsLoaded: false
     };
+  }
+
+  componentDidUpdate() {
+    const {
+      isWhyQuery,
+      parsedAreas,
+      parsedBrands,
+      parsedGenre,
+      parsedApplier,
+      parsedPackaging,
+      parsedManufacturer,
+      kantarData,
+      nielsenData,
+      nwbData,
+      dataIsLoading,
+      dataIsLoaded
+    } = this.state;
+
+    const manufacturerId = parsedManufacturer
+      ? parsedBrands.find(brand => brand.name === parsedManufacturer.name)
+        ? null
+        : parsedManufacturer.id
+      : null;
+
+    const values = {
+      [DATA_FILTERS_CONFIG[BRAND_FILTER].key]: parsedBrands.map(brand => brand.id),
+      [DATA_FILTERS_CONFIG[AREA_FILTER].key]: parsedAreas.length ? parsedAreas : [8],
+      [DATA_FILTERS_CONFIG[GENRE_FILTER].key]: parsedGenre,
+      [DATA_FILTERS_CONFIG[APPLIER_FILTER].key]: parsedApplier,
+      [DATA_FILTERS_CONFIG[PACKAGING_FILTER].key]: parsedPackaging,
+      [DATA_FILTERS_CONFIG[CHANNEL_FILTER].key]: 1,
+      [DATA_FILTERS_CONFIG[MANUFACTURER_FILTER].key]: manufacturerId
+    };
+
+    if (isWhyQuery && !dataIsLoaded && !dataIsLoading) {
+      this.setState(
+        { dataIsLoading: true },
+        () => this.fetchData(values, 'kantar')
+          .then(() => this.fetchData(values, 'nielsen'))
+          .then(() => this.fetchData(values, 'nwb'))
+          .then(() => this.setState({ dataIsLoading: false, dataIsLoaded: true }))
+      );
+    }
   }
 
   detectBrand = query => {
@@ -243,8 +292,49 @@ class QueryHandler extends React.Component {
     parsedPackaging: this.detectPackaging(value),
     parsedManufacturer: this.detectManufacturer(value),
     parsedMetric: this.detectMertic(value),
-    isWhyQuery: this.isWhyQuery(value)
+    isWhyQuery: this.isWhyQuery(value),
+    kantarData: [],
+    nielsenData: [],
+    nwbData: [],
+    dataIsLoading: false,
+    dataIsLoaded: false
   });
+
+  fetchData = (values = {}, dataSetName = 'kantar') => {
+    const usefulValues = _.omitBy(
+      value => _.isNil(value) || value.length === 0,
+      values
+    );
+
+    const usefulValuesKeys = Object.keys(usefulValues);
+
+    const shouldFetchData = usefulValuesKeys.length > 0;
+
+    if (!shouldFetchData) {
+      return;
+    }
+
+    const queryString = _.flow([
+      _.values,
+      _.filter(filter => _.keys(usefulValues).includes(filter.key)),
+      _.reduce(
+        (acc, { key, multi }) => [].concat(acc, multi
+          ? values[key].map(value => `${key}[]=${value}`)
+          : `${key}=${values[key]}`
+        ),
+        []
+      ),
+      _.join('&')
+    ])(DATA_FILTERS_CONFIG);
+
+    return new Promise((resolve, reject) => fetch(`${API_BASE_URL}/${dataSetName}/data?${queryString}`)
+      .then(response => response.json())
+      .then(json => {
+        this.setState({ [`${dataSetName}Data`]: json })
+        return resolve();
+      })
+    );
+  }
 
   render() {
     const {
@@ -253,7 +343,7 @@ class QueryHandler extends React.Component {
       parsedGenre,
       parsedApplier,
       parsedPackaging,
-      parsedManufacturer
+      parsedManufacturer,
     } = this.state;
 
     const shouldShowResults = parsedBrands.length ||
@@ -261,6 +351,8 @@ class QueryHandler extends React.Component {
       parsedGenre ||
       parsedApplier ||
       parsedPackaging;
+
+    const shouldHideLogos = shouldShowResults || isWhyQuery;
 
     return (
       <div className='query-handler'>
@@ -271,10 +363,17 @@ class QueryHandler extends React.Component {
         </Grid>
 
         <div className='result-body'>
-          { shouldShowResults && !isWhyQuery
-            ? this.getBarChart()
-            : <BrandLogos />
-          }
+          { !shouldHideLogos && <BrandLogos /> }
+          { shouldShowResults && !isWhyQuery && this.getBarChart() }
+          { isWhyQuery && (
+            <Grid>
+              <Col xs={12} md={6} mdOffset={3}>
+                <div>
+                  why question is detected
+                </div>
+              </Col>
+            </Grid>
+          ) }
         </div>
       </div>
     );
