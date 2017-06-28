@@ -394,7 +394,7 @@ class QueryHandler extends React.Component {
         );
       }
 
-      if (!isPositive && value <= 0) {
+      if (!isPositive && value < 0) {
         messages[brandId].push(
           'Reason 1.1: ' +
           `% of stores that sells ${brandName} ` +
@@ -418,7 +418,7 @@ class QueryHandler extends React.Component {
         );
       }
 
-      if (!isPositive && value <= 0) {
+      if (!isPositive && value < 0) {
         messages[brandId].push(
           'Reason 1.2: ' +
           `% of quality stores that sells ${brandName} ` +
@@ -442,7 +442,7 @@ class QueryHandler extends React.Component {
         );
       }
 
-      if (!isPositive && value <= 0) {
+      if (!isPositive && value < 0) {
         messages[brandId].push(
           'Reason 2.1: ' +
           `Decreased promotional and advertising activity within ` +
@@ -453,7 +453,7 @@ class QueryHandler extends React.Component {
 
     // Reason 2.2
     brandIds.forEach(brandId => {
-      const value = _.meanBy('popGrowth', nielsenData[brandId]);
+      const value = _.meanBy('popWeightedDistribution', nielsenData[brandId]);
       const brandName = _.getOr(null, 'name', brands.list.find(brand => brand.id === brandId));
 
       if (!_.isNumber(value) || !brandName) { return; }
@@ -466,7 +466,7 @@ class QueryHandler extends React.Component {
         );
       }
 
-      if (!isPositive && value <= 0) {
+      if (!isPositive && value < 0) {
         messages[brandId].push(
           'Reason 2.2: ' +
           `Decreased promotional and advertising activity within ` +
@@ -482,17 +482,39 @@ class QueryHandler extends React.Component {
 
       if (!_.isNumber(value) || !brandName) { return; }
 
-      if (isPositive && value > 0) {
+      if (isPositive && value < 0) {
         messages[brandId].push(
           'Reason 3.1: ' +
           `Increased out of stock distribution within the retail stores by ${Math.abs(value.toFixed(3))}%.`
         );
       }
 
-      if (!isPositive && value <= 0) {
+      if (!isPositive && value > 0) {
         messages[brandId].push(
           'Reason 3.1: ' +
           `Decreased out of stock distribution within the retail stores by ${Math.abs(value.toFixed(3))}%.`
+        );
+      }
+    });
+
+    // Reason 3.2
+    brandIds.forEach(brandId => {
+      const value = _.meanBy('weightedOutOfStockGrowth', nielsenData[brandId]);
+      const brandName = _.getOr(null, 'name', brands.list.find(brand => brand.id === brandId));
+
+      if (!_.isNumber(value) || !brandName) { return; }
+
+      if (isPositive && value < 0) {
+        messages[brandId].push(
+          'Reason 3.1: ' +
+          `Increased out of stock distribution within the quality retail stores by ${Math.abs(value.toFixed(3))}%.`
+        );
+      }
+
+      if (!isPositive && value > 0) {
+        messages[brandId].push(
+          'Reason 3.1: ' +
+          `Decreased out of stock distribution within the quality retail stores by ${Math.abs(value.toFixed(3))}%.`
         );
       }
     });
@@ -504,14 +526,14 @@ class QueryHandler extends React.Component {
 
       if (!_.isNumber(value) || !brandName) { return; }
 
-      if (isPositive && value > 0) {
+      if (isPositive && value < 0) {
         messages[brandId].push(
           'Reason 4: ' +
           `The price of ${brandName} increased by ${Math.abs(value.toFixed(3))}%.`
         );
       }
 
-      if (!isPositive && value <= 0) {
+      if (!isPositive && value > 0) {
         messages[brandId].push(
           'Reason 4: ' +
           `The price of ${brandName} decreased by ${Math.abs(value.toFixed(3))}%.`
@@ -533,7 +555,7 @@ class QueryHandler extends React.Component {
         );
       }
 
-      if (!isPositive && value <= 0) {
+      if (!isPositive && value < 0) {
         messages[brandId].push(
           'Reason 5: ' +
           `The penetration of ${brandName} decreased by ${Math.abs(value.toFixed(3))}%.`
@@ -555,7 +577,7 @@ class QueryHandler extends React.Component {
         );
       }
 
-      if (!isPositive && value <= 0) {
+      if (!isPositive && value < 0) {
         messages[brandId].push(
           'Reason 6.1: ' +
           `The conviction about ${brandName} decreased by ${Math.abs(value.toFixed(3))}%.`
@@ -577,7 +599,7 @@ class QueryHandler extends React.Component {
         );
       }
 
-      if (!isPositive && value <= 0) {
+      if (!isPositive && value < 0) {
         messages[brandId].push(
           'Reason 6.2: ' +
           `The presence about ${brandName} decreased by ${Math.abs(value.toFixed(3))}%.`
@@ -599,7 +621,7 @@ class QueryHandler extends React.Component {
         );
       }
 
-      if (!isPositive && value <= 0) {
+      if (!isPositive && value < 0) {
         messages[brandId].push(
           'Reason 6.3: ' +
           `The relevance impression about ${brandName} decreased by ${Math.abs(value.toFixed(3))}%.`
