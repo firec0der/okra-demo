@@ -125,7 +125,9 @@ class KantarPeriodsBarChart extends React.Component {
         (acc, item) => mergeObjects(acc, {
           [`${areasDict[item.areaId]}, ${brandsDict[item.brandId]}`]: item[metric]
         }),
-        { name: 'Q' + moment(date).format('Q\' YY').toUpperCase() }
+        { name: moment('2017', 'YYYY').unix() > moment(date).unix()
+          ? 'Q' + moment(date).format('Q\' YY').toUpperCase()
+          : 'Predicted Q' + moment(date).format('Q\' YY').toUpperCase() }
       ))
     ])(this.state.data.items);
   };
@@ -148,7 +150,7 @@ class KantarPeriodsBarChart extends React.Component {
       <Bar
         key={`${areasDict[areaId]}-${brandName}`}
         stackId={i + 1}
-        fill={lightenColor(colorPalette[j + 14], i * 7)}
+        fill={lightenColor(colorPalette[j], i * 7)}
         dataKey={`${areasDict[areaId]}, ${brandName}`}
       />
     ))), []);

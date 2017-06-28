@@ -24,7 +24,6 @@ import { colorPalette } from '../../../constants/colors';
 
 // import from utils
 import { mergeObjects } from '../../../utils/object';
-import { lightenColor } from '../../../utils/color';
 
 const mapStateToProps = state => ({
   metrics: state.metrics,
@@ -115,7 +114,9 @@ class NwbPeriodsBarChart extends React.Component {
       _.entries,
       _.map(([ date, list ]) => list.reduce(
         (acc, item) => mergeObjects(acc, { [brandsDict[item.brandId]]: item[metric] }),
-        { name: 'Q' + moment(date).format('Q\' YY').toUpperCase() }
+        { name: moment('2017', 'YYYY').unix() > moment(date).unix()
+          ? 'Q' + moment(date).format('Q\' YY').toUpperCase()
+          : 'Predicted Q' + moment(date).format('Q\' YY').toUpperCase() }
       ))
     ])(data.items);
   };
@@ -133,7 +134,7 @@ class NwbPeriodsBarChart extends React.Component {
         key={brandName}
         stackId={i}
         dataKey={brandName}
-        fill={lightenColor(colorPalette[14], i * 7)}
+        fill={colorPalette[i]}
       />
     ));
   };
