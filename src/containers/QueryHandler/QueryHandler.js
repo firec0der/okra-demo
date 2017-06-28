@@ -482,14 +482,16 @@ class QueryHandler extends React.Component {
 
       if (!_.isNumber(value) || !brandName) { return; }
 
-      if (isPositive && value < 0) {
+      // increasing - bad
+      if (!isPositive && value < 0) {
         messages[brandId].push(
           'Reason 3.1: ' +
           `Increased out of stock distribution within the retail stores by ${Math.abs(value.toFixed(3))}%.`
         );
       }
 
-      if (!isPositive && value > 0) {
+      // decreased - good
+      if (isPositive && value > 0) {
         messages[brandId].push(
           'Reason 3.1: ' +
           `Decreased out of stock distribution within the retail stores by ${Math.abs(value.toFixed(3))}%.`
@@ -504,14 +506,16 @@ class QueryHandler extends React.Component {
 
       if (!_.isNumber(value) || !brandName) { return; }
 
-      if (isPositive && value < 0) {
+      // increasing - bad
+      if (!isPositive && value < 0) {
         messages[brandId].push(
           'Reason 3.1: ' +
           `Increased out of stock distribution within the quality retail stores by ${Math.abs(value.toFixed(3))}%.`
         );
       }
 
-      if (!isPositive && value > 0) {
+      // decreased - good
+      if (isPositive && value > 0) {
         messages[brandId].push(
           'Reason 3.1: ' +
           `Decreased out of stock distribution within the quality retail stores by ${Math.abs(value.toFixed(3))}%.`
@@ -526,14 +530,16 @@ class QueryHandler extends React.Component {
 
       if (!_.isNumber(value) || !brandName) { return; }
 
-      if (isPositive && value < 0) {
+      // increasing - good
+      if (!isPositive && value < 0) {
         messages[brandId].push(
           'Reason 4: ' +
           `The price of ${brandName} increased by ${Math.abs(value.toFixed(3))}%.`
         );
       }
 
-      if (!isPositive && value > 0) {
+      // decreasing - bad
+      if (isPositive && value > 0) {
         messages[brandId].push(
           'Reason 4: ' +
           `The price of ${brandName} decreased by ${Math.abs(value.toFixed(3))}%.`
