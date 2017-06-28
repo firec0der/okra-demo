@@ -617,14 +617,14 @@ class QueryHandler extends React.Component {
       if (isPositive && value > 0) {
         messages[brandId].push(
           'Reason 6.3: ' +
-          `The relevance impression about ${brandName} increased by ${Math.abs(value.toFixed(3))}%.`
+          `The relevance about ${brandName} increased by ${Math.abs(value.toFixed(3))}%.`
         );
       }
 
       if (!isPositive && value < 0) {
         messages[brandId].push(
           'Reason 6.3: ' +
-          `The relevance impression about ${brandName} decreased by ${Math.abs(value.toFixed(3))}%.`
+          `The relevance about ${brandName} decreased by ${Math.abs(value.toFixed(3))}%.`
         );
       }
     });
