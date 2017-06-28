@@ -2,6 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Grid, Col } from 'react-bootstrap';
+import moment from 'moment';
 import _ from 'lodash/fp';
 
 // import from constants
@@ -35,6 +36,11 @@ const mapStateToProps = state => ({
   brands: state.brands,
   manufacturers: state.manufacturers,
 });
+
+const actionKeysWords = {
+  positive: ['gaining', 'gain', 'gains', 'gained', 'increasing', 'increase', 'increases', 'increased'],
+  negative: ['loosing', 'lose', 'loses', 'lost', 'decreasing', 'decrease', 'decreases', 'decreased']
+};
 
 class QueryHandler extends React.Component {
 
@@ -226,13 +232,13 @@ class QueryHandler extends React.Component {
   isWhyQuery = query => {
     const lowerCasedQuery = query.toLowerCase();
 
-    const actionKeysWords = [
-      'loosing', 'lose', 'loses', 'lost', 'increasing', 'increase', 'increases', 'increased',
-      'gaining', 'gain', 'gains', 'gained', 'decreasing', 'decrease', 'decreases', 'decreased',
-    ];
+    const keyWords = _.flow([
+      _.entries,
+      _.reduce((acc, [ name, list ]) => [...acc, ...list], [])
+    ])(actionKeysWords);
 
     return _.startsWith('why', lowerCasedQuery) &&
-      actionKeysWords.some(keyWord => lowerCasedQuery.includes(keyWord));
+      keyWords.some(keyWord => lowerCasedQuery.includes(keyWord));
   };
 
   getBarChart = () => {
@@ -338,6 +344,29 @@ class QueryHandler extends React.Component {
     );
   }
 
+  renderAnswers = () => {
+    const { query } = this.state;
+
+    const getItems = amount => _.flow([
+      _.filter(item => moment(item.date).unix() < moment('2017', 'YYYY').unix()),
+      _.sortBy(item => moment(item.date).unix()),
+      _.groupBy('brandId'),
+      _.entries,
+      _.reduce((acc, [ brandId, list ]) => mergeObjects(acc, { [brandId]: _.takeRight(amount, list) }), {})
+    ]);
+
+    const nielsenData = getItems(6)(this.state.nielsenData);
+    const kantarData = getItems(3)(this.state.kantarData);
+    const nwbData = getItems(6)(this.state.nwbData);
+
+    const action = _.findKey(
+      list => list.some(keyWord => query.toLowerCase().includes(keyWord)),
+      actionKeysWords
+    );
+
+    return <p>{ `your query is about some ${action} things` }</p>;
+  }
+
   render() {
     const {
       isWhyQuery,
@@ -346,6 +375,7 @@ class QueryHandler extends React.Component {
       parsedApplier,
       parsedPackaging,
       parsedManufacturer,
+      dataIsLoaded
     } = this.state;
 
     const shouldShowResults = parsedBrands.length ||
@@ -367,11 +397,12 @@ class QueryHandler extends React.Component {
         <div className='result-body'>
           { !shouldHideLogos && <BrandLogos /> }
           { shouldShowResults && !isWhyQuery && this.getBarChart() }
-          { isWhyQuery && (
+          { isWhyQuery && dataIsLoaded && (
             <Grid>
               <Col xs={12} md={6} mdOffset={3}>
                 <div>
-                  why question is detected
+                  <p>why question is detected</p>
+                  { this.renderAnswers() }
                 </div>
               </Col>
             </Grid>
