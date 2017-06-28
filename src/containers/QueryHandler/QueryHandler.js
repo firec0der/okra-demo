@@ -98,11 +98,7 @@ class QueryHandler extends React.Component {
     const values = {
       [DATA_FILTERS_CONFIG[BRAND_FILTER].key]: parsedBrands.map(brand => brand.id),
       [DATA_FILTERS_CONFIG[AREA_FILTER].key]: parsedAreas.length ? parsedAreas : [8],
-      [DATA_FILTERS_CONFIG[GENRE_FILTER].key]: parsedGenre,
-      [DATA_FILTERS_CONFIG[APPLIER_FILTER].key]: parsedApplier,
-      [DATA_FILTERS_CONFIG[PACKAGING_FILTER].key]: parsedPackaging,
       [DATA_FILTERS_CONFIG[CHANNEL_FILTER].key]: 1,
-      [DATA_FILTERS_CONFIG[MANUFACTURER_FILTER].key]: manufacturerId
     };
 
     if (isWhyQuery && !dataIsLoaded && !dataIsLoading) {
