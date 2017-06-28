@@ -42,6 +42,7 @@ class QueryHandler extends React.Component {
     super(...args);
 
     this.state = {
+      query: '',
       parsedAreas: [],
       parsedBrands: [],
       parsedGenre: null,
@@ -284,15 +285,16 @@ class QueryHandler extends React.Component {
     );
   };
 
-  searchOnSubmit = value => this.setState({
-    parsedAreas: this.detectArea(value).map(id => parseInt(id)),
-    parsedApplier: this.detectApplier(value),
-    parsedBrands: this.detectBrand(value),
-    parsedGenre: this.detectGenre(value),
-    parsedPackaging: this.detectPackaging(value),
-    parsedManufacturer: this.detectManufacturer(value),
-    parsedMetric: this.detectMertic(value),
-    isWhyQuery: this.isWhyQuery(value),
+  searchOnSubmit = query => this.setState({
+    query,
+    parsedAreas: this.detectArea(query).map(id => parseInt(id)),
+    parsedApplier: this.detectApplier(query),
+    parsedBrands: this.detectBrand(query),
+    parsedGenre: this.detectGenre(query),
+    parsedPackaging: this.detectPackaging(query),
+    parsedManufacturer: this.detectManufacturer(query),
+    parsedMetric: this.detectMertic(query),
+    isWhyQuery: this.isWhyQuery(query),
     kantarData: [],
     nielsenData: [],
     nwbData: [],
