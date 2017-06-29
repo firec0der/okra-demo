@@ -2,6 +2,8 @@ import CoreLayout from '../layouts/PageLayout/PageLayout';
 
 import HomePage from '../pages/HomePage/HomePage';
 
+import Q1Page from '../pages/Q1Page/Q1Page';
+
 import { fetchMetrics } from '../modules/metrics';
 import { fetchBrands } from '../modules/brands';
 import { fetchManufacturers } from '../modules/manufacturers';
@@ -58,5 +60,11 @@ export default (store) => ({
   path: '/',
   component: CoreLayout,
   indexRoute: { component: HomePage, onEnter: fetchAllStaticData(store) },
-  childRoutes: []
+  childRoutes: [
+    {
+      path: '/q1',
+      component: Q1Page,
+      onEnter: fetchAllStaticData(store)
+    }
+  ]
 });
