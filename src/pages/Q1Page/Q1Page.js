@@ -5,6 +5,7 @@ import { Grid, Col } from 'react-bootstrap';
 // import from constants
 import {
   CHANNEL_FILTER,
+  BRAND_FILTER,
   AREA_FILTER,
   GENRE_FILTER,
   PACKAGING_FILTER,
@@ -21,6 +22,7 @@ export default class Q1Page extends React.Component {
   render() {
     const barChartDataFilters = [
       SUBCATEGORY_FILTER,
+      BRAND_FILTER,
       AREA_FILTER,
       CHANNEL_FILTER,
       GENRE_FILTER,
@@ -31,12 +33,13 @@ export default class Q1Page extends React.Component {
 
     const barChartValues = {
       [DATA_FILTERS_CONFIG[CHANNEL_FILTER].key]: 1,
-      [DATA_FILTERS_CONFIG[GENRE_FILTER].key]: 1,
       [DATA_FILTERS_CONFIG[AREA_FILTER].key]: [8],
+      [DATA_FILTERS_CONFIG[BRAND_FILTER].key]: [2, 3, 4],
     };
 
     const lineChartDataFilters = [
       SUBCATEGORY_FILTER,
+      BRAND_FILTER,
       AREA_FILTER,
       CHANNEL_FILTER,
       GENRE_FILTER,
@@ -47,20 +50,12 @@ export default class Q1Page extends React.Component {
 
     const lineChartValues = {
       [DATA_FILTERS_CONFIG[CHANNEL_FILTER].key]: 1,
-      [DATA_FILTERS_CONFIG[GENRE_FILTER].key]: 1,
       [DATA_FILTERS_CONFIG[AREA_FILTER].key]: [8],
+      [DATA_FILTERS_CONFIG[BRAND_FILTER].key]: [2, 3, 4],
     };
 
     return (
       <div className='home-page'>
-        <Grid style={{ marginBottom: '30px' }}>
-          <Col xs={12} md={8} mdOffset={2}>
-            <h4 className='text-center'>
-              What is the market share of female deodorants in supermarkets?
-            </h4>
-          </Col>
-        </Grid>
-
         <PeriodsBarChart
           dataFilters={barChartDataFilters}
           dataFiltersValues={barChartValues}
@@ -71,7 +66,7 @@ export default class Q1Page extends React.Component {
           dataFilters={lineChartDataFilters}
           dataFiltersValues={lineChartValues}
           requiredFilters={lineChartRequiredFilters}
-          chosenMetric='weightedDistribution'
+          chosenMetric='marketShareGrowth'
         />
       </div>
     );
