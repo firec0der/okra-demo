@@ -1,8 +1,8 @@
 // import from vendors
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ButtonToolbar, Button } from 'react-bootstrap';
 import _ from 'lodash/fp';
+import classNames from 'classnames';
 
 import PenetrationGroupIcon from './icons/penetration_icon.png';
 import MarketShapeGroupIcon from './icons/Market_Share_icon.png';
@@ -155,25 +155,22 @@ export default class MetricsFilters extends React.Component {
       const props = {
         key: group.id,
         onClick: this.onGroupSelect.bind(null, group.id),
+        className: classNames('metric', { '-selected': selectedGroupId === group.id })
       };
-
-      const className = [].concat(
-        'metric-button',
-        selectedGroupId === group.id ? '-selected' : [],
-      ).join(' ');
 
       return (
         <span {...props}>
           <img
             src={groupsIcons[group.id]}
-            className={className}
+            className='metric-image'
             title={group.name}
           />
+          { group.name }
         </span>
       );
     });
 
-    return <ButtonToolbar>{ buttons }</ButtonToolbar>;
+    return <div className='metrics-row'>{ buttons }</div>;
   }
 
   renderButtons = () => {
@@ -190,25 +187,22 @@ export default class MetricsFilters extends React.Component {
       const props = {
         key: metric.value,
         onClick: onChange.bind(null, metric.value),
+        className: classNames('metric', { '-selected': selectedValue === metric.value })
       };
-
-      const className = [].concat(
-        'metric-button',
-        selectedValue === metric.value ? '-selected' : [],
-      ).join(' ');
 
       return (
         <span {...props}>
           <img
             src={icons[selectedGroupId][metric.value]}
-            className={className}
+            className='metric-image'
             title={metric.label}
           />
+          { metric.label }
         </span>
       );
     });
 
-    return <ButtonToolbar>{ buttons }</ButtonToolbar>;
+    return <div className='metrics-row'>{ buttons }</div>;
   }
 
   render() {

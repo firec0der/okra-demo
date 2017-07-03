@@ -1,16 +1,33 @@
 .metrics-filters {
   text-align: center;
 
-  .metric-button {
-    width: 30px;
-    margin-right: 5px;
-    margin-bottom: 5px;
-    cursor: pointer;
-    padding: 3px;
+  > .metrics-row {
+    display: flex;
+    justify-content: center;
 
-    &.-selected {
-      border: 1px solid rgb(0, 125, 187);
-      border-radius: 20px;
+    &:not(:last-child) {
+      margin-bottom: 5px;
+    }
+
+    > .metric {
+      font-size: 11px;
+      cursor: pointer;
+      padding: 0 5px;
+
+      > .metric-image {
+        width: 30px;
+        padding: 3px;
+        display: block;
+        margin: auto;
+      }
+
+      &.-selected {
+        > .metric-image {
+          border: 1px solid rgb(0, 125, 187);
+          border-radius: 20px;
+        }
+      }
     }
   }
+
 }
