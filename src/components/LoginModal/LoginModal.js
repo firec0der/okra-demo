@@ -17,17 +17,17 @@ export default class LoginModal extends React.Component {
         </Modal.Header>
 
         <Modal.Body>
-          <FormGroup controlId='email'>
-            <ControlLabel>Email</ControlLabel>
+          <FormGroup controlId='login'>
+            <ControlLabel>Login</ControlLabel>
             <FormControl
-              type='email'
-              id='email'
-              placeholder='Enter email'
+              type='login'
+              id='login'
+              placeholder='Enter login'
               onChange={event => this.setState({ login: event.target.value })}
             />
           </FormGroup>
           <FormGroup controlId='password'>
-            <ControlLabel>Email</ControlLabel>
+            <ControlLabel>Password</ControlLabel>
             <FormControl
               type='password'
               id='password'
