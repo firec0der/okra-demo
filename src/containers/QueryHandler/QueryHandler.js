@@ -740,7 +740,7 @@ class QueryHandler extends React.Component {
 
       if (!_.isNumber(value) || !value) { return; }
 
-      markers[brandId][value < 0 ? 'growth' : 'decline'].push({ metric: 'Out-of-stock decline', value });
+      markers[brandId][value < 0 ? 'growth' : 'decline'].push({ metric: 'Out-of-stock', value });
     });
 
     // Reason 3.2
@@ -749,7 +749,7 @@ class QueryHandler extends React.Component {
 
       if (!_.isNumber(value) || !value) { return; }
 
-      markers[brandId][value < 0 ? 'growth' : 'decline'].push({ metric: 'Weighted out-of-stock decline', value });
+      markers[brandId][value < 0 ? 'growth' : 'decline'].push({ metric: 'Weighted out-of-stock', value });
     });
 
     // Reason 4
@@ -758,7 +758,7 @@ class QueryHandler extends React.Component {
 
       if (!_.isNumber(value) || !value) { return; }
 
-      markers[brandId][value < 0 ? 'growth' : 'decline'].push({ metric: 'Price decline', value });
+      markers[brandId][value < 0 ? 'growth' : 'decline'].push({ metric: 'Price', value });
     });
 
     // Reason 5
@@ -862,7 +862,7 @@ class QueryHandler extends React.Component {
                     </tr>
                     { growthMarkers.length && (
                       <tr key='markers-of-growth' style={{ borderTop: '5px solid transparent' }}>
-                        <td>Markers of growth</td>
+                        <td><b>Markers of growth</b></td>
                       </tr>
                     ) }
                     { growthMarkers.length && growthMarkers.map(marker => (
@@ -882,7 +882,7 @@ class QueryHandler extends React.Component {
                     )) }
                     { declineMarkers.length && (
                       <tr key='markers-of-decline' style={{ borderTop: '5px solid transparent' }}>
-                        <td>Markers of decline</td>
+                        <td><b>Markers of decline</b></td>
                       </tr>
                     ) }
                     { declineMarkers.length && declineMarkers.map(marker => (
