@@ -824,7 +824,7 @@ class QueryHandler extends React.Component {
                 <table className='general-dashboard-table' key={brandId}>
                   <tbody>
                     <tr key='brand-name-row'>
-                      <td><b>{ brands.list.find(brand => brand.id === parseInt(brandId)).name }</b></td>
+                      <td style={{ fontSize: '17px', fontWeight: '600' }}>{ brands.list.find(brand => brand.id === parseInt(brandId)).name }</td>
                     </tr>
                     <tr key='metrics-row'>
                       <td key='metric-label-cell'>
