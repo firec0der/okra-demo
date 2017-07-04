@@ -670,7 +670,7 @@ class QueryHandler extends React.Component {
       _.reduce((acc, [ brandId, list ]) => mergeObjects(acc, { [brandId]: _.takeRight(amount, list) }), {})
     ]);
 
-    const generalData = {
+    const dataMapping = {
       nielsen: {
         historical: getItems(1)(this.state.nielsenData),
         predicted: getItems(1, true)(this.state.nielsenData),
@@ -683,13 +683,119 @@ class QueryHandler extends React.Component {
         historical: getItems(1)(this.state.nwbData),
         predicted: getItems(1, true)(this.state.nwbData),
       }
-    }[parsedMetric.dataset];
+    };
+
+    const generalData = dataMapping[parsedMetric.dataset];
 
     const brandIds = Object.keys(generalData.historical);
 
     const growthVarsMap = {
       totatMarketShare: 'marketShareGrowth'
     };
+
+    const markers = brandIds.reduce(
+      (acc, brandId) => mergeObjects(acc, { [brandId]: { growth: [], decline: [] } }),
+      {}
+    );
+
+    // Reason 1.1
+    brandIds.forEach(brandId => {
+      const value = _.getOr(null, 'numericDistributionGrowth', dataMapping['nielsen'].historical[brandId][0]);
+
+      if (!_.isNumber(value) || !value) { return; }
+
+      markers[brandId][value > 0 ? 'growth' : 'decline'].push({ metric: 'Distribution', value });
+    });
+
+    // Reason 1.2
+    brandIds.forEach(brandId => {
+      const value = _.getOr(null, 'weightedDistributionGrowth', dataMapping['nielsen'].historical[brandId][0]);
+
+      if (!_.isNumber(value) || !value) { return; }
+
+      markers[brandId][value > 0 ? 'growth' : 'decline'].push({ metric: 'Weighted distribution', value });
+    });
+
+    // Reason 2.1
+    brandIds.forEach(brandId => {
+      const value = _.getOr(null, 'popGrowth', dataMapping['nielsen'][brandId]);
+
+      if (!_.isNumber(value) || !value) { return; }
+
+      markers[brandId][value > 0 ? 'growth' : 'decline'].push({ metric: 'POP distribution', value });
+    });
+
+    // Reason 2.2
+    brandIds.forEach(brandId => {
+      const value = _.getOr(null, 'popWeightedDistribution', dataMapping['nielsen'].historical[brandId][0]);
+
+      if (!_.isNumber(value) || !value) { return; }
+
+      markers[brandId][value > 0 ? 'growth' : 'decline'].push({ metric: 'Weighted POP distribution', value });
+    });
+
+    // Reason 3.1
+    brandIds.forEach(brandId => {
+      const value = _.getOr(null, 'numericOutOfStockGrowth', dataMapping['nielsen'].historical[brandId][0]);
+
+      if (!_.isNumber(value) || !value) { return; }
+
+      markers[brandId][value < 0 ? 'growth' : 'decline'].push({ metric: 'Out-of-stock decline', value });
+    });
+
+    // Reason 3.2
+    brandIds.forEach(brandId => {
+      const value = _.getOr(null, 'weightedOutOfStockGrowth', dataMapping['nielsen'].historical[brandId][0]);
+
+      if (!_.isNumber(value) || !value) { return; }
+
+      markers[brandId][value < 0 ? 'growth' : 'decline'].push({ metric: 'Weighted out-of-stock decline', value });
+    });
+
+    // Reason 4
+    brandIds.forEach(brandId => {
+      const value = _.getOr(null, 'priceGrowth', dataMapping['kantar'].historical[brandId][0]);
+
+      if (!_.isNumber(value) || !value) { return; }
+
+      markers[brandId][value < 0 ? 'growth' : 'decline'].push({ metric: 'Price decline', value });
+    });
+
+    // Reason 5
+    brandIds.forEach(brandId => {
+      const value = _.getOr(null, 'penetrationGrowth', dataMapping['kantar'].historical[brandId][0]);
+
+      if (!_.isNumber(value) || !value) { return; }
+
+      markers[brandId][value > 0 ? 'growth' : 'decline'].push({ metric: '% Penetration', value });
+    });
+
+    // Reason 6.1
+    brandIds.forEach(brandId => {
+      const value = _.getOr(null, 'convictionGrowth', dataMapping['nwb'].historical[brandId][0]);
+
+      if (!_.isNumber(value) || !value) { return; }
+
+      markers[brandId][value > 0 ? 'growth' : 'decline'].push({ metric: 'Conviction', value });
+    });
+
+    // Reason 6.2
+    brandIds.forEach(brandId => {
+      const value = _.getOr(null, 'presenceGrowth', dataMapping['nwb'].historical[brandId][0]);
+
+      if (!_.isNumber(value) || !value) { return; }
+
+      markers[brandId][value > 0 ? 'growth' : 'decline'].push({ metric: 'Presence', value });
+    });
+
+    // Reason 6.3
+    brandIds.forEach(brandId => {
+      const value = _.getOr(null, 'relevanceGrowth', dataMapping['nwb'].historical[brandId][0]);
+
+      if (!_.isNumber(value) || !value) { return; }
+
+      markers[brandId][value > 0 ? 'growth' : 'decline'].push({ metric: 'Relevance', value });
+    });
 
     return (
       <Grid>
@@ -706,11 +812,19 @@ class QueryHandler extends React.Component {
               const predictedKey = growthVarsMap[parsedMetricGroup.items[0].value] || `${parsedMetricGroup.items[0].value}Growth`;
               const predictedGrowthValue = generalData.predicted[brandId][0][predictedKey];
 
+              const growthMarkers = markers[brandId].growth.length > 3
+                ? markers[brandId].growth.slice(0, 3)
+                : markers[brandId].growth;
+
+              const declineMarkers = markers[brandId].decline.length > 3
+                ? markers[brandId].decline.slice(0, 3)
+                : markers[brandId].decline;
+
               return (
                 <table className='general-dashboard-table' key={brandId}>
                   <tbody>
                     <tr key='brand-name-row'>
-                      <td>{ brands.list.find(brand => brand.id === parseInt(brandId)).name }</td>
+                      <td><b>{ brands.list.find(brand => brand.id === parseInt(brandId)).name }</b></td>
                     </tr>
                     <tr key='metrics-row'>
                       <td key='metric-label-cell'>
@@ -725,7 +839,7 @@ class QueryHandler extends React.Component {
                         style={{ textAlign: 'center', color: growthValue >= 0 ? 'green' : 'red' }}
                         dangerouslySetInnerHTML={{ __html: growthValue >= 0 ? '&#9650;' : '&#9660;' }}
                       />
-                      <td key='next-marker-cell' width={20}>
+                      <td key='next-marker-cell' width={55}>
                         { Math.abs(growthValue).toFixed(2) }%
                       </td>
                     </tr>
@@ -746,6 +860,46 @@ class QueryHandler extends React.Component {
                         { Math.abs(predictedGrowthValue).toFixed(2) }%
                       </td>
                     </tr>
+                    { growthMarkers.length && (
+                      <tr key='markers-of-growth' style={{ borderTop: '5px solid transparent' }}>
+                        <td>Markers of growth</td>
+                      </tr>
+                    ) }
+                    { growthMarkers.length && growthMarkers.map(marker => (
+                      <tr key={marker.metric}>
+                        <td key='metric-label-cell'>{ marker.metric }</td>
+                        <td key='current-marker-cell' width={20} />
+                        <td
+                          key='indicator-cell'
+                          width={20}
+                          style={{ textAlign: 'center', color: marker.value >= 0 ? 'green' : 'red' }}
+                          dangerouslySetInnerHTML={{ __html: marker.value >= 0 ? '&#9650;' : '&#9660;' }}
+                        />
+                        <td key='next-marker-cell' width={55}>
+                          { Math.abs(marker.value).toFixed(2) }%
+                        </td>
+                      </tr>
+                    )) }
+                    { declineMarkers.length && (
+                      <tr key='markers-of-decline' style={{ borderTop: '5px solid transparent' }}>
+                        <td>Markers of decline</td>
+                      </tr>
+                    ) }
+                    { declineMarkers.length && declineMarkers.map(marker => (
+                      <tr key={marker.metric}>
+                        <td key='metric-label-cell'>{ marker.metric }</td>
+                        <td key='current-marker-cell' width={20} />
+                        <td
+                          key='indicator-cell'
+                          width={20}
+                          style={{ textAlign: 'center', color: marker.value >= 0 ? 'green' : 'red' }}
+                          dangerouslySetInnerHTML={{ __html: marker.value >= 0 ? '&#9650;' : '&#9660;' }}
+                        />
+                        <td key='next-marker-cell' width={55}>
+                          { Math.abs(marker.value).toFixed(2) }%
+                        </td>
+                      </tr>
+                    )) }
                   </tbody>
                 </table>
               );
