@@ -2,4 +2,12 @@
   .result-body {
     margin-top: 50px;
   }
+
+  .general-dashboard-table {
+    width: 100%;
+
+    &:not(:last-child) {
+      margin-bottom: 10px;
+    }
+  }
 }

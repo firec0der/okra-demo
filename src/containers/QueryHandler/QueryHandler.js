@@ -101,7 +101,7 @@ class QueryHandler extends React.Component {
       [DATA_FILTERS_CONFIG[CHANNEL_FILTER].key]: 1,
     };
 
-    if (isWhyQuery && !dataIsLoaded && !dataIsLoading) {
+    if (!dataIsLoaded && !dataIsLoading) {
       this.setState(
         { dataIsLoading: true },
         () => this.fetchData(values, 'kantar')
@@ -647,6 +647,115 @@ class QueryHandler extends React.Component {
     ])(messages);
   }
 
+  renderSummary = () => {
+    const { metrics, brands } = this.props;
+
+    const parsedMetricValue = _.getOr('totatMarketShare', 'parsedMetric', this.state);
+
+    const parsedMetricGroup = metrics.list
+      .find(group => group.items.some(metric => metric.value === parsedMetricValue));
+
+    const parsedMetric = metrics.list
+      .reduce((acc, group) => [].concat(acc, group.items), [])
+      .find(metric => metric.value === parsedMetricValue);
+
+    const getItems = (amount, predicted = false) => _.flow([
+      _.filter(item => predicted
+          ? moment('2017', 'YYYY').unix() <= moment(item.date).unix()
+          : moment(item.date).unix() < moment('2017', 'YYYY').unix()
+      ),
+      _.sortBy(item => moment(item.date).unix()),
+      _.groupBy('brandId'),
+      _.entries,
+      _.reduce((acc, [ brandId, list ]) => mergeObjects(acc, { [brandId]: _.takeRight(amount, list) }), {})
+    ]);
+
+    const generalData = {
+      nielsen: {
+        historical: getItems(1)(this.state.nielsenData),
+        predicted: getItems(1, true)(this.state.nielsenData),
+      },
+      kantar: {
+        historical: getItems(1)(this.state.kantarData),
+        predicted: getItems(1, true)(this.state.kantarData),
+      },
+      nwb: {
+        historical: getItems(1)(this.state.nwbData),
+        predicted: getItems(1, true)(this.state.nwbData),
+      }
+    }[parsedMetric.dataset];
+
+    const brandIds = Object.keys(generalData.historical);
+
+    const growthVarsMap = {
+      totatMarketShare: 'marketShareGrowth'
+    };
+
+    return (
+      <Grid>
+        <Col xs={12} md={4} mdOffset={4}>
+          <div style={{ backgroundColor: '#fff', padding: '10px', marginBottom: '30px' }}>
+            { brandIds.map(brandId => {
+              const value = generalData.historical[brandId][0][parsedMetricGroup.items[0].value];
+
+              const key = growthVarsMap[parsedMetricGroup.items[0].value] || `${parsedMetricGroup.items[0].value}Growth`;
+              const growthValue = generalData.historical[brandId][0][key];
+
+              const predictedValue = generalData.predicted[brandId][0][parsedMetricGroup.items[0].value];
+
+              const predictedKey = growthVarsMap[parsedMetricGroup.items[0].value] || `${parsedMetricGroup.items[0].value}Growth`;
+              const predictedGrowthValue = generalData.predicted[brandId][0][predictedKey];
+
+              return (
+                <table className='general-dashboard-table' key={brandId}>
+                  <tbody>
+                    <tr key='brand-name-row'>
+                      <td>{ brands.list.find(brand => brand.id === parseInt(brandId)).name }</td>
+                    </tr>
+                    <tr key='metrics-row'>
+                      <td key='metric-label-cell'>
+                        { parsedMetricGroup.name }, { parsedMetric.dataset === 'kantar' ? 'Q4`16' : 'Dec 16' }
+                      </td>
+                      <td key='current-marker-cell' width={20}>
+                        { Math.abs(value).toFixed(2) }%
+                      </td>
+                      <td
+                        key='indicator-cell'
+                        width={20}
+                        style={{ textAlign: 'center', color: growthValue >= 0 ? 'green' : 'red' }}
+                        dangerouslySetInnerHTML={{ __html: growthValue >= 0 ? '&#9650;' : '&#9660;' }}
+                      />
+                      <td key='next-marker-cell' width={20}>
+                        { Math.abs(growthValue).toFixed(2) }%
+                      </td>
+                    </tr>
+                    <tr key='predicted-metrics-row'>
+                      <td key='metric-label-cell'>
+                        Predicted { parsedMetricGroup.name }, { parsedMetric.dataset === 'kantar' ? 'Q1`17' : 'Jan 17' }
+                      </td>
+                      <td key='current-marker-cell' width={20}>
+                        { Math.abs(predictedValue).toFixed(2) }%
+                      </td>
+                      <td
+                        key='indicator-cell'
+                        width={20}
+                        style={{ textAlign: 'center', color: predictedGrowthValue >= 0 ? 'green' : 'red' }}
+                        dangerouslySetInnerHTML={{ __html: predictedGrowthValue >= 0 ? '&#9650;' : '&#9660;' }}
+                      />
+                      <td key='next-marker-cell' width={20}>
+                        { Math.abs(predictedGrowthValue).toFixed(2) }%
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              );
+            }) }
+          </div>
+        </Col>
+      </Grid>
+    );
+  };
+
   render() {
     const {
       isWhyQuery,
@@ -676,6 +785,7 @@ class QueryHandler extends React.Component {
 
         <div className='result-body'>
           { !shouldHideLogos && <BrandLogos /> }
+          { shouldShowResults && !isWhyQuery && dataIsLoaded && this.renderSummary() }
           { shouldShowResults && !isWhyQuery && this.getBarChart() }
           { isWhyQuery && dataIsLoaded && (
             <Grid>
