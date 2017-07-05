@@ -174,19 +174,19 @@ class QueryHandler extends React.Component {
   detectArea = query => {
     const dictionary = {
       // NORTH+NORTHEAST
-      7: ['Area I', 'AreaI', 'Area1', 'Area 1', 'North', 'North East', 'northeast', 'northeastern', 'ceara', 'rio grande do norte', 'paraiba', 'Pernambuco', 'Alagoas', 'Bahia', 'Sergipe', 'Piaui', 'Maranhao'],
+      1: ['Area I', 'AreaI', 'Area1', 'Area 1', 'North', 'North East', 'northeast', 'northeastern', 'ceara', 'rio grande do norte', 'paraiba', 'Pernambuco', 'Alagoas', 'Bahia', 'Sergipe', 'Piaui', 'Maranhao'],
       // EAST
-      1: ['Area II', 'AreaII', 'Area2', 'Area 2', 'south east', 'southeast', 'south_east'],
+      2: ['Area II', 'AreaII', 'Area2', 'Area 2', 'south east', 'southeast', 'south_east'],
       // METROP. RIO
-      2: ['Area III', 'AreaIII', 'Area 3', 'Area3', 'Rio', 'Rio de janeiro', 'Janeiro', 'metopolian region rio', 'metrop rio', 'riodejaneiro', 'rio d janeiro'],
+      3: ['Area III', 'AreaIII', 'Area 3', 'Area3', 'Rio', 'Rio de janeiro', 'Janeiro', 'metopolian region rio', 'metrop rio', 'riodejaneiro', 'rio d janeiro'],
       // METROP. SP
-      3: ['Area IV', 'AreaIV', 'Area 4', 'Area4', 'São Paulo', 'SãoPaulo', 'SaoPaulo', 'Sao Paulo', 'Sao', 'Paulo', 'meropolian region SP', 'SP'],
+      4: ['Area IV', 'AreaIV', 'Area 4', 'Area4', 'São Paulo', 'SãoPaulo', 'SaoPaulo', 'Sao Paulo', 'Sao', 'Paulo', 'meropolian region SP', 'SP'],
       // SP COUNTRYSIDE
-      4: ['Area V', 'AreaV', 'Area 5', 'Area5', 'Interior of São Paulo', 'Interior SP', 'Countryside SP', 'Country SP'],
+      5: ['Area V', 'AreaV', 'Area 5', 'Area5', 'Interior of São Paulo', 'Interior SP', 'Countryside SP', 'Country SP'],
       // SOUTH
-      5: ['Area VI', 'AreaVI', 'Area 6', 'Area6', 'SOUTH', 'Paraná', 'Parana', 'Santa Catarina', 'Rio Grande do Sul', 'Parana', 'SantaCatarina', 'RioGrande do Sul'],
+      6: ['Area VI', 'AreaVI', 'Area 6', 'Area6', 'SOUTH', 'Paraná', 'Parana', 'Santa Catarina', 'Rio Grande do Sul', 'Parana', 'SantaCatarina', 'RioGrande do Sul'],
       // Midwest
-      6: ['Area VII', 'AreaVII', 'Area7', 'Area 7', 'Midwst', 'Federal district', 'Federal', 'Central-west', 'Central west', 'west', 'central'],
+      7: ['Area VII', 'AreaVII', 'Area7', 'Area 7', 'Midwst', 'Federal district', 'Federal', 'Central-west', 'Central west', 'west', 'central'],
       // T Brazil
       8: ['Brasil', 'Brazil']
     };
