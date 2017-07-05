@@ -797,6 +797,27 @@ class QueryHandler extends React.Component {
       markers[brandId][value > 0 ? 'growth' : 'decline'].push({ metric: 'Relevance', value });
     });
 
+    const markersToDisplay = _.flow([
+      _.entries,
+      _.reduce(
+        (acc, [brandId, markersObj]) => mergeObjects(
+          acc, { [brandId]: {
+            growth: _.flow([
+              _.sortBy(marker => Math.abs(marker.value)),
+              _.reverse,
+              _.take(3)
+            ])(markers[brandId].growth),
+            decline: _.flow([
+              _.sortBy(marker => Math.abs(marker.value)),
+              _.reverse,
+              _.take(3)
+            ])(markers[brandId].decline),
+          } }
+        ),
+        {}
+      )
+    ])(markers);
+
     return (
       <Grid>
         <Col xs={12} md={4} mdOffset={4}>
@@ -812,13 +833,8 @@ class QueryHandler extends React.Component {
               const predictedKey = growthVarsMap[parsedMetricGroup.items[0].value] || `${parsedMetricGroup.items[0].value}Growth`;
               const predictedGrowthValue = generalData.predicted[brandId][0][predictedKey];
 
-              const growthMarkers = markers[brandId].growth.length > 3
-                ? markers[brandId].growth.slice(0, 3)
-                : markers[brandId].growth;
-
-              const declineMarkers = markers[brandId].decline.length > 3
-                ? markers[brandId].decline.slice(0, 3)
-                : markers[brandId].decline;
+              const growthMarkers = markersToDisplay[brandId].growth;
+              const declineMarkers = markersToDisplay[brandId].decline;
 
               return (
                 <table className='general-dashboard-table' key={brandId}>
