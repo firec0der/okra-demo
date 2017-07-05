@@ -854,13 +854,15 @@ class QueryHandler extends React.Component {
                         width={20}
                         style={{ textAlign: 'center', color: growthValue >= 0 ? 'green' : 'red' }}
                         dangerouslySetInnerHTML={{
-                          __html: parseFloat(growthValue.toFixed(2)) === 0
-                            ? ''
-                            : growthValue > 0 ? '&#9650;' : '&#9660;'
+                          __html: _.isNumber(growthValue)
+                            ? parseFloat(growthValue.toFixed(2)) === 0
+                              ? ''
+                              : growthValue > 0 ? '&#9650;' : '&#9660;'
+                            : ''
                         }}
                       />
                       <td key='next-marker-cell' width={55}>
-                        { Math.abs(growthValue).toFixed(2) }%
+                        { _.isNumber(growthValue) ? (Math.abs(growthValue).toFixed(2) + '%') : '' }
                       </td>
                     </tr>
 
@@ -876,13 +878,15 @@ class QueryHandler extends React.Component {
                         width={20}
                         style={{ textAlign: 'center', color: predictedGrowthValue >= 0 ? 'green' : 'red' }}
                         dangerouslySetInnerHTML={{
-                          __html: parseFloat(predictedGrowthValue.toFixed(2)) === 0
-                            ? ''
-                            : predictedGrowthValue > 0 ? '&#9650;' : '&#9660;'
+                          __html: _.isNumber(predictedGrowthValue)
+                            ? parseFloat(predictedGrowthValue.toFixed(2)) === 0
+                              ? ''
+                              : predictedGrowthValue > 0 ? '&#9650;' : '&#9660;'
+                            : ''
                         }}
                       />
                       <td key='next-marker-cell' width={20}>
-                        { Math.abs(predictedGrowthValue).toFixed(2) }%
+                        { _.isNumber(predictedGrowthValue) ? (Math.abs(predictedGrowthValue).toFixed(2) + '%') : '' }
                       </td>
                     </tr>
 
@@ -900,13 +904,15 @@ class QueryHandler extends React.Component {
                           width={20}
                           style={{ textAlign: 'center', color: 'green' }}
                           dangerouslySetInnerHTML={{
-                            __html: parseFloat(marker.value.toFixed(2)) === 0
-                              ? ''
-                              : marker.value > 0 ? '&#9650;' : '&#9660;'
+                            __html: _.isNumber(marker.value)
+                              ? parseFloat(marker.value.toFixed(2)) === 0
+                                ? ''
+                                : marker.value > 0 ? '&#9650;' : '&#9660;'
+                              : ''
                           }}
                         />
                         <td key='next-marker-cell' width={55}>
-                          { Math.abs(marker.value).toFixed(2) }%
+                          { _.isNumber(marker.value) ? (Math.abs(marker.value).toFixed(2) + '%') : '' }
                         </td>
                       </tr>
                     )) }
@@ -925,13 +931,15 @@ class QueryHandler extends React.Component {
                           width={20}
                           style={{ textAlign: 'center', color: 'red' }}
                           dangerouslySetInnerHTML={{
-                            __html: parseFloat(marker.value.toFixed(2)) === 0
-                              ? ''
-                              : marker.value > 0 ? '&#9650;' : '&#9660;'
+                            __html: _.isNumber(marker.value)
+                              ? parseFloat(marker.value.toFixed(2)) === 0
+                                ? ''
+                                : marker.value > 0 ? '&#9650;' : '&#9660;'
+                              : ''
                           }}
                         />
                         <td key='next-marker-cell' width={55}>
-                          { Math.abs(marker.value).toFixed(2) }%
+                          { _.isNumber(marker.value) ? (Math.abs(marker.value).toFixed(2) + '%') : '' }
                         </td>
                       </tr>
                     )) }
