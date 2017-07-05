@@ -859,6 +859,7 @@ class QueryHandler extends React.Component {
                         { Math.abs(growthValue).toFixed(2) }%
                       </td>
                     </tr>
+
                     <tr key='predicted-metrics-row'>
                       <td key='metric-label-cell'>
                         Predicted { parsedMetricGroup.name }, { parsedMetric.dataset === 'kantar' ? 'Q1`17' : 'Jan 17' }
@@ -876,6 +877,7 @@ class QueryHandler extends React.Component {
                         { Math.abs(predictedGrowthValue).toFixed(2) }%
                       </td>
                     </tr>
+
                     { growthMarkers.length > 0 && (
                       <tr key='markers-of-growth' style={{ borderTop: '5px solid transparent' }}>
                         <td><b>Markers of growth</b></td>
@@ -888,7 +890,7 @@ class QueryHandler extends React.Component {
                         <td
                           key='indicator-cell'
                           width={20}
-                          style={{ textAlign: 'center', color: marker.value >= 0 ? 'green' : 'red' }}
+                          style={{ textAlign: 'center', color: 'green' }}
                           dangerouslySetInnerHTML={{ __html: marker.value >= 0 ? '&#9650;' : '&#9660;' }}
                         />
                         <td key='next-marker-cell' width={55}>
@@ -896,6 +898,7 @@ class QueryHandler extends React.Component {
                         </td>
                       </tr>
                     )) }
+
                     { declineMarkers.length > 0 && (
                       <tr key='markers-of-decline' style={{ borderTop: '5px solid transparent' }}>
                         <td><b>Markers of decline</b></td>
@@ -908,7 +911,7 @@ class QueryHandler extends React.Component {
                         <td
                           key='indicator-cell'
                           width={20}
-                          style={{ textAlign: 'center', color: marker.value >= 0 ? 'green' : 'red' }}
+                          style={{ textAlign: 'center', color: 'red' }}
                           dangerouslySetInnerHTML={{ __html: marker.value >= 0 ? '&#9650;' : '&#9660;' }}
                         />
                         <td key='next-marker-cell' width={55}>
