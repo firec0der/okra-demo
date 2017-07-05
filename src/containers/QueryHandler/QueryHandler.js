@@ -700,7 +700,7 @@ class QueryHandler extends React.Component {
 
     // Reason 1.1
     brandIds.forEach(brandId => {
-      const value = _.getOr(null, 'numericDistributionGrowth', dataMapping['nielsen'].historical[brandId][0]);
+      const value = _.getOr(null, `historical[${brandId}][0].numericDistributionGrowth`, dataMapping['nielsen']);
 
       if (!_.isNumber(value) || !value) { return; }
 
@@ -709,7 +709,7 @@ class QueryHandler extends React.Component {
 
     // Reason 1.2
     brandIds.forEach(brandId => {
-      const value = _.getOr(null, 'weightedDistributionGrowth', dataMapping['nielsen'].historical[brandId][0]);
+      const value = _.getOr(null, `historical[${brandId}][0].weightedDistributionGrowth`, dataMapping['nielsen']);
 
       if (!_.isNumber(value) || !value) { return; }
 
@@ -718,7 +718,7 @@ class QueryHandler extends React.Component {
 
     // Reason 2.1
     brandIds.forEach(brandId => {
-      const value = _.getOr(null, 'popGrowth', dataMapping['nielsen'][brandId]);
+      const value = _.getOr(null, `historical[${brandId}][0].popGrowth`, dataMapping['nielsen']);
 
       if (!_.isNumber(value) || !value) { return; }
 
@@ -727,7 +727,7 @@ class QueryHandler extends React.Component {
 
     // Reason 2.2
     brandIds.forEach(brandId => {
-      const value = _.getOr(null, 'popWeightedDistribution', dataMapping['nielsen'].historical[brandId][0]);
+      const value = _.getOr(null, `historical[${brandId}][0].popWeightedDistribution`, dataMapping['nielsen']);
 
       if (!_.isNumber(value) || !value) { return; }
 
@@ -736,7 +736,7 @@ class QueryHandler extends React.Component {
 
     // Reason 3.1
     brandIds.forEach(brandId => {
-      const value = _.getOr(null, 'numericOutOfStockGrowth', dataMapping['nielsen'].historical[brandId][0]);
+      const value = _.getOr(null, `historical[${brandId}][0].numericOutOfStockGrowth`, dataMapping['nielsen']);
 
       if (!_.isNumber(value) || !value) { return; }
 
@@ -745,7 +745,7 @@ class QueryHandler extends React.Component {
 
     // Reason 3.2
     brandIds.forEach(brandId => {
-      const value = _.getOr(null, 'weightedOutOfStockGrowth', dataMapping['nielsen'].historical[brandId][0]);
+      const value = _.getOr(null, `historical[${brandId}][0].weightedOutOfStockGrowth`, dataMapping['nielsen']);
 
       if (!_.isNumber(value) || !value) { return; }
 
@@ -754,7 +754,7 @@ class QueryHandler extends React.Component {
 
     // Reason 4
     brandIds.forEach(brandId => {
-      const value = _.getOr(null, 'priceGrowth', dataMapping['kantar'].historical[brandId][0]);
+      const value = _.getOr(null, `historical[${brandId}][0].priceGrowth`, dataMapping['kantar']);
 
       if (!_.isNumber(value) || !value) { return; }
 
@@ -763,7 +763,7 @@ class QueryHandler extends React.Component {
 
     // Reason 5
     brandIds.forEach(brandId => {
-      const value = _.getOr(null, 'penetrationGrowth', dataMapping['kantar'].historical[brandId][0]);
+      const value = _.getOr(null, `historical[${brandId}][0].penetrationGrowth`, dataMapping['kantar']);
 
       if (!_.isNumber(value) || !value) { return; }
 
@@ -772,7 +772,7 @@ class QueryHandler extends React.Component {
 
     // Reason 6.1
     brandIds.forEach(brandId => {
-      const value = _.getOr(null, 'convictionGrowth', dataMapping['nwb'].historical[brandId][0]);
+      const value = _.getOr(null, `historical[${brandId}][0].convictionGrowth`, dataMapping['nwb']);
 
       if (!_.isNumber(value) || !value) { return; }
 
@@ -781,7 +781,7 @@ class QueryHandler extends React.Component {
 
     // Reason 6.2
     brandIds.forEach(brandId => {
-      const value = _.getOr(null, 'presenceGrowth', dataMapping['nwb'].historical[brandId][0]);
+      const value = _.getOr(null, `historical[${brandId}][0].presenceGrowth`, dataMapping['nwb']);
 
       if (!_.isNumber(value) || !value) { return; }
 
@@ -790,7 +790,7 @@ class QueryHandler extends React.Component {
 
     // Reason 6.3
     brandIds.forEach(brandId => {
-      const value = _.getOr(null, 'relevanceGrowth', dataMapping['nwb'].historical[brandId][0]);
+      const value = _.getOr(null, `historical[${brandId}][0].relevanceGrowth`, dataMapping['nwb']);
 
       if (!_.isNumber(value) || !value) { return; }
 
@@ -876,12 +876,12 @@ class QueryHandler extends React.Component {
                         { Math.abs(predictedGrowthValue).toFixed(2) }%
                       </td>
                     </tr>
-                    { growthMarkers.length && (
+                    { growthMarkers.length > 0 && (
                       <tr key='markers-of-growth' style={{ borderTop: '5px solid transparent' }}>
                         <td><b>Markers of growth</b></td>
                       </tr>
                     ) }
-                    { growthMarkers.length && growthMarkers.map(marker => (
+                    { growthMarkers.length > 0 && growthMarkers.map(marker => (
                       <tr key={marker.metric}>
                         <td key='metric-label-cell'>{ marker.metric }</td>
                         <td key='current-marker-cell' width={20} />
@@ -896,12 +896,12 @@ class QueryHandler extends React.Component {
                         </td>
                       </tr>
                     )) }
-                    { declineMarkers.length && (
+                    { declineMarkers.length > 0 && (
                       <tr key='markers-of-decline' style={{ borderTop: '5px solid transparent' }}>
                         <td><b>Markers of decline</b></td>
                       </tr>
                     ) }
-                    { declineMarkers.length && declineMarkers.map(marker => (
+                    { declineMarkers.length > 0 && declineMarkers.map(marker => (
                       <tr key={marker.metric}>
                         <td key='metric-label-cell'>{ marker.metric }</td>
                         <td key='current-marker-cell' width={20} />
