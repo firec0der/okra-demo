@@ -126,10 +126,7 @@ class NielsenPeriodsBarChart extends React.Component {
       _.map(([ date, list ]) => list.reduce((acc, item) => mergeObjects(acc, {
           [`${areasDict[item.areaId]}, ${brandsDict[item.brandId]}`]: item[metric]
         }),
-        { name: moment('2017', 'YYYY').unix() > moment(date).unix()
-          ? moment(date).format('MMM, YY').toUpperCase()
-          : 'Predicted ' + moment(date).format('MMM, YY').toUpperCase()
-        }
+        { name: moment(date).format('MMM, YY').toUpperCase() }
       ))
     ])(this.state.data.items);
   }
