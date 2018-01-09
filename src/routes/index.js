@@ -35,7 +35,14 @@ import { fetchNwbGenres } from '../modules/nwb/nwbGenres';
 import { fetchNwbManufacturers } from '../modules/nwb/nwbManufacturers';
 import { fetchNwbSubcategories } from '../modules/nwb/nwbSubcategories';
 
-export const fetchAllStaticData = ({ dispatch }) => () => {
+export const onHomeEnter = ({ dispatch, getState }) => (nextState, replace, next) => {
+  const { auth } = getState();
+
+  if (!auth.isAuthenticated) {
+    replace({ pathname: '/sign-in' });
+    return next();
+  }
+
   dispatch(fetchMetrics());
   dispatch(fetchBrands());
   dispatch(fetchManufacturers());
@@ -60,12 +67,14 @@ export const fetchAllStaticData = ({ dispatch }) => () => {
   dispatch(fetchNwbGenres());
   dispatch(fetchNwbManufacturers());
   dispatch(fetchNwbSubcategories());
+
+  return next();
 };
 
 export default (store) => (
   <Router history={browserHistory}>
     <Route component={PageLayout}>
-      <Route path="/" component={HomePage} onEnter={() => {}} />
+      <Route path="/" component={HomePage} onEnter={onHomeEnter(store)} />
       <Route path="/sign-in" component={SignInPage} />
     </Route>
   </Router>
