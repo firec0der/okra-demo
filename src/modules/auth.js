@@ -46,10 +46,10 @@ export const authenticate = (data) => (dispatch) => {
   dispatch(startAuthRequest());
 
   return postJson(`${CORE_API_URL}/auth/signin`, { body: data })
-    .then((data) => {
+    .then(({ data }) => {
       const auth = { token: data.token };
       localStorageDecorator.stringifyAndSetItem('auth', auth);
       dispatch(receiveAuthResponse(data));
     })
-    .then((error) => dispatch(authRequestFailure(error)));
+    .catch((error) => dispatch(authRequestFailure(error)));
 };
