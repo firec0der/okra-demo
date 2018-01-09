@@ -9,7 +9,7 @@ import SuaveLogo from './suave-logo.png';
 import RexonaLogo from './rexona-logo.png';
 
 // import from styles
-import './BrandLogos.scss';
+import './BrandLogos.css';
 
 export default class BrandLogos extends React.Component {
 

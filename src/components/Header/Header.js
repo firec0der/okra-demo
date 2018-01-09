@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
-import './Header.scss';
+import './Header.css';
 
 export default class TopBar extends React.Component {
 

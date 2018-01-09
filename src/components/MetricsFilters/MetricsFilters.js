@@ -36,7 +36,7 @@ import RelevanceIcon from './icons/sub_BE/relevance.png';
 import beIcon from './icons/sub_BE/be.jpg';
 
 // import from styles
-import './MetricsFilters.scss';
+import './MetricsFilters.css';
 
 const groupsIcons = {
   1: PenetrationGroupIcon,

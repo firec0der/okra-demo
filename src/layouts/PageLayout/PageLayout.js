@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import Header from '../../components/Header/Header';
 
 // import from styles
-import './PageLayout.scss';
+import './PageLayout.css';
 
 export default class PageLayout extends React.Component {
 
