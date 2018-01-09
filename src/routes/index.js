@@ -6,6 +6,7 @@ import { Router, Route, browserHistory } from 'react-router';
 import PageLayout from '../layouts/PageLayout/PageLayout';
 
 import HomePage from '../pages/HomePage/HomePage';
+import SignInPage from '../pages/SignInPage/SignInPage';
 
 // import Q1Page from '../pages/Q1Page/Q1Page';
 
@@ -65,6 +66,7 @@ export default (store) => (
   <Router history={browserHistory}>
     <Route component={PageLayout}>
       <Route path="/" component={HomePage} onEnter={() => {}} />
+      <Route path="/sign-in" component={SignInPage} />
     </Route>
   </Router>
 );
