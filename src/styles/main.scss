@@ -1,0 +1,15 @@
+@import "~normalize.css";
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+// hack for the layout, root should be 100% height
+#root {
+  min-height: 100%;
+}
