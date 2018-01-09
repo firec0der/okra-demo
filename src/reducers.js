@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 
+import auth from './modules/auth';
 import metrics from './modules/metrics';
 import brands from './modules/brands';
 import manufacturers from './modules/manufacturers';
@@ -26,6 +27,7 @@ import nwbManufacturers from './modules/nwb/nwbManufacturers';
 import nwbSubcategories from './modules/nwb/nwbSubcategories';
 
 export default combineReducers({
+  auth,
   metrics,
   brands,
   manufacturers,
