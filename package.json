@@ -5,6 +5,7 @@
   "dependencies": {
     "classnames": "2.2.5",
     "eslint": "4.15.0",
+    "eslint-config-airbnb": "16.1.0",
     "lodash": "4.17.4",
     "moment": "2.20.1",
     "node-sass-chokidar": "0.0.3",
