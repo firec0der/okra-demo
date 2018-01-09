@@ -71,11 +71,22 @@ export const onHomeEnter = ({ dispatch, getState }) => (nextState, replace, next
   return next();
 };
 
+export const onSignInEnter = ({ getState }) => (nextState, replace, next) => {
+  const { auth } = getState();
+
+  if (auth.isAuthenticated) {
+    replace({ pathname: '/' });
+    return next();
+  }
+
+  return next();
+};
+
 export default (store) => (
   <Router history={browserHistory}>
     <Route component={PageLayout}>
       <Route path="/" component={HomePage} onEnter={onHomeEnter(store)} />
-      <Route path="/sign-in" component={SignInPage} />
+      <Route path="/sign-in" component={SignInPage} onEnter={onSignInEnter(store)} />
     </Route>
   </Router>
 );
