@@ -1,6 +1,9 @@
 // imports from vendors
 import { browserHistory } from 'react-router';
 
+// imports from constants
+import { CORE_API_URL } from '../constants/api';
+
 // imports from utils
 import { createReducer } from '../utils/redux';
 import * as localStorageDecorator from '../utils/localStorage';
@@ -42,7 +45,7 @@ export const destroyAuth = () => (dispatch) => {
 export const authenticate = (data) => (dispatch) => {
   dispatch(startAuthRequest());
 
-  return postJson('/auth/signin', data)
+  return postJson(`${CORE_API_URL}/auth/signin`, { body: data })
     .then((data) => {
       const auth = { token: data.token };
       localStorageDecorator.stringifyAndSetItem('auth', auth);
