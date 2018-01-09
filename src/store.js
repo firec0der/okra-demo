@@ -1,11 +1,17 @@
 // imports from vendors
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
+import _ from 'lodash/fp';
 
 // imports from middleware
 import { forbidden } from './middlewares/auth';
 
+// imports from utils
+import * as localStorageDecorator from './utils/localStorage';
+
 import rootReducer from './reducers';
+
+const auth = localStorageDecorator.getItemAndParse('auth');
 
 const enhancers = [];
 const middleware = [thunk, forbidden];
@@ -25,7 +31,7 @@ const composedEnhancers = compose(
 
 const store = createStore(
   rootReducer,
-  {},
+  { auth: { isAuthenticated: !!_.getOr(null, 'token', auth) } },
   composedEnhancers
 );
 
