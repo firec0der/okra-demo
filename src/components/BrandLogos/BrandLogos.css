@@ -1,7 +1,0 @@
-.brand-logos .logo-holder {
-  min-height: 150px;
-  display: flex;
-  align-items: center;
-  justify-content: center; }
-  .brand-logos .logo-holder > img {
-    max-width: 150px; }

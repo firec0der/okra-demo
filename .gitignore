@@ -9,6 +9,13 @@
 # production
 /build
 
+# css
+src/components/**/*.css
+src/containers/**/*.css
+src/layouts/**/*.css
+src/pages/**/*.css
+src/styles/**/*.css
+
 # misc
 .DS_Store
 .idea
