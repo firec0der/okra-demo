@@ -1,11 +1,14 @@
-// import from vendors
+// imports from vendors
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
+
+// imports from middleware
+import { forbidden } from './middlewares/auth';
 
 import rootReducer from './reducers';
 
 const enhancers = [];
-const middleware = [thunk];
+const middleware = [thunk, forbidden];
 
 if (process.env.NODE_ENV === 'development') {
   const { devToolsExtension } = window;
