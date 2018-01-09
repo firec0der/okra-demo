@@ -1,0 +1,33 @@
+.metrics-filters {
+  text-align: center;
+
+  > .metrics-row {
+    display: flex;
+    justify-content: center;
+
+    &:not(:last-child) {
+      margin-bottom: 5px;
+    }
+
+    > .metric {
+      font-size: 11px;
+      cursor: pointer;
+      padding: 0 5px;
+
+      > .metric-image {
+        height: 30px;
+        padding: 3px;
+        display: block;
+        margin: auto;
+      }
+
+      &.-selected {
+        > .metric-image {
+          border: 1px solid rgb(0, 125, 187);
+          border-radius: 20px;
+        }
+      }
+    }
+  }
+
+}

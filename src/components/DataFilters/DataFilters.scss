@@ -1,0 +1,40 @@
+.data-filters {
+  padding: 0;
+  background-color: #fff;
+  margin-bottom: 30px;
+
+  &.-expanded {
+    .data-filters-header {
+      cursor: default;
+    }
+  }
+
+  .data-filters-header {
+    font-weight: 400;
+    font-size: 18px;
+    margin: 0;
+    color: #007dbb;
+    padding: 15px;
+    cursor: pointer;
+  }
+
+  .data-filters-body {
+    padding: 10px;
+
+    .row {
+      margin: 0;
+      > div {
+        padding: 0;
+      }
+    }
+
+    .form-group {
+      margin-bottom: 5px;
+    }
+  }
+
+  .data-filters-footer {
+    text-align: center;
+    padding-bottom: 10px;
+  }
+}
