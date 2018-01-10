@@ -8,7 +8,7 @@ import * as localStorage from '../utils/localStorage';
 export const forbidden = () => (next) => (action) => {
   // Skip any check on the main page.
   const location = browserHistory.getCurrentLocation();
-  if (location.pathname === '/') {
+  if (location.pathname === '/sign-in') {
     return next(action);
   }
 
