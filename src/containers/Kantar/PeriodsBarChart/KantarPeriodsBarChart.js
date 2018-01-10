@@ -31,6 +31,7 @@ import { colorPalette } from '../../../constants/colors';
 // import from utils
 import { mergeObjects } from '../../../utils/object';
 import { lightenColor } from '../../../utils/color';
+import { getJson } from '../../../utils/http';
 
 const mapStateToProps = state => ({
   metrics: state.metrics,
@@ -104,9 +105,8 @@ class KantarPeriodsBarChart extends React.Component {
 
     this.setState(
       { data: { items: [], isLoading: true } },
-      () => fetch(`${CORE_API_URL}/kantar/data?${queryString}`)
-        .then(response => response.json())
-        .then(json => this.setState({ data: { items: json, isLoading: false } }))
+      () => getJson(`${CORE_API_URL}/kantar/data?${queryString}`)
+        .then(({ data }) => this.setState({ data: { items: data, isLoading: false } }))
     );
   }
 

@@ -24,6 +24,7 @@ import SearchBar from '../../components/SearchBar/SearchBar';
 
 // import from utils
 import { mergeObjects } from '../../utils/object';
+import { getJson } from '../../utils/http';
 
 // import from containers
 import PeriodsBarChart from '../../containers/PeriodsBarChart/PeriodsBarChart';
@@ -339,10 +340,9 @@ class QueryHandler extends React.Component {
       _.join('&')
     ])(DATA_FILTERS_CONFIG);
 
-    return new Promise((resolve, reject) => fetch(`${CORE_API_URL}/${dataSetName}/data?${queryString}`)
-      .then(response => response.json())
-      .then(json => {
-        this.setState({ [`${dataSetName}Data`]: json })
+    return new Promise((resolve, reject) => getJson(`${CORE_API_URL}/${dataSetName}/data?${queryString}`)
+      .then(({ data }) => {
+        this.setState({ [`${dataSetName}Data`]: data });
         return resolve();
       })
     );
