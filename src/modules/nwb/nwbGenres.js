@@ -47,5 +47,5 @@ export const fetchNwbGenres = () => (dispatch) => {
   dispatch(loading());
 
   return getJson(`${CORE_API_URL}/nwb/genres`)
-    .then((data) => dispatch(success(data)));
+    .then(({ data }) => dispatch(success(data)));
 };

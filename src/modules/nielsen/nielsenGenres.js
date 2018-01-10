@@ -47,5 +47,5 @@ export const fetchNielsenGenres = () => (dispatch) => {
   dispatch(loading());
 
   return getJson(`${CORE_API_URL}/nielsen/genres`)
-    .then((data) => dispatch(success(data)));
+    .then(({ data }) => dispatch(success(data)));
 };

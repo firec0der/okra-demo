@@ -45,5 +45,5 @@ export const fetchNwbBrands = () => (dispatch) => {
   dispatch(loading());
 
   return getJson(`${CORE_API_URL}/nwb/brands`)
-    .then((data) => dispatch(success(data)));
+    .then(({ data }) => dispatch(success(data)));
 };

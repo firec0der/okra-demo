@@ -45,5 +45,5 @@ export const fetchKantarManufacturers = () => (dispatch) => {
   dispatch(loading());
 
   return getJson(`${CORE_API_URL}/kantar/manufacturers`)
-    .then((data) => dispatch(success(data)));
+    .then(({ data }) => dispatch(success(data)));
 };

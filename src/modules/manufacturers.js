@@ -45,5 +45,5 @@ export const fetchManufacturers = () => (dispatch) => {
   dispatch(loading());
 
   return getJson(`${CORE_API_URL}/manufacturers`)
-    .then((data) => dispatch(success(data)));
+    .then(({ data }) => dispatch(success(data)));
 };

@@ -45,5 +45,5 @@ export const fetchNielsenBrands = () => (dispatch) => {
   dispatch(loading());
 
   return getJson(`${CORE_API_URL}/nielsen/brands`)
-    .then((data) => dispatch(success(data)));
+    .then(({ data }) => dispatch(success(data)));
 };

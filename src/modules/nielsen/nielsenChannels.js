@@ -45,5 +45,5 @@ export const fetchNielsenChannels = () => (dispatch) => {
   dispatch(loading());
 
   return getJson(`${CORE_API_URL}/nielsen/channels`)
-    .then((data) => dispatch(success(data)));
+    .then(({ data }) => dispatch(success(data)));
 };

@@ -45,5 +45,5 @@ export const fetchMetrics = () => (dispatch) => {
   dispatch(loading());
 
   return getJson(`${CORE_API_URL}/metrics`)
-    .then((data) => dispatch(success(data)));
+    .then(({ data }) => dispatch(success(data)));
 };

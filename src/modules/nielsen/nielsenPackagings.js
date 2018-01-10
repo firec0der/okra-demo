@@ -47,5 +47,5 @@ export const fetchNielsenPackagings = () => (dispatch) => {
   dispatch(loading());
 
   return getJson(`${CORE_API_URL}/nielsen/packagings`)
-    .then((data) => dispatch(success(data)));
+    .then(({ data }) => dispatch(success(data)));
 };
