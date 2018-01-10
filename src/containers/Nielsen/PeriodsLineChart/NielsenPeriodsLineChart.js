@@ -16,17 +16,17 @@ import _ from 'lodash/fp';
 import moment from 'moment';
 
 // import from constants
-import { API_BASE_URL } from '../../../constants/api';
+import { CORE_API_URL } from '../../../constants/api';
 import { DATA_FILTERS_CONFIG } from '../../../constants/dataFilters';
 import DATA_FILTERS_PROP_TYPES from './dataFiltersPropTypes';
 import { colorPalette } from '../../../constants/colors';
 
 // import from components
 import DataFilters from '../../../components/DataFilters/DataFilters';
-import DatePicker from '../../../components/DatePicker/DatePicker';
 
 // import from utils
 import { mergeObjects } from '../../../utils/object';
+import { getJson } from '../../../utils/http';
 
 const mapStateToProps = state => ({
   metrics: state.metrics,
@@ -114,9 +114,8 @@ class NielsenPeriodsLineChart extends React.Component {
 
     this.setState(
       { data: { items: [], isLoading: false } },
-      () => fetch(`${API_BASE_URL}/nielsen/data?${queryString}`)
-        .then(response => response.json())
-        .then(json => this.setState({ data: { items: json, isLoading: false } }))
+      () => getJson(`${CORE_API_URL}/nielsen/data?${queryString}`)
+        .then(({ data }) => this.setState({ data: { items: data, isLoading: false } }))
     )
   }
 

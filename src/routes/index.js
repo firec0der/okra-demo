@@ -1,6 +1,12 @@
-import CoreLayout from '../layouts/PageLayout/PageLayout';
+// imports from vendors
+import React from 'react';
+import { Router, Route, browserHistory } from 'react-router';
+
+// imports from layouts
+import PageLayout from '../layouts/PageLayout/PageLayout';
 
 import HomePage from '../pages/HomePage/HomePage';
+import SignInPage from '../pages/SignInPage/SignInPage';
 
 // import Q1Page from '../pages/Q1Page/Q1Page';
 
@@ -29,7 +35,14 @@ import { fetchNwbGenres } from '../modules/nwb/nwbGenres';
 import { fetchNwbManufacturers } from '../modules/nwb/nwbManufacturers';
 import { fetchNwbSubcategories } from '../modules/nwb/nwbSubcategories';
 
-export const fetchAllStaticData = ({ dispatch }) => () => {
+export const onHomeEnter = ({ dispatch, getState }) => (nextState, replace, next) => {
+  const { auth } = getState();
+
+  if (!auth.isAuthenticated) {
+    replace({ pathname: '/sign-in' });
+    return next();
+  }
+
   dispatch(fetchMetrics());
   dispatch(fetchBrands());
   dispatch(fetchManufacturers());
@@ -54,17 +67,26 @@ export const fetchAllStaticData = ({ dispatch }) => () => {
   dispatch(fetchNwbGenres());
   dispatch(fetchNwbManufacturers());
   dispatch(fetchNwbSubcategories());
+
+  return next();
 };
 
-export default (store) => ({
-  path: '/',
-  component: CoreLayout,
-  indexRoute: { component: HomePage, onEnter: fetchAllStaticData(store) },
-  childRoutes: [
-    // {
-    //   path: '/q1',
-    //   component: Q1Page,
-    //   onEnter: fetchAllStaticData(store)
-    // }
-  ]
-});
+export const onSignInEnter = ({ getState }) => (nextState, replace, next) => {
+  const { auth } = getState();
+
+  if (auth.isAuthenticated) {
+    replace({ pathname: '/' });
+    return next();
+  }
+
+  return next();
+};
+
+export default (store) => (
+  <Router history={browserHistory}>
+    <Route component={PageLayout}>
+      <Route path="/" component={HomePage} onEnter={onHomeEnter(store)} />
+      <Route path="/sign-in" component={SignInPage} onEnter={onSignInEnter(store)} />
+    </Route>
+  </Router>
+);

@@ -1,4 +1,8 @@
-import { API_BASE_URL } from '../constants/api';
+// imports from utils
+import { getJson } from '../utils/http';
+
+// imports from constants
+import { CORE_API_URL } from '../constants/api';
 
 const LOADING = 'BRANDS_LOADING';
 const SUCCESS = 'BRANDS_SUCCESS';
@@ -6,16 +10,16 @@ const SUCCESS = 'BRANDS_SUCCESS';
 const initialState = {
   isLoading: false,
   error: null,
-  list: []
+  list: [],
 };
 
 const loading = () => ({
-  type: LOADING
+  type: LOADING,
 });
 
 const success = (list) => ({
   type: SUCCESS,
-  payload: { list }
+  payload: { list },
 });
 
 export default (state = initialState, action) => {
@@ -25,22 +29,21 @@ export default (state = initialState, action) => {
         ...state,
         list: action.payload.list,
         isLoading: false,
-        error: null
+        error: null,
       };
     case LOADING:
       return {
         ...state,
-        isLoading: true
+        isLoading: true,
       };
     default:
       return state;
   }
 };
 
-export const fetchBrands = () => dispatch => {
+export const fetchBrands = () => (dispatch) => {
   dispatch(loading());
 
-  return fetch(`${API_BASE_URL}/brands`)
-    .then(response => response.json())
-    .then(data => dispatch(success(data)));
+  return getJson(`${CORE_API_URL}/brands`)
+    .then(({ data }) => dispatch(success(data)));
 };

@@ -17,7 +17,7 @@ import { DATA_FILTERS_CONFIG } from '../../constants/dataFilters';
 import { mergeObjects } from '../../utils/object';
 
 // import from styles
-import './DataFilters.scss';
+import './DataFilters.css';
 
 export default class DataFilters extends React.Component {
 

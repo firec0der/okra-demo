@@ -1,22 +1,52 @@
 {
+  "extends": "airbnb",
   "parser": "babel-eslint",
-  "extends": ["standard", "standard-react"],
-  "plugins": ["babel", "react", "promise"],
-  "env": { "browser": true },
-  "globals": {
-    "__DEV__": false,
-    "__TEST__": false,
-    "__PROD__": false,
-    "__COVERAGE__": false
+  "plugins": [
+    "import",
+    "jsx-a11y",
+    "react"
+  ],
+  "env": {
+    "browser": true,
   },
   "rules": {
-    "key-spacing": "off",
-    "jsx-quotes": [2, "prefer-single"],
-    "max-len": [2, 120, 2],
-    "object-curly-spacing": [2, "always"],
-    "comma-dangle": "off",
-    "semi": ["error", "always"],
-    "space-before-function-paren": ["error", "never"],
-    "padded-blocks": ["error", { "classes": "always" }]
+    "react/jsx-filename-extension": ["error", { "extensions": [".js"] }],
+    "arrow-parens": ["error", "always"],
+    "no-confusing-arrow": ["off"],
+    "padded-blocks": ["error", { "blocks": "never", "classes": "always", "switches": "never" }],
+    "object-curly-newline": ["error", {
+      "ObjectExpression": { "minProperties": 5, "multiline": true, "consistent": true },
+      "ObjectPattern": { "minProperties": 5, "multiline": true, "consistent": true }
+    }],
+    "function-paren-newline": ["error", "consistent"],
+    "no-unused-expressions": ["error", {
+      "allowShortCircuit": true,
+      "allowTernary": true
+    }],
+    "no-shadow": ["off"],
+    "space-before-function-paren": ["error", {
+      "anonymous": "never",
+      "named": "never",
+      "asyncArrow": "always"
+    }],
+    "comma-dangle": ["error", {
+      "arrays": "always-multiline",
+      "objects": "always-multiline",
+      "imports": "always-multiline",
+      "exports": "always-multiline",
+      "functions": "never"
+    }],
+    "jsx-a11y/label-has-for": ["error", { "allowChildren": true }],
+    "jsx-a11y/anchor-is-valid": ["error", {
+      "components": ["Link"],
+      "specialLink": ["to"],
+      "aspects": ["noHref", "invalidHref", "preferButton"],
+    }],
+    "import/prefer-default-export": ["off"],
+    "react/prefer-stateless-function": ["off"],
+    "react/prefer-es6-class": ["error", "always"],
+    "react/require-default-props": ["warn"],
+    "react/prop-types": ["warn"],
+    "react/forbid-prop-types": ["warn"]
   }
 }

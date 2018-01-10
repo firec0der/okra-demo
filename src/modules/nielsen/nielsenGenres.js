@@ -1,4 +1,8 @@
-import { API_BASE_URL } from '../../constants/api';
+// imports from utils
+import { getJson } from '../../utils/http';
+
+// imports from constants
+import { CORE_API_URL } from '../../constants/api';
 
 const LOADING = 'NIELSEN/GENRES_LOADING';
 const SUCCESS = 'NIELSEN/GENRES_SUCCESS';
@@ -11,12 +15,12 @@ const initialState = {
 };
 
 const loading = () => ({
-  type: LOADING
+  type: LOADING,
 });
 
 const success = ({ dictionary, applicableForBrands }) => ({
   type: SUCCESS,
-  payload: { dictionary, applicableForBrands }
+  payload: { dictionary, applicableForBrands },
 });
 
 export default (state = initialState, action) => {
@@ -27,22 +31,21 @@ export default (state = initialState, action) => {
         dictionary: action.payload.dictionary,
         applicableForBrands: action.payload.applicableForBrands,
         isLoading: false,
-        error: null
+        error: null,
       };
     case LOADING:
       return {
         ...state,
-        isLoading: true
+        isLoading: true,
       };
     default:
       return state;
   }
 };
 
-export const fetchNielsenGenres = () => dispatch => {
+export const fetchNielsenGenres = () => (dispatch) => {
   dispatch(loading());
 
-  return fetch(`${API_BASE_URL}/nielsen/genres`)
-    .then(response => response.json())
-    .then(json => dispatch(success(json)));
+  return getJson(`${CORE_API_URL}/nielsen/genres`)
+    .then(({ data }) => dispatch(success(data)));
 };

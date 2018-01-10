@@ -1,4 +1,8 @@
-import { API_BASE_URL } from '../../constants/api';
+// imports from utils
+import { getJson } from '../../utils/http';
+
+// imports from constants
+import { CORE_API_URL } from '../../constants/api';
 
 const LOADING = 'KANTAR/AREAS_LOADING';
 const SUCCESS = 'KANTAR/AREAS_SUCCESS';
@@ -6,16 +10,16 @@ const SUCCESS = 'KANTAR/AREAS_SUCCESS';
 const initialState = {
   isLoading: false,
   error: null,
-  dictionary: {}
+  dictionary: {},
 };
 
 const loading = () => ({
-  type: LOADING
+  type: LOADING,
 });
 
 const success = ({ dictionary }) => ({
   type: SUCCESS,
-  payload: { dictionary }
+  payload: { dictionary },
 });
 
 export default (state = initialState, action) => {
@@ -25,22 +29,21 @@ export default (state = initialState, action) => {
         ...state,
         dictionary: action.payload.dictionary,
         isLoading: false,
-        error: null
+        error: null,
       };
     case LOADING:
       return {
         ...state,
-        isLoading: true
+        isLoading: true,
       };
     default:
       return state;
   }
 };
 
-export const fetchKantarAreas = () => dispatch => {
+export const fetchKantarAreas = () => (dispatch) => {
   dispatch(loading());
 
-  return fetch(`${API_BASE_URL}/kantar/areas`)
-    .then(response => response.json())
-    .then(json => dispatch(success(json)));
+  return getJson(`${CORE_API_URL}/kantar/areas`)
+    .then(({ data }) => dispatch(success(data)));
 };

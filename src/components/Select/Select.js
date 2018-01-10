@@ -6,7 +6,7 @@ import { FormGroup, ControlLabel } from 'react-bootstrap';
 import _ from 'lodash/fp';
 
 // import from styles
-import 'react-select/scss/default.scss';
+import 'react-select/dist/react-select.css';
 
 export default class Select extends React.Component {
 

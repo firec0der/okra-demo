@@ -17,13 +17,14 @@ import _ from 'lodash/fp';
 import moment from 'moment';
 
 // import from constants
-import { API_BASE_URL } from '../../../constants/api';
+import { CORE_API_URL } from '../../../constants/api';
 import { DATA_FILTERS_CONFIG, BRAND_FILTER, GENRE_FILTER } from '../../../constants/dataFilters';
 import NWB_PROP_TYPES from '../../../constants/nwbPropTypes';
 import { colorPalette } from '../../../constants/colors';
 
 // import from utils
 import { mergeObjects } from '../../../utils/object';
+import { getJson } from '../../../utils/http';
 
 const mapStateToProps = state => ({
   metrics: state.metrics,
@@ -95,9 +96,8 @@ class NwbPeriodsBarChart extends React.Component {
 
     this.setState(
       { data: { items: [], isLoading: true } },
-      () => fetch(`${API_BASE_URL}/nwb/data?${queryString}`)
-        .then(response => response.json())
-        .then(json => this.setState({ data: { items: json, isLoading: false } }))
+      () => getJson(`${CORE_API_URL}/nwb/data?${queryString}`)
+        .then(({ data }) => this.setState({ data: { items: data, isLoading: false } }))
     );
   }
 
