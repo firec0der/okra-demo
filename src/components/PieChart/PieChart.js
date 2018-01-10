@@ -5,7 +5,7 @@ import {
   PieChart as RechartPieChart,
   Pie,
   Cell,
-  ResponsiveContainer
+  ResponsiveContainer,
 } from 'recharts';
 
 // import from constants
@@ -16,12 +16,12 @@ export default class PieChart extends React.Component {
   static propTypes = {
     data: PropTypes.arrayOf(PropTypes.shape({
       name: PropTypes.string.isRequired,
-      value: PropTypes.number.isRequired
-    }).isRequired)
+      value: PropTypes.number.isRequired,
+    }).isRequired),
   };
 
   static defaultProps = {
-    data: []
+    data: [],
   };
 
   render() {
@@ -30,11 +30,11 @@ export default class PieChart extends React.Component {
     const pieProps = {
       data,
       label: true,
-      outerRadius: 100
+      outerRadius: 100,
     };
 
     return (
-      <ResponsiveContainer width='100%' height={300}>
+      <ResponsiveContainer width="100%" height={300}>
         <RechartPieChart margin={{ top: 20, right: 20, left: 20, bottom: 20 }}>
           <Pie {...pieProps}>
             { data.map((entry, index) => (

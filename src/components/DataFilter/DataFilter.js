@@ -17,7 +17,7 @@ export default class DataFilter extends React.Component {
     multi: PropTypes.bool,
     // TODO: null || { label: 'label', value: 'value' } || [{ label: 'label', value: 'value' }, ...]
     value: PropTypes.any,
-    clearable: PropTypes.bool
+    clearable: PropTypes.bool,
   }
 
   static defaultProps = {
@@ -41,8 +41,8 @@ export default class DataFilter extends React.Component {
   render() {
     const options = _.flow([
       _.entries,
-      _.map(([ id, label ]) => ({ value: parseInt(id), label })),
-      _.sortBy('label')
+      _.map(([id, label]) => ({ value: parseInt(id), label })),
+      _.sortBy('label'),
     ])(this.props.dictionary);
 
     return (

@@ -11,7 +11,7 @@ import {
   Tooltip,
   Legend,
   Bar,
-  ResponsiveContainer
+  ResponsiveContainer,
 } from 'recharts';
 import _ from 'lodash/fp';
 import moment from 'moment';
@@ -24,7 +24,7 @@ import {
   BRAND_FILTER,
   APPLIER_FILTER,
   PACKAGING_FILTER,
-  GENRE_FILTER
+  GENRE_FILTER,
 } from '../../../constants/dataFilters';
 import NIELSEN_PROP_TYPES from '../../../constants/nielsenPropTypes';
 import { colorPalette } from '../../../constants/colors';
@@ -34,7 +34,7 @@ import { mergeObjects } from '../../../utils/object';
 import { lightenColor } from '../../../utils/color';
 import { getJson } from '../../../utils/http';
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   metrics: state.metrics,
   nielsenAppliers: state.nielsenAppliers,
   nielsenAreas: state.nielsenAreas,
@@ -54,7 +54,7 @@ class NielsenPeriodsBarChart extends React.Component {
   static defaultProps = {
     usePeriodFilters: true,
     dataFiltersValues: {},
-    metric: 'numericDistribution'
+    metric: 'numericDistribution',
   };
 
   constructor(...args) {
@@ -75,7 +75,7 @@ class NielsenPeriodsBarChart extends React.Component {
 
   fetchData = (values = {}) => {
     const usefulValues = _.omitBy(
-      value => _.isNil(value) || value.length === 0,
+      (value) => _.isNil(value) || value.length === 0,
       values
     );
 
@@ -89,14 +89,13 @@ class NielsenPeriodsBarChart extends React.Component {
 
     const queryStringParts = _.flow([
       _.values,
-      _.filter(filter => _.keys(usefulValues).includes(filter.key)),
+      _.filter((filter) => _.keys(usefulValues).includes(filter.key)),
       _.reduce(
         (acc, { key, multi }) => [].concat(acc, multi
-          ? values[key].map(value => `${key}[]=${value}`)
-          : `${key}=${values[key]}`
-        ),
+          ? values[key].map((value) => `${key}[]=${value}`)
+          : `${key}=${values[key]}`),
         []
-      )
+      ),
     ])(DATA_FILTERS_CONFIG);
 
     const queryString = (
@@ -116,18 +115,17 @@ class NielsenPeriodsBarChart extends React.Component {
     const {
       nielsenBrands: { dictionary: brandsDict },
       nielsenAreas: { dictionary: areasDict },
-      metric
+      metric,
     } = this.props;
 
     return _.flow([
-      _.filter(item => item[metric] && item.date),
+      _.filter((item) => item[metric] && item.date),
       _.groupBy('date'),
       _.entries,
-      _.map(([ date, list ]) => list.reduce((acc, item) => mergeObjects(acc, {
-          [`${areasDict[item.areaId]}, ${brandsDict[item.brandId]}`]: item[metric]
-        }),
-        { name: moment(date).format('MMM, YY').toUpperCase() }
-      ))
+      _.map(([date, list]) => list.reduce((acc, item) => mergeObjects(acc, {
+        [`${areasDict[item.areaId]}, ${brandsDict[item.brandId]}`]: item[metric],
+      }),
+      { name: moment(date).format('MMM, YY').toUpperCase() })),
     ])(this.state.data.items);
   }
 
@@ -135,14 +133,14 @@ class NielsenPeriodsBarChart extends React.Component {
     const {
       nielsenBrands: { dictionary: brandsDict },
       nielsenAreas: { dictionary: areasDict },
-      dataFiltersValues
+      dataFiltersValues,
     } = this.props;
 
     const areaIds = dataFiltersValues[DATA_FILTERS_CONFIG[AREA_FILTER].key];
 
     const brands = _.flow([
       _.uniqBy('brandId'),
-      _.map(item => brandsDict[item.brandId])
+      _.map((item) => brandsDict[item.brandId]),
     ])(this.state.data.items);
 
     return brands.reduce((acc, brandName, i) => [].concat(acc, areaIds.map((areaId, j) => (
@@ -157,14 +155,16 @@ class NielsenPeriodsBarChart extends React.Component {
 
   render() {
     const { data } = this.state;
-    const { metric, dataFiltersValues, nielsenBrands, nielsenGenres, nielsenPackagings, nielsenAppliers } = this.props;
+    const {
+      metric, dataFiltersValues, nielsenBrands, nielsenGenres, nielsenPackagings, nielsenAppliers,
+    } = this.props;
 
     const barChartProps = {
       width: 600,
       height: 450,
       data: this.barChartData(),
       margin: { top: 20, right: 30, left: 20, bottom: 5 },
-      barGap: 0
+      barGap: 0,
     };
 
     const growthVariables = {
@@ -172,21 +172,21 @@ class NielsenPeriodsBarChart extends React.Component {
       weightedDistribution: { key: 'weightedDistributionGrowth', text: 'weighted distribution' },
       numericDistributionStock: { key: 'penetrationGrowth', text: 'numeric distribution stock' },
       weightedDistributionStock: { key: 'weightedOutOfStockGrowth', text: 'weighted distribution stock' },
-      popWeightedDistribution: { key: 'popGrowth', text: 'POP growth' }
+      popWeightedDistribution: { key: 'popGrowth', text: 'POP growth' },
     };
 
     const growthValues = _.flow([
       // dirty hack: we don't need predicted data in this case.
-      _.filter(item => (moment(2017, 'YYYY').unix() > moment(item.date).unix())),
-      _.sortBy(item => moment(item.date).unix()),
+      _.filter((item) => (moment(2017, 'YYYY').unix() > moment(item.date).unix())),
+      _.sortBy((item) => moment(item.date).unix()),
       _.groupBy('brandId'),
       _.entries,
-      _.reduce((acc, [ brandId, list ]) => mergeObjects(acc, { [brandId]: _.last(list)[growthVariables[metric].key] }), {})
+      _.reduce((acc, [brandId, list]) => mergeObjects(acc, { [brandId]: _.last(list)[growthVariables[metric].key] }), {}),
     ])(data.items);
 
     const messages = dataFiltersValues[DATA_FILTERS_CONFIG[BRAND_FILTER].key]
-      .filter(brandId => _.isNumber(growthValues[brandId]))
-      .map(brandId => {
+      .filter((brandId) => _.isNumber(growthValues[brandId]))
+      .map((brandId) => {
         const brandName = nielsenBrands.dictionary[brandId];
         const growthValue = growthValues[brandId];
         const status = growthValue <= 0 ? 'decreased' : 'increased';
@@ -199,9 +199,9 @@ class NielsenPeriodsBarChart extends React.Component {
         const applierValue = nielsenAppliers.dictionary[applierId];
 
         return `The ${growthVariables[metric].text} of ` +
-          `${packagingValue ? packagingValue : ''} ` +
-          `${genreValue ? genreValue : ''} ` +
-          `${applierValue ? applierValue : ''} ${brandName} ` +
+          `${packagingValue || ''} ` +
+          `${genreValue || ''} ` +
+          `${applierValue || ''} ${brandName} ` +
           `is ${status} in the last quarter by a rate of ${Math.abs(growthValue.toFixed(1))}%`;
       });
 
@@ -214,11 +214,11 @@ class NielsenPeriodsBarChart extends React.Component {
             <Col xs={12} md={8} mdOffset={2} style={colStyles}>
               { messages.map((message, i) => (<div key={i}>{ message }</div>)) }
 
-              <ResponsiveContainer width='100%' height={300}>
+              <ResponsiveContainer width="100%" height={300}>
                 <RechartsBarChart {...barChartProps}>
-                  <XAxis dataKey='name' />
+                  <XAxis dataKey="name" />
                   <YAxis tickCount={10} />
-                  <CartesianGrid strokeDasharray='3 3' />
+                  <CartesianGrid strokeDasharray="3 3" />
                   <Tooltip />
                   <Legend />
                   { this.renderBarStacks() }

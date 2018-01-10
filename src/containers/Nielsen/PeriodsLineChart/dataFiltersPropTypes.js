@@ -27,6 +27,6 @@ export default {
   }),
   nielsenPackagings: PropTypes.shape({
     isLoading: PropTypes.bool.isRequired,
-    dictionary: PropTypes.object.isRequired
-  })
+    dictionary: PropTypes.object.isRequired,
+  }),
 };

@@ -11,19 +11,19 @@ import './PageLayout.css';
 export default class PageLayout extends React.Component {
 
   static propTypes = {
-    children: PropTypes.node
+    children: PropTypes.node,
   }
 
   render() {
     const { children } = this.props;
 
     return (
-      <div className='page-layout'>
+      <div className="page-layout">
         <Header />
-        <main className='main'>
+        <main className="main">
           { children }
         </main>
-        <footer className='footer' />
+        <footer className="footer" />
       </div>
     );
   }

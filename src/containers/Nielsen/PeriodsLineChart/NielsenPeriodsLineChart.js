@@ -10,7 +10,7 @@ import {
   CartesianGrid,
   Tooltip,
   Line,
-  ResponsiveContainer
+  ResponsiveContainer,
 } from 'recharts';
 import _ from 'lodash/fp';
 import moment from 'moment';
@@ -28,7 +28,7 @@ import DataFilters from '../../../components/DataFilters/DataFilters';
 import { mergeObjects } from '../../../utils/object';
 import { getJson } from '../../../utils/http';
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   metrics: state.metrics,
   nielsenAppliers: state.nielsenAppliers,
   nielsenAreas: state.nielsenAreas,
@@ -58,7 +58,7 @@ class NielsenPeriodsLineChart extends React.Component {
     onDataFiltersChange: () => {},
     requiredFilters: [],
     showPeriodFilters: true,
-    metric: 'numericDistribution'
+    metric: 'numericDistribution',
   };
 
   constructor(props, ...args) {
@@ -67,28 +67,28 @@ class NielsenPeriodsLineChart extends React.Component {
     this.state = {
       data: {
         items: [],
-        isLoading: false
-      }
+        isLoading: false,
+      },
     };
   }
 
-  onDataFiltersChange = values => this.props.onDataFiltersChange(values, this.fetchData);
+  onDataFiltersChange = (values) => this.props.onDataFiltersChange(values, this.fetchData);
 
   fetchData = (values = {}) => {
     const { requiredFilters, showPeriodFilters } = this.props;
 
     const usefulValues = _.omitBy(
-      value => _.isNil(value) || value.length === 0,
+      (value) => _.isNil(value) || value.length === 0,
       values
     );
 
     const usefulValuesKeys = Object.keys(usefulValues);
     const requiredFiltersKeys = requiredFilters.map(
-      filter => DATA_FILTERS_CONFIG[filter].key
+      (filter) => DATA_FILTERS_CONFIG[filter].key
     );
 
     const shouldFetchData = usefulValuesKeys.length > 0
-      && requiredFiltersKeys.every(key => usefulValuesKeys.includes(key));
+      && requiredFiltersKeys.every((key) => usefulValuesKeys.includes(key));
 
     if (!shouldFetchData) {
       return;
@@ -96,14 +96,13 @@ class NielsenPeriodsLineChart extends React.Component {
 
     const queryStringParts = _.flow([
       _.values,
-      _.filter(filter => _.keys(usefulValues).includes(filter.key)),
+      _.filter((filter) => _.keys(usefulValues).includes(filter.key)),
       _.reduce(
         (acc, { key, multi }) => [].concat(acc, multi
-          ? values[key].map(value => `${key}[]=${value}`)
-          : `${key}=${values[key]}`
-        ),
+          ? values[key].map((value) => `${key}[]=${value}`)
+          : `${key}=${values[key]}`),
         []
-      )
+      ),
     ])(DATA_FILTERS_CONFIG);
 
     const queryString = (
@@ -116,25 +115,25 @@ class NielsenPeriodsLineChart extends React.Component {
       { data: { items: [], isLoading: false } },
       () => getJson(`${CORE_API_URL}/nielsen/data?${queryString}`)
         .then(({ data }) => this.setState({ data: { items: data, isLoading: false } }))
-    )
+    );
   }
 
   lineChartData = () => {
     const {
       nielsenBrands: { dictionary: brandsDict },
-      metric
+      metric,
     } = this.props;
     const { data } = this.state;
 
     return _.flow([
-      _.filter(item => item[metric] && item.date),
+      _.filter((item) => item[metric] && item.date),
       _.groupBy('date'),
       _.entries,
-      _.map(([ date, list ]) => list
+      _.map(([date, list]) => list
         .reduce(
-        (acc, item) => mergeObjects(acc, { [brandsDict[item.brandId]]: item[metric] }),
-        { name: moment(date).format('MMM, YY').toUpperCase() }
-      ))
+          (acc, item) => mergeObjects(acc, { [brandsDict[item.brandId]]: item[metric] }),
+          { name: moment(date).format('MMM, YY').toUpperCase() }
+        )),
     ])(data.items);
   }
 
@@ -144,7 +143,7 @@ class NielsenPeriodsLineChart extends React.Component {
 
     const brands = _.flow([
       _.uniqBy('brandId'),
-      _.map(item => brandsDict[item.brandId])
+      _.map((item) => brandsDict[item.brandId]),
     ])(items);
 
     return brands.map((brandName, i) => (
@@ -154,7 +153,7 @@ class NielsenPeriodsLineChart extends React.Component {
         dataKey={brandName}
         stroke={colorPalette[i]}
       />
-    ))
+    ));
   }
 
   render() {
@@ -168,7 +167,7 @@ class NielsenPeriodsLineChart extends React.Component {
       nielsenManufacturers,
       nielsenPackagings,
       nielsenSubcategories,
-      showPeriodFilters
+      showPeriodFilters,
     } = this.props;
 
     const { data } = this.state;
@@ -178,7 +177,7 @@ class NielsenPeriodsLineChart extends React.Component {
       height: 450,
       data: this.lineChartData(),
       margin: { top: 20, right: 30, left: 20, bottom: 5 },
-      barGap: 0
+      barGap: 0,
     };
 
     return (
@@ -187,7 +186,7 @@ class NielsenPeriodsLineChart extends React.Component {
           values={this.props.dataFiltersValues}
           onChange={this.onDataFiltersChange}
           dataFilters={this.props.dataFilters}
-          dataSetName='nielsen'
+          dataSetName="nielsen"
           nielsenAppliers={nielsenAppliers}
           nielsenAreas={nielsenAreas}
           nielsenBrands={nielsenBrands}
@@ -203,11 +202,11 @@ class NielsenPeriodsLineChart extends React.Component {
         { !data.isLoading && data.items.length > 0 && (
           <Grid>
             <Col xs={12} md={8} mdOffset={2} style={{ marginBottom: '30px', backgroundColor: '#fff' }}>
-              <ResponsiveContainer width='100%' height={300}>
+              <ResponsiveContainer width="100%" height={300}>
                 <RechartsLineChart {...barChartProps}>
-                  <XAxis dataKey='name' />
+                  <XAxis dataKey="name" />
                   <YAxis tickCount={10} />
-                  <CartesianGrid strokeDasharray='3 3' />
+                  <CartesianGrid strokeDasharray="3 3" />
                   <Tooltip />
                   { this.renderLines() }
                 </RechartsLineChart>

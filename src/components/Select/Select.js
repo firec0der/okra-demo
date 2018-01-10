@@ -19,7 +19,7 @@ export default class Select extends React.Component {
     value: PropTypes.any,
     multi: PropTypes.bool,
     isLoading: PropTypes.bool,
-    clearable: PropTypes.bool
+    clearable: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -28,7 +28,7 @@ export default class Select extends React.Component {
     isLoading: false,
     options: [],
     value: null,
-    clearable: true
+    clearable: true,
   };
 
   shouldComponentUpdate(nextProps, nextState) {

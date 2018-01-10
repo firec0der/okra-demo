@@ -11,7 +11,7 @@ import {
   Tooltip,
   Legend,
   Bar,
-  ResponsiveContainer
+  ResponsiveContainer,
 } from 'recharts';
 import _ from 'lodash/fp';
 import moment from 'moment';
@@ -23,7 +23,7 @@ import {
   AREA_FILTER,
   BRAND_FILTER,
   GENRE_FILTER,
-  PACKAGING_FILTER
+  PACKAGING_FILTER,
 } from '../../../constants/dataFilters';
 import KANTAR_PROP_TYPES from '../../../constants/kantarPropTypes';
 import { colorPalette } from '../../../constants/colors';
@@ -33,7 +33,7 @@ import { mergeObjects } from '../../../utils/object';
 import { lightenColor } from '../../../utils/color';
 import { getJson } from '../../../utils/http';
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   metrics: state.metrics,
   kantarAreas: state.kantarAreas,
   kantarBrands: state.kantarBrands,
@@ -52,7 +52,7 @@ class KantarPeriodsBarChart extends React.Component {
   static defaultProps = {
     usePeriodFilters: true,
     dataFiltersValues: {},
-    metric: 'penetration'
+    metric: 'penetration',
   };
 
   constructor(...args) {
@@ -73,7 +73,7 @@ class KantarPeriodsBarChart extends React.Component {
 
   fetchData = (values = {}) => {
     const usefulValues = _.omitBy(
-      value => _.isNil(value) || value.length === 0,
+      (value) => _.isNil(value) || value.length === 0,
       values
     );
 
@@ -87,12 +87,11 @@ class KantarPeriodsBarChart extends React.Component {
 
     const queryStringParts = _.flow([
       _.values,
-      _.filter(filter => _.keys(usefulValues).includes(filter.key)),
+      _.filter((filter) => _.keys(usefulValues).includes(filter.key)),
       _.reduce(
         (acc, { key, multi }) => [].concat(acc, multi
-          ? values[key].map(value => `${key}[]=${value}`)
-          : `${key}=${values[key]}`
-        ),
+          ? values[key].map((value) => `${key}[]=${value}`)
+          : `${key}=${values[key]}`),
         []
       ),
     ])(DATA_FILTERS_CONFIG);
@@ -114,21 +113,23 @@ class KantarPeriodsBarChart extends React.Component {
     const {
       kantarBrands: { dictionary: brandsDict },
       kantarAreas: { dictionary: areasDict },
-      metric
+      metric,
     } = this.props;
 
     return _.flow([
-      _.filter(item => item[metric] && item.date),
+      _.filter((item) => item[metric] && item.date),
       _.groupBy('date'),
       _.entries,
-      _.map(([ date, list ]) => list.reduce(
+      _.map(([date, list]) => list.reduce(
         (acc, item) => mergeObjects(acc, {
-          [`${areasDict[item.areaId]}, ${brandsDict[item.brandId]}`]: item[metric]
+          [`${areasDict[item.areaId]}, ${brandsDict[item.brandId]}`]: item[metric],
         }),
-        { name: moment('2017', 'YYYY').unix() > moment(date).unix()
-          ? 'Q' + moment(date).format('Q\' YY').toUpperCase()
-          : 'Predicted Q' + moment(date).format('Q\' YY').toUpperCase() }
-      ))
+        {
+          name: moment('2017', 'YYYY').unix() > moment(date).unix()
+            ? `Q${moment(date).format('Q\' YY').toUpperCase()}`
+            : `Predicted Q${moment(date).format('Q\' YY').toUpperCase()}`,
+        }
+      )),
     ])(this.state.data.items);
   };
 
@@ -136,14 +137,14 @@ class KantarPeriodsBarChart extends React.Component {
     const {
       kantarBrands: { dictionary: brandsDict },
       kantarAreas: { dictionary: areasDict },
-      dataFiltersValues
+      dataFiltersValues,
     } = this.props;
 
     const areaIds = dataFiltersValues[DATA_FILTERS_CONFIG[AREA_FILTER].key];
 
     const brands = _.flow([
       _.uniqBy('brandId'),
-      _.map(item => brandsDict[item.brandId])
+      _.map((item) => brandsDict[item.brandId]),
     ])(this.state.data.items);
 
     return brands.reduce((acc, brandName, i) => [].concat(acc, areaIds.map((areaId, j) => (
@@ -158,14 +159,16 @@ class KantarPeriodsBarChart extends React.Component {
 
   render() {
     const { data } = this.state;
-    const { metric, dataFiltersValues, kantarBrands, kantarGenres, kantarPackagings } = this.props;
+    const {
+      metric, dataFiltersValues, kantarBrands, kantarGenres, kantarPackagings,
+    } = this.props;
 
     const barChartProps = {
       width: 600,
       height: 450,
       data: this.barChartData(),
       margin: { top: 20, right: 30, left: 20, bottom: 5 },
-      barGap: 0
+      barGap: 0,
     };
 
     const growthVariables = {
@@ -186,16 +189,16 @@ class KantarPeriodsBarChart extends React.Component {
 
     const growthValues = _.flow([
       // dirty hack: we don't need predicted data in this case.
-      _.filter(item => (moment(2017, 'YYYY').unix() > moment(item.date).unix())),
-      _.sortBy(item => moment(item.date).unix()),
+      _.filter((item) => (moment(2017, 'YYYY').unix() > moment(item.date).unix())),
+      _.sortBy((item) => moment(item.date).unix()),
       _.groupBy('brandId'),
       _.entries,
-      _.reduce((acc, [ brandId, list ]) => mergeObjects(acc, { [brandId]: _.last(list)[growthVariables[metric].key] }), {})
+      _.reduce((acc, [brandId, list]) => mergeObjects(acc, { [brandId]: _.last(list)[growthVariables[metric].key] }), {}),
     ])(data.items);
 
     const messages = dataFiltersValues[DATA_FILTERS_CONFIG[BRAND_FILTER].key]
-      .filter(brandId => _.isNumber(growthValues[brandId]))
-      .map(brandId => {
+      .filter((brandId) => _.isNumber(growthValues[brandId]))
+      .map((brandId) => {
         const brandName = kantarBrands.dictionary[brandId];
         const growthValue = growthValues[brandId];
         const status = growthValue <= 0 ? 'decreased' : 'increased';
@@ -206,8 +209,8 @@ class KantarPeriodsBarChart extends React.Component {
         const packagingValue = kantarPackagings.dictionary[packagingId];
 
         return `The ${growthVariables[metric].text} of ` +
-          `${packagingValue ? packagingValue : ''} ` +
-          `${genreValue ? genreValue : ''} ${brandName} ` +
+          `${packagingValue || ''} ` +
+          `${genreValue || ''} ${brandName} ` +
           `${status} in the last quarter by ${Math.abs(growthValue.toFixed(1))}%`;
       });
 
@@ -220,11 +223,11 @@ class KantarPeriodsBarChart extends React.Component {
             <Col xs={12} md={8} mdOffset={2} style={colStyles}>
               { messages.map((message, i) => (<div key={i}>{ message }</div>)) }
 
-              <ResponsiveContainer width='100%' height={300}>
+              <ResponsiveContainer width="100%" height={300}>
                 <RechartsBarChart {...barChartProps}>
-                  <XAxis dataKey='name' />
+                  <XAxis dataKey="name" />
                   <YAxis tickCount={10} />
-                  <CartesianGrid strokeDasharray='3 3' />
+                  <CartesianGrid strokeDasharray="3 3" />
                   <Tooltip />
                   <Legend />
                   { this.renderBarStacks() }

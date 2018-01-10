@@ -12,17 +12,17 @@ export const lightenColor = (color, percent) => {
         : R
       : 255
   ) * 0x10000 + (
-    B < 255
-      ? B < 1
-        ? 0
-        : B
-      : 255
-  ) * 0x100 + (
-    G < 255
-      ? G < 1
-        ? 0
-        : G
-      : 255
+      B < 255
+        ? B < 1
+          ? 0
+          : B
+        : 255
+    ) * 0x100 + (
+      G < 255
+        ? G < 1
+          ? 0
+          : G
+        : 255
     )
   ).toString(16).slice(1);
 

@@ -9,7 +9,7 @@ import {
   Tooltip,
   Legend,
   Bar,
-  ResponsiveContainer
+  ResponsiveContainer,
 } from 'recharts';
 import _ from 'lodash/fp';
 
@@ -24,13 +24,13 @@ export default class StackedBarChart extends React.Component {
 
   static propTypes = {
     data: PropTypes.arrayOf(PropTypes.shape({
-      name: PropTypes.string.isRequired
+      name: PropTypes.string.isRequired,
     }).isRequired),
     chartWidth: PropTypes.number,
     chartHeight: PropTypes.number,
     yTickFormatter: PropTypes.func,
     tooltipValueFormatter: PropTypes.func,
-    stacks: PropTypes.array
+    stacks: PropTypes.array,
   }
 
   static defaultProps = {
@@ -68,15 +68,15 @@ export default class StackedBarChart extends React.Component {
       height: chartHeight,
       data,
       margin: { top: 20, right: 30, left: 20, bottom: 5 },
-      barGap: 0
+      barGap: 0,
     };
 
     return (
-      <ResponsiveContainer width='100%' height={chartHeight}>
+      <ResponsiveContainer width="100%" height={chartHeight}>
         <RechartsBarChart {...barChartProps}>
-          <XAxis dataKey='name' />
+          <XAxis dataKey="name" />
           <YAxis tickCount={10} />
-          <CartesianGrid strokeDasharray='3 3' />
+          <CartesianGrid strokeDasharray="3 3" />
           <Tooltip />
           <Legend />
           { this.renderBars() }

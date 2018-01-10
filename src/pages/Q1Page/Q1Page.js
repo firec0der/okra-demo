@@ -10,7 +10,7 @@ import {
   GENRE_FILTER,
   PACKAGING_FILTER,
   SUBCATEGORY_FILTER,
-  DATA_FILTERS_CONFIG
+  DATA_FILTERS_CONFIG,
 } from '../../constants/dataFilters';
 
 // import from containers
@@ -26,7 +26,7 @@ export default class Q1Page extends React.Component {
       AREA_FILTER,
       CHANNEL_FILTER,
       GENRE_FILTER,
-      PACKAGING_FILTER
+      PACKAGING_FILTER,
     ];
 
     const barChartRequiredFilters = [];
@@ -43,7 +43,7 @@ export default class Q1Page extends React.Component {
       AREA_FILTER,
       CHANNEL_FILTER,
       GENRE_FILTER,
-      PACKAGING_FILTER
+      PACKAGING_FILTER,
     ];
 
     const lineChartRequiredFilters = [];
@@ -55,18 +55,18 @@ export default class Q1Page extends React.Component {
     };
 
     return (
-      <div className='home-page'>
+      <div className="home-page">
         <PeriodsBarChart
           dataFilters={barChartDataFilters}
           dataFiltersValues={barChartValues}
           requiredFilters={barChartRequiredFilters}
-          chosenMetric='weightedDistribution'
+          chosenMetric="weightedDistribution"
         />
         <PeriodsLineChart
           dataFilters={lineChartDataFilters}
           dataFiltersValues={lineChartValues}
           requiredFilters={lineChartRequiredFilters}
-          chosenMetric='marketShareGrowth'
+          chosenMetric="marketShareGrowth"
         />
       </div>
     );

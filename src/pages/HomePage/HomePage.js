@@ -15,14 +15,14 @@ export default class HomePage extends React.Component {
 
   render() {
     return (
-      <div className='home-page'>
-        <Grid className='top-content' key='top-content'>
+      <div className="home-page">
+        <Grid className="top-content" key="top-content">
           <Col xs={12} md={6} mdOffset={3}>
-            <img className='unilever-logo' src={UnileverLargeLogo} />
+            <img className="unilever-logo" src={UnileverLargeLogo} />
           </Col>
         </Grid>
 
-        <QueryHandler key='query-handler' />
+        <QueryHandler key="query-handler" />
       </div>
     );
   }

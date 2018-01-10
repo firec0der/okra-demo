@@ -49,7 +49,7 @@ class PeriodsBarChart extends React.Component {
     requiredFilters: [],
     chosenMetric: 'numericDistribution',
     shouldShowMetrics: true,
-    showPeriodFilters: true
+    showPeriodFilters: true,
   };
 
   constructor(props, ...args) {
@@ -65,7 +65,7 @@ class PeriodsBarChart extends React.Component {
     this.state = {
       chosenMetric: props.chosenMetric,
       barChartContainer: null,
-      dataFiltersValues
+      dataFiltersValues,
     };
   }
 
@@ -83,12 +83,12 @@ class PeriodsBarChart extends React.Component {
         mergeObjects({ chosenMetric: nextProps.chosenMetric },
           nextDataSetName !== previousDataSetName
             ? { barChartContainer: dataSetChartContainerMap[nextDataSetName] }
-            : {}
-        ));
+            : {})
+      );
     }
   }
 
-  onMetricFilterChange = chosenMetric => {
+  onMetricFilterChange = (chosenMetric) => {
     const previousDataSetName = this.getDataSetName(this.state.chosenMetric);
     const nextDataSetName = this.getDataSetName(chosenMetric);
 
@@ -96,8 +96,8 @@ class PeriodsBarChart extends React.Component {
       mergeObjects({ chosenMetric },
         nextDataSetName !== previousDataSetName
           ? { barChartContainer: dataSetChartContainerMap[nextDataSetName] }
-          : {}
-      ));
+          : {})
+    );
   }
 
   onDataFiltersChange = (values, callback = () => {}) => this.setState(
@@ -105,12 +105,12 @@ class PeriodsBarChart extends React.Component {
     () => callback(this.state.dataFiltersValues)
   );
 
-  getDataSetName = chosenMetric => {
+  getDataSetName = (chosenMetric) => {
     const { metrics } = this.props;
 
     const metricObject = _.flow([
       _.reduce((acc, { items }) => [...acc, ...items], []),
-      _.find(object => object.value === chosenMetric)
+      _.find((object) => object.value === chosenMetric),
     ])(metrics.list);
 
     if (_.isEmpty(metricObject)) { return null; }
@@ -131,7 +131,7 @@ class PeriodsBarChart extends React.Component {
         'kantarLevels',
         'kantarManufacturers',
         'kantarPackagings',
-        'kantarSubcategories'
+        'kantarSubcategories',
       ],
       nielsen: [
         'nielsenAppliers',
@@ -142,14 +142,14 @@ class PeriodsBarChart extends React.Component {
         'nielsenLevels',
         'nielsenManufacturers',
         'nielsenPackagings',
-        'nielsenSubcategories'
+        'nielsenSubcategories',
       ],
       nwb: [
         'nwbBrands',
         'nwbGenres',
         'nwbManufacturers',
-        'nwbSubcategories'
-      ]
+        'nwbSubcategories',
+      ],
     };
 
     const props = propsForDataSet[dataSetName]
@@ -164,7 +164,7 @@ class PeriodsBarChart extends React.Component {
         usePeriodFilters
         {...props}
       />
-    )
+    );
   }
 
   render() {
@@ -178,7 +178,7 @@ class PeriodsBarChart extends React.Component {
         { !_.isNil(header) && (
           <Grid style={{ marginBottom: '30px' }}>
             <Col xs={12} md={8} mdOffset={2}>
-              <h1 className='text-center'>{ header }</h1>
+              <h1 className="text-center">{ header }</h1>
             </Col>
           </Grid>
         ) }
@@ -218,7 +218,7 @@ class PeriodsBarChart extends React.Component {
 
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   metrics: state.metrics,
 
   kantarAreas: state.kantarAreas,

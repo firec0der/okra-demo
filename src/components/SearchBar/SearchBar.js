@@ -13,7 +13,7 @@ export default class SearchBar extends React.Component {
     placeholder: PropTypes.string,
     onChange: PropTypes.func,
     onSubmit: PropTypes.func,
-    buttonText: PropTypes.string
+    buttonText: PropTypes.string,
   }
 
   static defaultProps = {
@@ -21,7 +21,7 @@ export default class SearchBar extends React.Component {
     onChange: (value) => {},
     onSubmit: (value) => {},
     buttonText: 'Search',
-    recognition: false
+    recognition: false,
   }
 
   constructor(props, ...args) {
@@ -32,16 +32,16 @@ export default class SearchBar extends React.Component {
 
   onSubmit = () => this.props.onSubmit(this.state.value);
 
-  onChange = event => {
+  onChange = (event) => {
     const { value } = event.target;
     this.setState({ value }, this.props.onChange.bind(null, value));
   };
 
-  onKeyPress = event => {
+  onKeyPress = (event) => {
     if (event.key === 'Enter') { this.onSubmit(); }
   };
 
-  onSpeechRecognition = event => {
+  onSpeechRecognition = (event) => {
     this.setState({ recognition: true }, () => {
       const recognition = new window.webkitSpeechRecognition();
 
@@ -67,14 +67,14 @@ export default class SearchBar extends React.Component {
       value,
       onChange: this.onChange,
       onKeyPress: this.onKeyPress,
-      style: { borderColor: '#007dbb' }
+      style: { borderColor: '#007dbb' },
     };
 
     return (
-      <div className='search-bar'>
+      <div className="search-bar">
         <FormGroup>
           <InputGroup>
-            <FormControl type='text' {...inputProps} />
+            <FormControl type="text" {...inputProps} />
             <InputGroup.Button>
               { window.webkitSpeechRecognition && (
                 <Button

@@ -51,5 +51,5 @@ export default combineReducers({
   nwbBrands,
   nwbGenres,
   nwbManufacturers,
-  nwbSubcategories
+  nwbSubcategories,
 });

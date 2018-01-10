@@ -30,9 +30,9 @@ export default class DataFilters extends React.Component {
   };
 
   static defaultProps = {
-    onChange: values => {},
+    onChange: (values) => {},
     dataSetName: 'nielsen',
-    usePeriodFilters: true
+    usePeriodFilters: true,
   };
 
   constructor(props, ...args) {
@@ -63,7 +63,7 @@ export default class DataFilters extends React.Component {
 
   onChangeSingle = (property, value) => {
     const values = mergeObjects(this.state.values, {
-      [property]: value ? parseInt(value.value) : null
+      [property]: value ? parseInt(value.value) : null,
     });
 
     this.setState({ values }, () => this.props.onChange(this.state.values));
@@ -71,7 +71,7 @@ export default class DataFilters extends React.Component {
 
   onChangeMultiple = (stateKey, arrayWithValues) => {
     const values = mergeObjects(this.state.values, {
-      [stateKey]: arrayWithValues.map(value => parseInt(value.value))
+      [stateKey]: arrayWithValues.map((value) => parseInt(value.value)),
     });
 
     this.setState({ values }, () => this.props.onChange(this.state.values));
@@ -79,16 +79,16 @@ export default class DataFilters extends React.Component {
 
   onPeriodChange = (property, value) => {
     const values = mergeObjects(this.state.values, {
-      [property]: value ? moment(value).unix() : null
+      [property]: value ? moment(value).unix() : null,
     });
 
     this.setState({ values }, () => this.props.onChange(this.state.values));
   }
 
-  getDictionary = propKey => _.getOr({}, `${propKey}.dictionary`, this.props);
-  getIsLoading = propKey => _.getOr(false, `${propKey}.isLoading`, this.props);
+  getDictionary = (propKey) => _.getOr({}, `${propKey}.dictionary`, this.props);
+  getIsLoading = (propKey) => _.getOr(false, `${propKey}.isLoading`, this.props);
 
-  getSelectedValue = filter => {
+  getSelectedValue = (filter) => {
     const { dataSetName } = this.props;
 
     // it's impossible, but anyway, something bad could happen.
@@ -106,17 +106,17 @@ export default class DataFilters extends React.Component {
     if (!multi) {
       return {
         label: dictionary[this.state.values[key]],
-        value: this.state.values[key]
+        value: this.state.values[key],
       };
     }
 
-    return this.state.values[key].map(id => ({ label: dictionary[id], value: id }));
+    return this.state.values[key].map((id) => ({ label: dictionary[id], value: id }));
   };
 
   initialValues = () => {
     const { values, usePeriodFilters } = this.props;
 
-    const getValue = filter => values && values[DATA_FILTERS_CONFIG[filter].key]
+    const getValue = (filter) => values && values[DATA_FILTERS_CONFIG[filter].key]
       ? values[DATA_FILTERS_CONFIG[filter].key]
       : DATA_FILTERS_CONFIG[filter].multi
         ? []
@@ -125,7 +125,7 @@ export default class DataFilters extends React.Component {
     const initialValues = Object
       .keys(DATA_FILTERS_CONFIG)
       .reduce((acc, filterName) => mergeObjects(acc, {
-        [DATA_FILTERS_CONFIG[filterName].key]: getValue(filterName)
+        [DATA_FILTERS_CONFIG[filterName].key]: getValue(filterName),
       }), {});
 
     if (!usePeriodFilters) { return initialValues; }
@@ -133,27 +133,27 @@ export default class DataFilters extends React.Component {
     return mergeObjects(initialValues, {
       // make sure that timestamps are here. values must be INTs.
       periodFrom: values.periodFrom,
-      periodTo: values.periodTo
+      periodTo: values.periodTo,
     });
   };
 
-  configForCurrentSetup = dataSetName => {
+  configForCurrentSetup = (dataSetName) => {
     const { dataFilters } = this.props;
 
     // Get all available filters for current data set.
     const filtersForCurrentDataSet = Object
       .keys(DATA_FILTERS_CONFIG)
-      .filter(filterName => DATA_FILTERS_CONFIG[filterName][`${dataSetName}PropKey`]);
+      .filter((filterName) => DATA_FILTERS_CONFIG[filterName][`${dataSetName}PropKey`]);
 
     // Assemble configs for all requested filters.
     return dataFilters
-      .filter(filterName => filtersForCurrentDataSet.includes(filterName))
+      .filter((filterName) => filtersForCurrentDataSet.includes(filterName))
       .reduce((acc, filterName) => mergeObjects(acc, {
-        [filterName]: DATA_FILTERS_CONFIG[filterName]
+        [filterName]: DATA_FILTERS_CONFIG[filterName],
       }), {});
   }
 
-  getOnChangeCallbacks = dataSetName => {
+  getOnChangeCallbacks = (dataSetName) => {
     const configForCurrentDataSet = this.configForCurrentSetup(dataSetName);
 
     return Object
@@ -161,7 +161,7 @@ export default class DataFilters extends React.Component {
       .reduce((acc, filterName) => mergeObjects(acc, {
         [filterName]: DATA_FILTERS_CONFIG[filterName].multi
           ? this.onChangeMultiple.bind(null, configForCurrentDataSet[filterName].key)
-          : this.onChangeSingle.bind(null, configForCurrentDataSet[filterName].key)
+          : this.onChangeSingle.bind(null, configForCurrentDataSet[filterName].key),
       }), {});
   }
 
@@ -170,34 +170,34 @@ export default class DataFilters extends React.Component {
 
     const periodFilters = usePeriodFilters
       ? [
-        <FormGroup key='periodFrom'>
+        <FormGroup key="periodFrom">
           <ControlLabel>Period from</ControlLabel>
           <DatePicker
             customInput={<FormControl />}
             selected={moment.unix(this.state.values.periodFrom)}
             showYearDropdown
             showMonthDropdown
-            dropdownMode='select'
+            dropdownMode="select"
             onChange={this.onPeriodChange.bind(null, 'periodFrom')}
           />
         </FormGroup>,
-        <FormGroup key='periodTo'>
+        <FormGroup key="periodTo">
           <ControlLabel>Period to</ControlLabel>
           <DatePicker
             customInput={<FormControl />}
             selected={moment.unix(this.state.values.periodTo)}
             showYearDropdown
             showMonthDropdown
-            dropdownMode='select'
+            dropdownMode="select"
             onChange={this.onPeriodChange.bind(null, 'periodTo')}
           />
-        </FormGroup>
+        </FormGroup>,
       ]
       : [];
 
     const configForCurrentDataSet = this.configForCurrentSetup(dataSetName);
 
-    const dataFilterProps = filterName => {
+    const dataFilterProps = (filterName) => {
       const config = configForCurrentDataSet[filterName];
 
       return {
@@ -208,26 +208,26 @@ export default class DataFilters extends React.Component {
         dictionary: this.getDictionary(config[`${dataSetName}PropKey`]),
         isLoading: this.getIsLoading(config[`${dataSetName}PropKey`]),
         onChange: this.onChangeCallbacks[filterName],
-        clearable: filterName !== 'channel'
+        clearable: filterName !== 'channel',
       };
     };
 
     const filters = _.flow([
       _.keys,
-      _.map(filterName => <DataFilter {...dataFilterProps(filterName)} />)
+      _.map((filterName) => <DataFilter {...dataFilterProps(filterName)} />),
     ])(configForCurrentDataSet);
 
     return _.flow([
       _.chunk(3),
       _.map((row, i) => (
-        <Row key={row.map(item => item.key).join('+')}>
+        <Row key={row.map((item) => item.key).join('+')}>
           { row.map((item, j) => (
             <Col key={j} xs={12} md={4}>
               { item }
             </Col>
           )) }
         </Row>
-      ))
+      )),
     ])([...filters, ...periodFilters]);
   }
 
@@ -253,12 +253,12 @@ export default class DataFilters extends React.Component {
               </div>
 
               { expanded && [
-                <div className='data-filters-body' key='body'>
+                <div className="data-filters-body" key="body">
                   { this.renderFilters() }
                 </div>,
-                <div className='data-filters-footer' key='footer'>
+                <div className="data-filters-footer" key="footer">
                   <Button onClick={this.expandContainer}>Confirm</Button>
-                </div>
+                </div>,
               ] }
             </div>
           </Col>

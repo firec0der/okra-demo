@@ -23,7 +23,7 @@ import { mergeObjects } from '../../utils/object';
 const dataSetChartContainerMap = {
   nielsen: NielsenPeriodsLineChart,
   kantar: KantarPeriodsLineChart,
-  nwb: NwbPeriodsLineChart
+  nwb: NwbPeriodsLineChart,
 };
 
 class PeriodsLineChart extends React.Component {
@@ -45,7 +45,7 @@ class PeriodsLineChart extends React.Component {
     requiredFilters: [],
     chosenMetric: 'numericDistribution',
     shouldShowMetrics: true,
-    showPeriodFilters: true
+    showPeriodFilters: true,
   };
 
   constructor(props, ...args) {
@@ -60,11 +60,11 @@ class PeriodsLineChart extends React.Component {
 
     this.state = {
       chosenMetric: props.chosenMetric,
-      dataFiltersValues
+      dataFiltersValues,
     };
   }
 
-  onMetricFilterChange = chosenMetric => this.setState({ chosenMetric });
+  onMetricFilterChange = (chosenMetric) => this.setState({ chosenMetric });
 
   onDataFiltersChange = (values, callback = () => {}) => {
     console.log(values);
@@ -80,7 +80,7 @@ class PeriodsLineChart extends React.Component {
 
     const metricObject = _.flow([
       _.reduce((acc, { items }) => [...acc, ...items], []),
-      _.find(object => object.value === chosenMetric)
+      _.find((object) => object.value === chosenMetric),
     ])(metrics.list);
 
     if (_.isEmpty(metricObject)) { return null; }
@@ -103,7 +103,7 @@ class PeriodsLineChart extends React.Component {
         { !_.isNil(header) && (
           <Grid style={{ marginBottom: '30px' }}>
             <Col xs={12} md={8} mdOffset={2}>
-              <h1 className='text-center'>{ header }</h1>
+              <h1 className="text-center">{ header }</h1>
             </Col>
           </Grid>
         ) }

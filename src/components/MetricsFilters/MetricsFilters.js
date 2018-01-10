@@ -43,7 +43,7 @@ const groupsIcons = {
   2: MarketShapeGroupIcon,
   3: PricePositionGroupIcon,
   4: DistributionGroupIcon,
-  5: BrandEquityGroupIcon
+  5: BrandEquityGroupIcon,
 };
 
 const icons = {
@@ -56,28 +56,28 @@ const icons = {
     totatMarketShare: TotatMarketShareIcon,
     totatVolumeShare: AveragePriceIcon,
     marketShareGrowth: MarketShareGrowthIcon,
-    volumeShareGrowth: VolumeShareGrowth
+    volumeShareGrowth: VolumeShareGrowth,
   },
   3: {
     averageUnitPrice: AverageUnitPriceIcon,
     buyers: VolumeBuyersIcon,
     value: TotalValueIcon,
-    priceGrowth: PriceGrowthIcon
+    priceGrowth: PriceGrowthIcon,
   },
   4: {
     numericDistributionStock: NumericDistributionIcon,
     weightedDistributionStock: WeightedDistributionIcon,
     numericDistribution: NumericDistributionOutIcon,
     weightedDistribution: WeightedDistributionOutIcon,
-    popWeightedDistribution: PopWeightedDistribution
+    popWeightedDistribution: PopWeightedDistribution,
   },
   5: {
     presence: PresenceIcon,
     relevance: RelevanceIcon,
     conviction: ConvictionIcon,
-    beValue: beIcon
-  }
-}
+    beValue: beIcon,
+  },
+};
 
 export default class MetricsFilters extends React.Component {
 
@@ -88,28 +88,28 @@ export default class MetricsFilters extends React.Component {
       items: PropTypes.arrayOf(PropTypes.shape({
         value: PropTypes.string.isRequired,
         label: PropTypes.string.isRequired,
-      })).isRequired
+      })).isRequired,
     }).isRequired),
     onChange: PropTypes.func,
-    selectedValue: PropTypes.string
+    selectedValue: PropTypes.string,
   };
 
   static defaultProps = {
     metrics: [],
-    onChange: value => {},
-    selectedValue: null
+    onChange: (value) => {},
+    selectedValue: null,
   }
 
   constructor(props, ...args) {
     super(props, ...args);
 
     const selectedGroup = _.find(
-      group => group.items.some(item => item.value === props.selectedValue),
+      (group) => group.items.some((item) => item.value === props.selectedValue),
       props.metrics
     );
 
     this.state = {
-      selectedGroupId: _.getOr(null, 'id', selectedGroup)
+      selectedGroupId: _.getOr(null, 'id', selectedGroup),
     };
   }
 
@@ -123,7 +123,7 @@ export default class MetricsFilters extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.selectedValue !== this.props.selectedValue) {
       const selectedGroup = _.find(
-        group => group.items.some(item => item.value === nextProps.selectedValue),
+        (group) => group.items.some((item) => item.value === nextProps.selectedValue),
         this.props.metrics
       );
 
@@ -135,13 +135,13 @@ export default class MetricsFilters extends React.Component {
     }
   }
 
-  onGroupSelect = selectedGroupId => {
+  onGroupSelect = (selectedGroupId) => {
     const { metrics, onChange } = this.props;
 
     const firstItem = _.getOr(
       null,
       'items[0]',
-      _.find(group => group.id === selectedGroupId, metrics)
+      _.find((group) => group.id === selectedGroupId, metrics)
     );
 
     this.setState({ selectedGroupId }, onChange(firstItem ? firstItem.value : null));
@@ -151,18 +151,18 @@ export default class MetricsFilters extends React.Component {
     const { metrics } = this.props;
     const { selectedGroupId } = this.state;
 
-    const buttons = metrics.map(group => {
+    const buttons = metrics.map((group) => {
       const props = {
         key: group.id,
         onClick: this.onGroupSelect.bind(null, group.id),
-        className: classNames('metric', { '-selected': selectedGroupId === group.id })
+        className: classNames('metric', { '-selected': selectedGroupId === group.id }),
       };
 
       return (
         <span {...props}>
           <img
             src={groupsIcons[group.id]}
-            className='metric-image'
+            className="metric-image"
             title={group.name}
           />
           { group.name }
@@ -170,7 +170,7 @@ export default class MetricsFilters extends React.Component {
       );
     });
 
-    return <div className='metrics-row'>{ buttons }</div>;
+    return <div className="metrics-row">{ buttons }</div>;
   }
 
   renderButtons = () => {
@@ -180,21 +180,21 @@ export default class MetricsFilters extends React.Component {
     const items = _.getOr(
       [],
       'items',
-      _.find(group => group.id === selectedGroupId, metrics)
+      _.find((group) => group.id === selectedGroupId, metrics)
     );
 
-    const buttons = items.map(metric => {
+    const buttons = items.map((metric) => {
       const props = {
         key: metric.value,
         onClick: onChange.bind(null, metric.value),
-        className: classNames('metric', { '-selected': selectedValue === metric.value })
+        className: classNames('metric', { '-selected': selectedValue === metric.value }),
       };
 
       return (
         <span {...props}>
           <img
             src={icons[selectedGroupId][metric.value]}
-            className='metric-image'
+            className="metric-image"
             title={metric.label}
           />
           { metric.label }
@@ -202,16 +202,16 @@ export default class MetricsFilters extends React.Component {
       );
     });
 
-    return <div className='metrics-row'>{ buttons }</div>;
+    return <div className="metrics-row">{ buttons }</div>;
   }
 
   render() {
     return (
-      <div className='metrics-filters'>
+      <div className="metrics-filters">
         { this.renderGroups() }
         { this.renderButtons() }
       </div>
-    )
+    );
   }
 
 }
