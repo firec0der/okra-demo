@@ -9,7 +9,7 @@ import QueryHandler from '../../containers/QueryHandler/QueryHandler';
 import './HomePage.css';
 
 // import from assets
-import UnileverLargeLogo from './UL-large-logo.png';
+import OkraLogo from './logo.png';
 
 export default class HomePage extends React.Component {
 
@@ -18,7 +18,7 @@ export default class HomePage extends React.Component {
       <div className="home-page">
         <Grid className="top-content" key="top-content">
           <Col xs={12} md={6} mdOffset={3}>
-            <img className="unilever-logo" src={UnileverLargeLogo} />
+            <img className="okra-logo" src={OkraLogo} />
           </Col>
         </Grid>
 
