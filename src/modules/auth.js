@@ -38,7 +38,7 @@ export default createReducer(initialState, {
 export const destroyAuth = () => (dispatch) => {
   dispatch({ type: AUTH_DESTROY });
   localStorageDecorator.removeItem('auth');
-  browserHistory.push('/');
+  browserHistory.push('/sign-in');
 };
 
 // Action creator for authentication.
