@@ -19,7 +19,6 @@ import {
 import { CORE_API_URL } from '../../constants/api';
 
 // import from components
-import BrandLogos from '../../components/BrandLogos/BrandLogos';
 import SearchBar from '../../components/SearchBar/SearchBar';
 
 // import from utils
@@ -980,7 +979,6 @@ class QueryHandler extends React.Component {
         </Grid>
 
         <div className="result-body">
-          { !shouldHideLogos && <BrandLogos /> }
           { shouldShowResults && !isWhyQuery && dataIsLoaded && this.renderSummary() }
           { shouldShowResults && !isWhyQuery && this.getBarChart() }
           { isWhyQuery && dataIsLoaded && (
