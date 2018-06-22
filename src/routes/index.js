@@ -35,6 +35,8 @@ import { fetchNwbGenres } from '../modules/nwb/nwbGenres';
 import { fetchNwbManufacturers } from '../modules/nwb/nwbManufacturers';
 import { fetchNwbSubcategories } from '../modules/nwb/nwbSubcategories';
 
+import { destroyAuth } from '../modules/auth';
+
 export const onHomeEnter = ({ dispatch, getState }) => (nextState, replace, next) => {
   const { auth } = getState();
 
@@ -43,32 +45,37 @@ export const onHomeEnter = ({ dispatch, getState }) => (nextState, replace, next
     return next();
   }
 
-  dispatch(fetchMetrics());
-  dispatch(fetchBrands());
-  dispatch(fetchManufacturers());
+  dispatch(fetchMetrics())
+    .then(() => {
+      dispatch(fetchBrands());
+      dispatch(fetchManufacturers());
 
-  dispatch(fetchKantarAreas());
-  dispatch(fetchKantarBrands());
-  dispatch(fetchKantarGenres());
-  dispatch(fetchKantarManufacturers());
-  dispatch(fetchKantarPackagings());
-  dispatch(fetchKantarSubcategories());
+      dispatch(fetchKantarAreas());
+      dispatch(fetchKantarBrands());
+      dispatch(fetchKantarGenres());
+      dispatch(fetchKantarManufacturers());
+      dispatch(fetchKantarPackagings());
+      dispatch(fetchKantarSubcategories());
 
-  dispatch(fetchNielsenAppliers());
-  dispatch(fetchNielsenAreas());
-  dispatch(fetchNielsenBrands());
-  dispatch(fetchNielsenChannels());
-  dispatch(fetchNielsenGenres());
-  dispatch(fetchNielsenManufacturers());
-  dispatch(fetchNielsenPackagings());
-  dispatch(fetchNielsenSubcategories());
+      dispatch(fetchNielsenAppliers());
+      dispatch(fetchNielsenAreas());
+      dispatch(fetchNielsenBrands());
+      dispatch(fetchNielsenChannels());
+      dispatch(fetchNielsenGenres());
+      dispatch(fetchNielsenManufacturers());
+      dispatch(fetchNielsenPackagings());
+      dispatch(fetchNielsenSubcategories());
 
-  dispatch(fetchNwbBrands());
-  dispatch(fetchNwbGenres());
-  dispatch(fetchNwbManufacturers());
-  dispatch(fetchNwbSubcategories());
+      dispatch(fetchNwbBrands());
+      dispatch(fetchNwbGenres());
+      dispatch(fetchNwbManufacturers());
+      dispatch(fetchNwbSubcategories());
 
-  return next();
+      return next();
+    })
+    .catch(() => {
+      dispatch(destroyAuth());
+    });
 };
 
 export const onSignInEnter = ({ getState }) => (nextState, replace, next) => {
